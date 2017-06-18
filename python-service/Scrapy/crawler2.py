@@ -32,14 +32,14 @@ def imprimirLinks(url,persona):
 		for item in info["Familia"]:
 			if "links" in item:
 				for link in info["Familia"][item]:
-					if item.strip(" - links").encode("utf-8")+ link["url"].encode("utf-8") not in visitadas:
-						if "#cite" not in link["url"]:
-							relacion =  item.strip(" - links").encode("utf-8")
-							if dic[persona.encode("utf-8")].has_key(relacion):
-								dic[persona.encode("utf-8")][relacion].append(link["url"].encode("utf-8"))
-							else:
-								dic[persona.encode("utf-8")][relacion] = [link["url"].encode("utf-8")]
-							#print persona.encode("utf-8")+" "+ item.strip(" - links").encode("utf-8")+" "+link["title"].encode("utf-8")+" "+link["url"].encode("utf-8")
+					if "#cite" not in link["url"]:
+						relacion =  item.strip(" - links").encode("utf-8")
+						if dic[persona.encode("utf-8")].has_key(relacion):
+							dic[persona.encode("utf-8")][relacion].append(link["url"].encode("utf-8"))
+						else:
+							dic[persona.encode("utf-8")][relacion] = [link["url"].encode("utf-8")]
+						print persona.encode("utf-8")+" "+ item.strip(" - links").encode("utf-8")+" "+link["title"].encode("utf-8")+" "+link["url"].encode("utf-8")
+						if item.strip(" - links").encode("utf-8")+ link["url"].encode("utf-8") not in visitadas:
 							visitadas.add(item.strip(" - links").encode("utf-8")+ link["url"].encode("utf-8"))
 							imprimirLinks(link["url"] ,link["title"])
 
