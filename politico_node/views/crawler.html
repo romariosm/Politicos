@@ -20,8 +20,196 @@
 
 		<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 
+		<style>
+		.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+		.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+		.autocomplete-selected { background: #F0F0F0; }
+		.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+		.autocomplete-group { padding: 2px 5px; }
+		.autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
+
+		.avatar {
+					/* cambia estos dos valores para definir el tamaño de tu círculo */  
+		    width:120px;
+		    height:120px;
+		    border-radius:100%;
+		    border:3px solid white;
+		    
+		    
+		}
+
+		.avatar2 {
+					/* cambia estos dos valores para definir el tamaño de tu círculo */  
+		    width: 60px;
+		    height:60px;
+		    border-radius:100%;
+		    border:3px solid white;
+		    
+		    
+		}
 		
+
+		.political-thumbnail{
+			background: rgba(255,255,255,0); 
+			border-radius:0px; 
+			
+		    border: 20px solid rgba(0, 0, 0, 0);
+		    margin: 8px;
+		    flex-direction: column;
+
+		    -webkit-box-shadow: 0 8px 6px -6px #999 !important;
+            -moz-box-shadow: 0 8px 6px -6px #999 !important;
+			box-shadow: 0 4px 8px 0px #999 !important;
+
+
+		}
+
+		.btn-thumbnail{
+
+			display: block;
+			border-radius: 100%;
+			background-color: #222;
+			height: 40px;
+			width: 40px;
+			border: rgba(0, 0, 0, 1);
+			font-size: 20px;
+			text-align:  center;
+			cursor: pointer;
+		    color: #fff;
+		    outline: 0;
+		    -webkit-transition: all .3s;
+		    -moz-transition: all .3s;
+		    transition: all .3s; 
+
+			}
+		.btn-thumbnail:hover { 
+    		background-color: #148f76;
+    		color: white;
+    	}
+    	.political-thumbnail:hover{
+
+    		background-color: rgba(62,75,88, 0.7); 
+
+    		background-color: rgba(19,44,56, 0.4); 		
+
+    		background-color: rgba(19,44,56, 0.7); 
+
+			
+    	}
+    	.margin-top-panel{
+    		margin-top: 20px
+    	}
+
+    	.no-border{
+    		border-radius: 0px;
+    	}
+    	.panel-header{
+    		margin-top: 0px;
+    		margin-bottom: 0px;
+    		margin-right: 0px;
+    		margin-left: 0px;
+    	}
+    	.nav-shadow{
+		    -webkit-box-shadow: 0 8px 6px -6px #999 !important;
+            -moz-box-shadow: 0 8px 6px -6px #999 !important;
+			box-shadow: 0 4px 8px 0px #999 !important;
+			background-image: url('/images/sayata.png');
+		}
+		
+		.grid-item{
+			width: 360px
+		}
+
+		.btn-site{
+			background-color: #1ab394;
+			border-color: #1ab394;
+			color: #FFFFFF;
+
+		}
+
+		.btn-site:hover{
+			background-color: #148f76;
+			border-color: #148f76;
+			color: #FFFFFF;
+		}
+
+		.btn-site-info{
+			
+			background-color: #969292;
+			border-color: #969292;
+			color: #FFFFFF;		 
+		}
+
+		.btn-site-info:hover{
+			
+			background-color: #a7b1c2;
+			border-color: #a7b1c2;
+			color: #FFFFFF;		 
+		}
+
+
+
+		.footer-bottom {
+		    background-color: #e7eaec;
+		    min-height: 30px;
+		    width: 100%;
+		}
+		.copyright {
+		    color: #676a6c;
+		    line-height: 30px;
+		    min-height: 30px;
+		    padding: 7px 0;
+		}
+		.design {
+		    color: #676a6c;
+		    line-height: 30px;
+		    min-height: 30px;
+		    padding: 7px 0;
+		    text-align: right;
+		}
+		.design a {
+		    color: #676a6c;
+		}
+
+		.pagination a {
+		    color: black;
+		    float: left;
+		    padding: 8px 16px;
+		    text-decoration: none;
+
+		}
+	    
+
+	    .pagination a.active {
+		    background-color: #1ab394;
+		    color: white;
+		}
+
+		.pagination a:hover:not(.active) {background-color: rgba(62,75,88, 0.7);}
+
+		.rv{
+			    height: 150px;
+    			background-size: cover;
+    			background-image: url('http://visitas.presidencia.gov.co/web/fts/casa-narino-1-fachada.jpg') ;
+
+    			
+    			padding-top: 0.25rem;
+    			  
+ 
+			}
+
+		.rp{
+			-webkit-box-flex: 40;
+			flex: 1 1 auto;
+    		padding: 0.25rem;
+			    
+		}
+		
+
+	</style>
+
 		<h1> Hola soy un crawler </h1>
+
 	</head>
 	<script>
 		var links = []
@@ -41,23 +229,17 @@
 					links.push(links_to_search[cont])
 
 					var personaje = JSON.parse(data)
-					//$("#table_body").append('<p>' +'Imagen: '+ personaje.Imagen+' Nombre: '+personaje.Nombre+ ' Enlace: ' + personaje.Url+'</p')
-					console.log(personaje)
-					$("#table_body").append('<p>&&&&&&&&&&&&&&&&& Nombre: '+personaje.Nombre+ ' Enlace: ' + personaje.Url+'</p')
-					
-					for (property in personaje.Familia){
-
-						console.log(property)
-						
-
-	    				if (property.indexOf("links") !=-1){
+					var imagen = personaje.Imagen == 'no disponible'? '/images/hombre.png':personaje.Imagen
+					$("#table_body").append('<tr>'+
+													'<td><img class="avatar2" style="object-fit: cover" src="'+imagen+'" height = "50px" width="50px"> <a style="cursor:pointer" href="'+personaje.Url+'">'+personaje.Nombre+'<a/></td>'+
+													'</tr>')
+					for(property in personaje.Familia){
+						if (property.indexOf("links") !=-1 ){
 
 	    					personaje.Familia[property].forEach(function(enlace){
+	    						
 		    					if (enlace.title != null){	
-		    						$("#table_body").append('<p>' + 'Parentesco: '+property.replace(' - links','')+' Nombre: '+enlace.title+'</p')
-		    						
-
-		    						console.log(links.indexOf(enlace.url))
+		    						$("#table_body").append('' + property.replace(' - links',': ')+'<a href = "'+ enlace.url+'">'+enlace.title+'</a><br>')
 		    						if (links.indexOf(enlace.url) == -1){
 
 		    							if (links_to_search.indexOf(enlace.url) == -1){
@@ -86,20 +268,87 @@
 				
 		}
 		$(document).ready(function() {
-			
-			
 			links_to_search.push("https://es.wikipedia.org/wiki/Juan_Manuel_Santos")
 			getPersonaje(links_to_search,0)
-
 		})
 		
 	</script>
-	<body>
-		<table class="table">
-			<tbody id="table_body">
-			</tbody>
-		</table>
-<!--%personaje.Nombre%-->
+	
+	<body style="">
+
+			<nav class="navbar navbar-default navbar-fixed-top no-border nav-shadow">
+			  	<div class="container-fluid">
+			    	
+			        
+			    
+			  	</div>
+			</nav>
+			
+
+
+			<div class="panel panel-default no-border" style ="margin-top: 100px" align="center">
+				<div class="panel-body">
+			   	
+	
+
+					<div class="container">
+
+						<table class="table">
+							<tbody id="table_body">
+							</tbody>
+						</table>
+			<div class="footer-bottom">
+
+				<div class="container">
+
+					<div class="row">
+
+						<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+							<div class="copyright">
+
+								© 2016-2017, "Nombre de la Aplicación"
+							</div>
+
+						</div>
+
+						<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+							<div class="design">
+
+								 <a target="_blank" href="http://comunidad.udistrital.edu.co/gesdatos/">Grupo de Investigación Gesdatos </a> |  <a target="_blank" href="https://www.udistrital.edu.co/">Universidad Distrital Francisco José de Caldas</a>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+	<div class="modal fade" id="loading_div" data-backdrop="static" data-keyboard="false">
+
+		 <div class="modal-dialog">
+
+		    <!-- Modal content-->
+		    <div class="modal-content">
+		    	
+		      	<div class="modal-body" align="center">
+		      		<h3><i class="fa fa-paper-plane" aria-hidden="true"></i> Estamos recolectando información...</h3>
+		        	<img src="/images/loading.gif" />
+		      	</div>
+		      
+		    </div>
+
+		  </div>
+
+	</div>
+			
+		
+		
+
 	</body>
 
 </html>
