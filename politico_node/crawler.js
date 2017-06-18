@@ -17,7 +17,8 @@ app.use(express.static('static')); //Donde voy a guardar archivos estaticos (jav
 
 app.get('/', function(request, response){ //Start the main page 
     context = {}
-    context['mensaje'] = 'Hola mundo'
+    context['political'] = ''
+
 	response.render('crawler.html',context);
 	//iniciar("https://es.wikipedia.org/wiki/Juan_Manuel_Santos")
 }).listen(properties.crawler.port)  //Mientras :3
@@ -33,6 +34,23 @@ app.get('/search/personal_info', function(request, response){
         response.end(JSON.stringify(salida))
     })
 })
+
+app.get('/search/person:*', function(request, response){
+
+    var political=request.query.search
+    console.log(request.query.search)
+    context={}
+
+    context['political']=political
+
+    
+    response.render('crawler.html',context)
+
+            
+
+            
+
+});
 
 
 function iniciar(inicio){ 

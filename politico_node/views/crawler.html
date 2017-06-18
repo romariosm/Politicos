@@ -40,8 +40,8 @@
 
 		.avatar2 {
 					/* cambia estos dos valores para definir el tamaño de tu círculo */  
-		    width: 60px;
-		    height:60px;
+		    width: 70px;
+		    height:70px;
 		    border-radius:100%;
 		    border:3px solid white;
 		    
@@ -230,16 +230,17 @@
 
 					var personaje = JSON.parse(data)
 					var imagen = personaje.Imagen == 'no disponible'? '/images/hombre.png':personaje.Imagen
-					$("#table_body").append('<tr>'+
-													'<td><img class="avatar2" style="object-fit: cover" src="'+imagen+'" height = "50px" width="50px"> <a style="cursor:pointer" href="'+personaje.Url+'">'+personaje.Nombre+'<a/></td>'+
-													'</tr>')
+
+					row='<tr>'+'<td><h4><img class="avatar2" style="object-fit: cover" src="'+imagen+'" height = "70px" width="70px"> <a style="cursor:pointer" href="'+personaje.Url+'"><span class="label label-default">'+personaje.Nombre+'</span><a/></h4>'
+					row=row+'<div class="list-group" style="width: 100%"> <li class="list-group-item default"><h4><strong><i class="fa fa-share-alt" aria-hidden="true"></i> Personas Relacionadas</strong></h4></li>'													
 					for(property in personaje.Familia){
 						if (property.indexOf("links") !=-1 ){
+
 
 	    					personaje.Familia[property].forEach(function(enlace){
 	    						
 		    					if (enlace.title != null){	
-		    						$("#table_body").append('' + property.replace(' - links',': ')+'<a href = "'+ enlace.url+'">'+enlace.title+'</a><br>')
+		    						row=row+'<li class="list-group-item"><h5><strong><span class="label" style="background-color: #1ab394">' + property.replace(' - links','')+'</span> <a href = "'+ enlace.url+'">'+enlace.title+'</a></strong></h5></li>'
 		    						if (links.indexOf(enlace.url) == -1){
 
 		    							if (links_to_search.indexOf(enlace.url) == -1){
@@ -256,19 +257,22 @@
 
 
 	    			}
+	    			row=row+'</div>'
+
+	    			$("#table_body").append(row+'</td></tr>')
+	    			
 	    			getPersonaje(links_to_search, cont+1)
-	    			 
-
-					
-					
-
+	    		
 			})
 
 			}
 				
 		}
+
+	
 		$(document).ready(function() {
-			links_to_search.push("https://es.wikipedia.org/wiki/Juan_Manuel_Santos")
+			$("#table_body").empty();
+			links_to_search.push("<%= political %>")
 			getPersonaje(links_to_search,0)
 		})
 		
@@ -278,25 +282,45 @@
 
 			<nav class="navbar navbar-default navbar-fixed-top no-border nav-shadow">
 			  	<div class="container-fluid">
-			    	
+			    	<div class="navbar-header" style="margin-top: 30px; margin-bottom: 30px">
+				    	
+					  		
+					  	
+				      	<div class="col-md-12">
+
+							<form id="loginformA" action="/search/person:political" method="get">
+							    <div class="input-group" >
+							    	<input type="text" name="search" id="autocomplete" class="form-control" placeholder="Buscar..." value="<%= political %>" style="border-radius:0px"/>
+							      
+							    	
+
+							      <span class="input-group-btn">
+							        <button class="btn btn-site no-border" id="search_submit" type="submit"><i class="glyphicon glyphicon-search"></i> Buscar</button>
+							      </span>
+							    </div>
+						    </form>
+						</div>
 			        
-			    
+			    	</div>
 			  	</div>
 			</nav>
 			
+			<div class="container">
 
+				<div class="panel panel-default no-border" style ="margin-top: 40px;" >
+					<div class="panel-heading"><h4><strong><i class="fa fa-users fa-lg" aria-hidden="true"></i> Personas</strong></h4> </div>
+					<div class="panel-body" align="center">
+				   	
 
-			<div class="panel panel-default no-border" style ="margin-top: 100px" align="center">
-				<div class="panel-body">
-			   	
-	
-
-					<div class="container">
-
-						<table class="table">
+						<table class="table table-hover" style="width: 80%">
 							<tbody id="table_body">
 							</tbody>
 						</table>
+					</div>
+				</div>
+
+			</div>
+
 			<div class="footer-bottom">
 
 				<div class="container">
