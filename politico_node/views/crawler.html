@@ -277,6 +277,10 @@
 
 				$("#div_descargar").show()
 				$("#div_personas").css('margin-top','0px')
+				$("#spin").removeClass('fa-circle-o-notch')
+				$("#spin").removeClass('fa-spin')
+				$("#spin").addClass('fa-download')
+				$("#descargar_button").prop('disabled', false)
 			}
 		}
 		function descargar_archivo(){
@@ -328,8 +332,8 @@
 			</nav>
 
 			<div class="container">
-				<div class="col-md-12" id="div_descargar" style="margin-top: 50px; margin-bottom: 30px; display: none">
-					<button class="btn btn-site no-border pull-right" id="search_submit" onclick="descargar_archivo()" type="button"><i class="fa fa-download" aria-hidden="true"></i> Descargar</button>
+				<div class="col-md-12" id="div_descargar" style="margin-top: 50px; margin-bottom: 30px;">
+					<div class="pull-right"> &nbsp;</div> <button class="btn btn-site no-border pull-right" id="descargar_button" disabled onclick="descargar_archivo()" type="button"> <i id="spin" class="fa fa-circle-o-notch fa-spin fa-lg" aria-hidden="true"></i> Descargar</button>
 
 					<a download="" href="" id="descargar"></a>
 				</div>
@@ -339,7 +343,7 @@
 			<div class="container">
 				
 
-				<div class="panel panel-default no-border" id="div_personas" style ="margin-top: 50px" >
+				<div class="panel panel-default no-border" id="div_personas" style ="" >
 					<div class="panel-heading"><h4><strong><i class="fa fa-users fa-lg" aria-hidden="true"></i> Personas</strong></h4> </div>
 					<div class="panel-body" align="center">
 				   	
