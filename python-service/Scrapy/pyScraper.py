@@ -52,6 +52,10 @@ def politic_scrapeTable(url):
 					if parent != "":
 						dic[parent] = jsonp.addValue(dic[parent],fil.find_all('th')[0].text, jsonp.clearValue(fil.find_all('td')[0].text))
 						if len(fil.find_all('td')[0].findAll('a'))>0:
+							print 
+							print fil.find_all('th')[0].text
+							print getLinks(fil.find_all('td')[0])
+							print
 							dic[parent] = jsonp.addValue(dic[parent],fil.find_all('th')[0].text + " - links", getLinks(fil.find_all('td')[0]))
 					else:
 						dic = jsonp.addValue(dic,fil.find_all('th')[0].text, fil.find_all('td')[0].text)		
@@ -72,5 +76,7 @@ def getLinks(element):
 				enlace["url"] = link.get('href')
 			else:
 				enlace["url"] ="https://es.wikipedia.org" + link.get('href')
-		temp.append(enlace)
+			temp.append(enlace)
 	return temp
+
+fm.writeFileJSON('test_enri',politic_scrapeTable("https://es.wikipedia.org/wiki/Enrique_Santos_Castillo"))
