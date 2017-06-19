@@ -214,6 +214,7 @@
 	<script>
 		var links = []
 		var links_to_search=[]
+		var info_recolectada=[]
 		function buscarPersonaje(data){
 				     		
     	
@@ -228,12 +229,17 @@
 				.done(function( data ) {	
 					links.push(links_to_search[cont])
 
+
 					var personaje = JSON.parse(data)
+					info_recolectada.push(personaje)
+
 					var imagen = personaje.Imagen == 'no disponible'? '/images/hombre.png':personaje.Imagen
 
 					row='<tr>'+'<td><h4><img class="avatar2" style="object-fit: cover" src="'+imagen+'" height = "70px" width="70px"> <a style="cursor:pointer" href="'+personaje.Url+'"><span class="label label-default">'+personaje.Nombre+'</span><a/></h4>'
-					row=row+'<div class="list-group" style="width: 100%"> <li class="list-group-item default"><h4><strong><i class="fa fa-share-alt" aria-hidden="true"></i> Personas Relacionadas</strong></h4></li>'													
+					row=row+'<div class="list-group" style="width: 100%"> <li class="list-group-item default"><h4><strong><i class="fa fa-share-alt" aria-hidden="true"></i> Personas Relacionadas</strong></h4></li>'
+					console.log(personaje)													
 					for(property in personaje.Familia){
+
 						if (property.indexOf("links") !=-1 ){
 
 
@@ -253,6 +259,8 @@
 
 	    					})
 
+	    				}else{
+
 	    				}
 
 
@@ -265,8 +273,21 @@
 	    		
 			})
 
+			}else{
+
+				$("#div_descargar").show()
+				$("#div_personas").css('margin-top','0px')
 			}
-				
+		}
+		function descargar_archivo(){
+			
+			var elem = document.getElementById('descargar');
+
+			elem.download = "<%= political %>.json";
+			elem.href = "data:application/octet-stream," 
+			                     + encodeURIComponent(JSON.stringify(info_recolectada));
+
+			elem.click()
 		}
 
 	
@@ -275,6 +296,7 @@
 			links_to_search.push("<%= political %>")
 			getPersonaje(links_to_search,0)
 		})
+			
 		
 	</script>
 	
@@ -304,10 +326,20 @@
 			    	</div>
 			  	</div>
 			</nav>
+
+			<div class="container">
+				<div class="col-md-12" id="div_descargar" style="margin-top: 50px; margin-bottom: 30px; display: none">
+					<button class="btn btn-site no-border pull-right" id="search_submit" onclick="descargar_archivo()" type="button"><i class="fa fa-download" aria-hidden="true"></i> Descargar</button>
+
+					<a download="" href="" id="descargar"></a>
+				</div>
+			</div>
+			
 			
 			<div class="container">
+				
 
-				<div class="panel panel-default no-border" style ="margin-top: 40px;" >
+				<div class="panel panel-default no-border" id="div_personas" style ="margin-top: 50px" >
 					<div class="panel-heading"><h4><strong><i class="fa fa-users fa-lg" aria-hidden="true"></i> Personas</strong></h4> </div>
 					<div class="panel-body" align="center">
 				   	
