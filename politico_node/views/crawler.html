@@ -236,12 +236,11 @@
 					var imagen = personaje.Imagen == 'no disponible'? '/images/hombre.png':personaje.Imagen
 
 					row='<tr>'+'<td><h4><img class="avatar2" style="object-fit: cover" src="'+imagen+'" height = "70px" width="70px"> <a style="cursor:pointer" href="'+personaje.Url+'"><span class="label label-default">'+personaje.Nombre+'</span><a/></h4>'
+					if (personaje.Familia){
 					row=row+'<div class="list-group" style="width: 100%"> <li class="list-group-item default"><h4><strong><i class="fa fa-share-alt" aria-hidden="true"></i> Personas Relacionadas</strong></h4></li>'
-					console.log(personaje)													
 					for(property in personaje.Familia){
 
 						if (property.indexOf("links") !=-1 ){
-
 
 	    					personaje.Familia[property].forEach(function(enlace){
 	    						
@@ -265,7 +264,20 @@
 
 
 	    			}
+	    			
 	    			row=row+'</div>'
+					}
+	    			if (personaje.Laboral && personaje.Laboral[0].length != 0){
+	    			row=row+'<div class="list-group" style="width: 100%"> <li class="list-group-item default"><h4><strong><i class="fa fa-share-alt" aria-hidden="true"></i> Entidades relacionadas</strong></h4></li>'
+	    			
+		    			personaje.Laboral.forEach(function(entidad){		    				entidad.forEach(function(ent_link){
+		    					
+	    						if (ent_link.title){
+	    							row=row+'<li class="list-group-item"><h5><strong> <a href = "'+ ent_link.url+'">'+ent_link.title+'</a></strong></h5></li>'
+	    					}
+	    					})
+	    				})
+	    			} 
 
 	    			$("#table_body").append(row+'</td></tr>')
 	    			
