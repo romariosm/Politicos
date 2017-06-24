@@ -42,12 +42,16 @@ def politic_scrapeTable(url):
 			dic = jsonp.addValue(dic,"Url",url)
 			dic = jsonp.addValue(dic,"Imagen",getTableImage(url))			
 			filas = table.find_all('tr')[2:]
-			dic["laboral - links"] = []
+			dic["laboral"] = []
 			parent = ""
 			for fil in filas:
 				if len(fil.find_all('th'))>0 and len(fil.find_all('td'))<1:
 					parent = jsonp.eliminateCharacters(jsonp.clearValue(fil.find_all('th')[0].text))
-					dic["laboral - links"].append(getLinks(fil.find_all('th')[0]))
+
+					for link in getLinks(fil.find_all('th')[0]):
+
+						dic["laboral"].append(link)
+
 					dic = jsonp.addValue(dic,parent,{})
 				elif len(fil.find_all('th')) > 0  and len(fil.find_all('td')) > 0:
 					if parent != "":
