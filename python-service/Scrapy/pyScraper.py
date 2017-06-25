@@ -87,21 +87,37 @@ def getLinks(element):
 	temp = []
 	for link in element.findAll('a'):
 		if "wikidata" not in link.get('href'):
-			enlace = {}
-			#print link
-			#print link.text
-			enlace["title"] = link.get('title')
-			#enlace["text"] =link.text
-			if "http" in link.get('href'):
-				enlace["url"] = link.get('href')
+			print link
+			if link.get('class'):
+				if u'image' not in link.get('class'):
+					enlace = {}
+					#print link
+					#print link.text
+					enlace["title"] = link.get('title')
+					#enlace["text"] =link.text
+					if "http" in link.get('href'):
+						enlace["url"] = link.get('href')
+					else:
+						enlace["url"] ="https://es.wikipedia.org" + link.get('href')
+					temp.append(enlace)
 			else:
-				enlace["url"] ="https://es.wikipedia.org" + link.get('href')
-			temp.append(enlace)
+
+				enlace = {}
+				#print link
+				#print link.text
+				enlace["title"] = link.get('title')
+				#enlace["text"] =link.text
+				if "http" in link.get('href'):
+					enlace["url"] = link.get('href')
+				else:
+					enlace["url"] ="https://es.wikipedia.org" + link.get('href')
+
+				temp.append(enlace)
 	return temp
 
 #fm.writeFileJSON('test_enri',politic_scrapeTable("https://es.wikipedia.org/wiki/Enrique_Santos_Castillo"))
 
 
 #parsed = json.loads()
+print json.dumps(politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos"), indent=4, sort_keys=True)
 #print json.dumps(politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos"), indent=4, sort_keys=True)
-print json.dumps(politic_scrapeTable("https://es.wikipedia.org/wiki/%C3%81lvaro_Uribe"), indent=4, sort_keys=True)

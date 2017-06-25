@@ -232,50 +232,65 @@
 
 					var personaje = JSON.parse(data)
 					info_recolectada.push(personaje)
+					console.log(personaje)
 
 					var imagen = personaje.Imagen == 'no disponible'? '/images/hombre.png':personaje.Imagen
 
 					row='<tr>'+'<td><h4><img class="avatar2" style="object-fit: cover" src="'+imagen+'" height = "70px" width="70px"> <a style="cursor:pointer" href="'+personaje.Url+'"><span class="label label-default">'+personaje.Nombre+'</span><a/></h4>'
 					if (personaje.Familia){
-					row=row+'<div class="list-group" style="width: 100%"> <li class="list-group-item default"><h4><strong><i class="fa fa-share-alt" aria-hidden="true"></i> Personas Relacionadas</strong></h4></li>'
+					row=row+'<div class="list-group" style="width: 100%"> <li class="list-group-item default"><h4><strong><i class="fa fa-share-alt" aria-hidden="true"></i> Familia Relacionada</strong></h4></li>'
 					for(property in personaje.Familia){
 
-						if (property.indexOf("links") !=-1 ){
-
-	    					personaje.Familia[property].forEach(function(enlace){
+	    				personaje.Familia[property].forEach(function(enlace){
 	    						
-		    					if (enlace.title != null){	
-		    						row=row+'<li class="list-group-item"><h5><strong><span class="label" style="background-color: #1ab394">' + property.replace(' - links','')+'</span> <a href = "'+ enlace.url+'">'+enlace.title+'</a></strong></h5></li>'
+	    					if (enlace.title != null){
+
+	    						if (enlace.url != null ){
+
+	    							
+		    						row=row+'<li class="list-group-item"><h5><strong><span class="label" style="background-color: #1ab394">' + property+'</span> <a href = "'+ enlace.url+'">'+enlace.title+'</a></strong></h5></li>'
 		    						if (links.indexOf(enlace.url) == -1){
 
 		    							if (links_to_search.indexOf(enlace.url) == -1){
 		    								links_to_search.push(enlace.url) 
 		    							}
+    								}
+	    						}else{
+
+	    							row=row+'<li class="list-group-item"><h5><strong><span class="label" style="background-color: #1ab394">'+property+'</span> '+ enlace.title+'</strong></h5></li>'
 	    								
+	    						}
 
-	    							}	                        	
-		    					}   					
+	    					}
 
-	    					})
 
-	    				}else{
+    					})
 
-	    				}
+	    				
 
 
 	    			}
 	    			
 	    			row=row+'</div>'
 					}
-	    			if (personaje.Laboral && personaje.Laboral[0].length != 0){
+	    			if (personaje.laboral && personaje.laboral.length != 0){
 	    			row=row+'<div class="list-group" style="width: 100%"> <li class="list-group-item default"><h4><strong><i class="fa fa-university" aria-hidden="true"></i> Entidades relacionadas</strong></h4></li>'
 	    			
-		    			personaje.Laboral.forEach(function(entidad){		    				entidad.forEach(function(ent_link){
+		    			personaje.laboral.forEach(function(entidad){
+		    				
 		    					
-	    						if (ent_link.title){
-	    							row=row+'<li class="list-group-item"><h5><strong> <a href = "'+ ent_link.url+'">'+ent_link.title+'</a></strong></h5></li>'
+	    					if (entidad.title){
+
+	    						if (entidad.url){
+	    							row=row+'<li class="list-group-item"><h5><strong> <a href = "'+ entidad.url+'">'+entidad.title+'</a></strong></h5></li>'
+	    						
+	    						}else{
+	    							row=row+'<li class="list-group-item"><h5><strong>'+entidad.title+'</strong></h5></li>'
+	    						}
+	    					}else{
+	    						row=row+'<li class="list-group-item"><h5><strong> <a href = "'+ entidad.url+'">'+entidad.url+'</a></strong></h5></li>'
 	    					}
-	    					})
+	    					
 	    				})
 	    			} 
 

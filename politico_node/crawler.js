@@ -32,7 +32,7 @@ app.get('/search/personal_info', function(request, response){
         salida['Imagen']= msg.Imagen
         salida['Familia']= msg.Familia
         salida['Laboral'] = msg["laboral - links"]
-        response.end(JSON.stringify(salida))
+        response.end(JSON.stringify(msg))
     })
 })
 
