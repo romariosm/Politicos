@@ -41,23 +41,20 @@ def politic_scrapeTable(url):
 			dic = jsonp.addValue(dic,"Nombre",getTitle(soup).replace(' - Wikipedia, la enciclopedia libre',''))
 			dic = jsonp.addValue(dic,"Url",url)
 			dic = jsonp.addValue(dic,"Imagen",getTableImage(url))			
-			filas = table.find_all('tr')[2:]
+			filas = table.find_all('tr')[1:] if dic['Imagen'] == "no disponible" else table.find_all('tr')[2:]
 			dic["laboral"] = []
 			parent = ""
 			for fil in filas:
 				if len(fil.find_all('th'))>0 and len(fil.find_all('td'))<1:
 					parent = jsonp.eliminateCharacters(jsonp.clearValue(fil.find_all('th')[0].text))
-
 					for link in getLinks(fil.find_all('th')[0]):
-
 						dic["laboral"].append(link)
-
 					dic = jsonp.addValue(dic,parent,{})
 				elif len(fil.find_all('th')) > 0  and len(fil.find_all('td')) > 0:
-					if parent != "":
-						
+					if parent != "":						
 						data_clean=jsonp.clearValue(''.join(value for value in fil.find_all(text=True) if value.parent.name != 'a' and value.parent.name != 'th' and value != '' and value != ' ' and value != '\n' ))
-
+						#if fil.find_all('th')[0].text == "Nacimiento":
+						#	dic[parent]=jsonp.addValue(dic[parent], fil.find_all('th')[0].text, [{'title': jsonp.eliminateCharacters_title(data_clean), 'url': None }])
 						#print data_clean, "--------"
 						if hasattr(data_clean, '__iter__'):
 							if len(data_clean)>0:
@@ -65,8 +62,7 @@ def politic_scrapeTable(url):
 						elif data_clean != '':
 							dic[parent]=jsonp.addValue(dic[parent], fil.find_all('th')[0].text, [{'title': jsonp.eliminateCharacters_title(data_clean), 'url': None }])
 						 
-						if len(fil.find_all('td')[0].findAll('a'))>0:
-							
+						if len(fil.find_all('td')[0].findAll('a'))>0:							
 							if dic[parent].has_key(jsonp.eliminateCharacters(fil.find_all('th')[0].text)):
 
 								for link in getLinks(fil.find_all('td')[0]):
@@ -86,35 +82,17 @@ def politic_scrapeTable(url):
 def getLinks(element):
 	temp = []
 	for link in element.findAll('a'):
-		if "wikidata" not in link.get('href'):
-			if link.get('class'):
-				if u'image' not in link.get('class'):
-					enlace = {}
-					#print link
-					#print link.text
-					enlace["title"] = jsonp.eliminateCharacters(link.get('title'))
-					#enlace["text"] =link.text
-					if "http" in link.get('href'):
-						enlace["url"] = link.get('href')
-					else:
-						enlace["url"] ="https://es.wikipedia.org" + link.get('href')
-					temp.append(enlace)
-			else:
-				enlace = {}
-				#print link
-				#print link.text
-				enlace["title"] = jsonp.eliminateCharacters(link.get('title'))
-				#enlace["text"] =link.text
-				if "http" in link.get('href'):
-					enlace["url"] = link.get('href')
-				else:
-					enlace["url"] ="https://es.wikipedia.org" + link.get('href')
-				temp.append(enlace)
+		if "wikidata" not in link.get('href') and "#cite_note" not in link.get('href'):
+			enlace = {}
+			enlace["title"] = link.get('title')
+			enlace["url"] = link.get('href') if "http" in link.get('href') else "https://es.wikipedia.org" + link.get('href')
+			temp.append(enlace)			
 	return temp
 
 #fm.writeFileJSON('test_enri',politic_scrapeTable("https://es.wikipedia.org/wiki/Enrique_Santos_Castillo"))
 
-
+#campo = politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos")[u'Informaci\u00f3n personal']["Nacimiento"]
 #parsed = json.loads()
-print json.dumps(politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos"), indent=4, sort_keys=True)
-#print json.dumps(politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos"), indent=4, sort_keys=True)
+#print json.dumps(campo[len(campo)-1] , indent=4, sort_keys=True)
+#print json.dumps(campo[len(campo)-2] , indent=4, sort_keys=True)
+print json.dumps(politic_scrapeTable("https://es.wikipedia.org/wiki/Enrique_Santos_Castillo"), indent=4, sort_keys=True)
