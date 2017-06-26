@@ -57,19 +57,19 @@ def politic_scrapeTable(url):
 					if parent != "":
 						
 						data_clean=jsonp.clearValue(''.join(value for value in fil.find_all(text=True) if value.parent.name != 'a' and value.parent.name != 'th' and value != '' and value != ' ' and value != '\n' ))
+
 						#print data_clean, "--------"
 						if hasattr(data_clean, '__iter__'):
 							if len(data_clean)>0:
-								dic[parent]=jsonp.addValue(dic[parent], fil.find_all('th')[0].text, [{'title': text, 'url': None } for text in data_clean if text != '' and text != ''])
+								dic[parent]=jsonp.addValue(dic[parent], fil.find_all('th')[0].text, [{'title': jsonp.eliminateCharacters_title(text), 'url': None } for text in data_clean if text != '' and text != ''])
 						elif data_clean != '':
-							dic[parent]=jsonp.addValue(dic[parent], fil.find_all('th')[0].text, [{'title': data_clean, 'url': None }])
+							dic[parent]=jsonp.addValue(dic[parent], fil.find_all('th')[0].text, [{'title': jsonp.eliminateCharacters_title(data_clean), 'url': None }])
 						 
 						if len(fil.find_all('td')[0].findAll('a'))>0:
 							
 							if dic[parent].has_key(jsonp.eliminateCharacters(fil.find_all('th')[0].text)):
 
 								for link in getLinks(fil.find_all('td')[0]):
-									print link.get('url')
 									if link.get('url'):
 										dic[parent][fil.find_all('th')[0].text].append(link)																
 							else:
@@ -87,13 +87,12 @@ def getLinks(element):
 	temp = []
 	for link in element.findAll('a'):
 		if "wikidata" not in link.get('href'):
-			print link
 			if link.get('class'):
 				if u'image' not in link.get('class'):
 					enlace = {}
 					#print link
 					#print link.text
-					enlace["title"] = link.get('title')
+					enlace["title"] = jsonp.eliminateCharacters(link.get('title'))
 					#enlace["text"] =link.text
 					if "http" in link.get('href'):
 						enlace["url"] = link.get('href')
@@ -101,17 +100,15 @@ def getLinks(element):
 						enlace["url"] ="https://es.wikipedia.org" + link.get('href')
 					temp.append(enlace)
 			else:
-
 				enlace = {}
 				#print link
 				#print link.text
-				enlace["title"] = link.get('title')
+				enlace["title"] = jsonp.eliminateCharacters(link.get('title'))
 				#enlace["text"] =link.text
 				if "http" in link.get('href'):
 					enlace["url"] = link.get('href')
 				else:
 					enlace["url"] ="https://es.wikipedia.org" + link.get('href')
-
 				temp.append(enlace)
 	return temp
 
