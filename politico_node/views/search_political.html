@@ -1,27 +1,5 @@
-
 <!DOCTYPE html>
 <html>
-<!--head>
-	<title></title>
-</head>
-<body>
-
-	<% political_list.forEach(function(political) { %>
-
-        <li><%= political.nombre %> - <%= political.id %></li>
-    <% }); %>
-
-</body>
-</html>
-
-
-<!DOCTYPE html>
-
-<html-->
-
-
-<!--prueba de comentario-->
-
 	<head>
 		<meta charset="utf-8">
 
@@ -252,18 +230,14 @@
 
 		});
 
-		/*$("#search_submit").on("click", function(e){
-		    e.preventDefault();
-		    $('#loginformA').attr('action', "/search/person:"+$("#autocomplete").val()).submit();
-		});*/
-
+		
 		var grid=$('.grid').masonry({
 		  // options
 		  itemSelector: '.grid-item',
 		  
 		});
 
-		$.get( "/search/personal_info", { search: "Juan Manuel Santos" } )
+		$.get( "/search/getsuggestion", { search: "<%= search %>" } )
 			.done(function( data ) {
 				console.log(JSON.parse(data))
 
@@ -290,19 +264,16 @@
 
 					data_politic={}
 					data_politic=JSON.parse(response)
-					console.log(response)
 
 					if(JSON.parse(response)!= null && JSON.parse(response) != undefined){
 
 					if(JSON.parse(response).Politic){
 
 						political_list.push(JSON.parse(response))
-						console.log(political_list)
 
 						$("#table_body").empty();
 
 						for(i=0;i<political_list.length; i=i+3){
-
 							if (political_list[i].Imagen== "Imagen no disponible"){
 
 								imagen='/images/hombre.png'

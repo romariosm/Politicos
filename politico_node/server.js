@@ -7,7 +7,7 @@ var MongoClient = require('mongodb').MongoClient,
 var properties = require('./properties.json')
 var redis = require('redis')
 var mongo = require('mongodb');
-var neo4j = require('neo4j');
+var neo4j = require('./neo4J.js');
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
@@ -15,21 +15,7 @@ app.set('views', __dirname + '/views'); //REderizar vistas
 app.engine('html', require('ejs').renderFile); // Para procesar todo el HTML 
 app.use(express.static('static')); //Donde voy a guardar archivos estaticos (java script y sus librerias)
 
-function sendNeo4j(){
-	
-	var db = new neo4j.GraphDatabase('http://' + properties.neo4j.user + ":" + properties.neo4j.password + "@" + properties.neo4j.host + ":"+properties.neo4j.port);
- 
-		db.cypher({
-    		query: 'create (p:person {nombre:{nombre}}) return p',
-    		params: {
-        		nombre: 'JuanMa',
-    		},
-		}, function (err, results) {
-    		if (err) throw err;
-    		var result = results[0];
-    		console.log(result);    		
-		});	
-}
+
 
 function testRedis(redisClient){
 	//redisClient.set('test','It's working,redis.print)
@@ -95,14 +81,12 @@ app.get('/send_political', function(request, response){
 app.get('/search/person:*', function(request, response){
 
 	var political=request.query.search
-	console.log(request.query.search)
 
 	context = {}
 	list_political=[]
 	quantity_characters=9
 	initial=0
 	page=1
-
 	sendMongo(function (db){
 	 	db.collection(properties.mongo.collections).find({"Nombre": {"$in": [new RegExp(political, "i") ]} }).toArray(function(err, result) {
 	 		//console.log(result)
@@ -341,13 +325,26 @@ app.get('/search/getScrapy', function(request, response){
 
 	context = {}
 	socket.emit('search politician', request.query.url)
-	socket.on('my response', function(msg) {
-    	context['nombre']=msg
+	socket.on('my response', function(msg) {    	
+    	person = {}
+    	registrarEsquema(msg)
     	sendMongo(function(database){
     		database.collection(properties.mongo.collections).insertMany([msg])
     		response.end(msg.Nombre)
+
     		
     		}
     	);
+
+		console.log(msg)
 	});
 })       
+
+function registrarEsquema(political_info){
+	nodo = {}
+	nodo['Nombre'] = political_info['Nombre']
+	nodo['Imagen'] = political_info['Imagen']
+	nodo['Url'] = political_info['Url']
+	nodo['Fecha_registro'] = political_info['Fecha de registro']
+	neo4j.createNode('Politico',nodo)
+}

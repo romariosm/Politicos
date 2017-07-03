@@ -232,8 +232,7 @@
 
 					var personaje = JSON.parse(data)
 					info_recolectada.push(personaje)
-					console.log(personaje)
-
+					
 					var imagen = personaje.Imagen == 'no disponible'? '/images/hombre.png':personaje.Imagen
 
 					row='<tr>'+'<td><h4><img class="avatar2" style="object-fit: cover" src="'+imagen+'" height = "70px" width="70px"> <a style="cursor:pointer" href="'+personaje.Url+'"><span class="label label-default">'+personaje.Nombre+'</span><a/></h4>'
@@ -271,10 +270,10 @@
 
 	    			}
 	    			
-	    			row=row+'</div>'
+	    			row +='</div>'
 					}
 	    			if (personaje.laboral && personaje.laboral.length != 0){
-	    			row=row+'<div class="list-group" style="width: 100%"> <li class="list-group-item default"><h4><strong><i class="fa fa-university" aria-hidden="true"></i> Entidades relacionadas</strong></h4></li>'
+	    			row += '<div class="list-group" style="width: 100%"> <li class="list-group-item default"><h4><strong><i class="fa fa-university" aria-hidden="true"></i> Entidades relacionadas</strong></h4></li>'
 	    			
 		    			personaje.laboral.forEach(function(entidad){
 		    				
@@ -282,17 +281,29 @@
 	    					if (entidad.title){
 
 	    						if (entidad.url){
-	    							row=row+'<li class="list-group-item"><h5><strong> <a href = "'+ entidad.url+'">'+entidad.title+'</a></strong></h5></li>'
+	    							row +='<li class="list-group-item"><h5><strong> <a href = "'+ entidad.url+'">'+entidad.title+'</a></strong></h5></li>'
 	    						
 	    						}else{
-	    							row=row+'<li class="list-group-item"><h5><strong>'+entidad.title+'</strong></h5></li>'
+	    							row += '<li class="list-group-item"><h5><strong>'+entidad.title+'</strong></h5></li>'
 	    						}
-	    					}else{
+	    					}/*else{
 	    						row=row+'<li class="list-group-item"><h5><strong> <a href = "'+ entidad.url+'">'+entidad.url+'</a></strong></h5></li>'
-	    					}
+	    					}*/
 	    					
 	    				})
-	    			} 
+	    				row +='</div>'
+	    			}
+	    				if (personaje['Información personal'] && personaje['Información personal']['Nacimiento']){
+
+	    			row += '<div class="list-group" style="width: 100%"> <li class="list-group-item default"><h4><strong><i class="fa fa-university" aria-hidden="true"></i> Lugar de nacimiento </strong></h4></li>'
+	    			
+					var nacimiento_info = personaje['Información personal']['Nacimiento']
+					row +='<li class="list-group-item"><h5><strong> <span class="label" style="background-color: #1ab394">'+'Ciudad'+'</span> '+ '<a href = "'+ nacimiento_info[nacimiento_info.length-2].url+'">'+nacimiento_info[nacimiento_info.length-2].title+'</a></strong></h5></li>'
+					row +='<li class="list-group-item"><h5><strong>  <span class="label" style="background-color: #1ab394">'+'País'+'</span> <a href = "'+ nacimiento_info[nacimiento_info.length-1].url+'">'+nacimiento_info[nacimiento_info.length-1].title+'</a></strong></h5></li>'
+					}else{
+						console.log(personaje)
+					}
+	    			 
 
 	    			$("#table_body").append(row+'</td></tr>')
 	    			

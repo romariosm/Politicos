@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+
+		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css">
+
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+		
+
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.3.0/jquery.autocomplete.js"></script>
+
+		<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+
+		
+		<h1> Hola soy un crawler </h1>
+	</head>
+	<script>
+		function buscarPersonaje(data){
+				
+				var personaje = JSON.parse(data)
+				//$("#table_body").append('<p>' 'Imagen: ' personaje.Imagen' Nombre: 'personaje.Nombre ' Enlace: '  personaje.Url'</p')
+				$("#table_body").append('<h4> Nombre: '+ personaje.Nombre + ' Enlace: ' + personaje.Url +  '</h4>')
+				for (property in personaje.Familia){
+    				if (property.indexOf("links") !=-1){
+    					personaje.Familia[property].forEach(function(enlace){
+	    					if (enlace.title != null){	
+	    						$("#table_body").append('<p>'+ 'Parentesco: '+property.replace(' - links','')+' Nombre: '+enlace.title+'</p')	    						
+    								getPersonaje(enlace.url)        	
+	    					}   					
+
+    					})  
+    				}
+    			}     		
+    	
+		}
+		function getPersonaje(url){
+				$.get( "/search/personal_info", { search: url } )
+					.done(function( data ) {
+						if (data){
+							console.log(data)
+							buscarPersonaje(data)						
+						}						
+				})
+					
+				
+		}
+
+		$(document).ready(function() {
+			
+			getPersonaje("https://es.wikipedia.org/wiki/Juan_Manuel_Santos")
+
+		})
+		
+	</script>
+	<body>
+		<table class="table">
+			<tbody id="table_body">
+			</tbody>
+		</table>
+<!--%personaje.Nombre%-->
+	</body>
+
+</html>
