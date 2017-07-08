@@ -71,7 +71,9 @@ def politic_scrapeTable(url):
 							else:
 								dic[parent]=jsonp.addValue(dic[parent], fil.find_all('th')[0].text, getLinks(fil.find_all('td')[0]))
 					else:
-						dic = jsonp.addValue(dic,fil.find_all('th')[0].text, fil.find_all('td')[0].text)		
+						dic = jsonp.addValue(dic,fil.find_all('th')[0].text, fil.find_all('td')[0].text)
+
+		dic = jsonp.addValue(dic,'content', getContent(url))
 	except Exception as error:
 	   	fm.registerError(str(error))
 	return dic 
@@ -88,6 +90,25 @@ def getLinks(element):
 			enlace["url"] = link.get('href') if "http" in link.get('href') else "https://es.wikipedia.org" + link.get('href')
 			temp.append(enlace)			
 	return temp
+
+def getContent(url):
+	data=''
+
+	search=url.split('https://es.wikipedia.org/wiki/')[1] if len(url.split('https://es.wikipedia.org/wiki/'))>1 else None
+
+	if search != None:
+		#url_wikipedia=urllib2
+		page=urllib2.urlopen('https://es.wikipedia.org/w/api.php?action=query&prop=extracts&titles='+search+'&utf8=1&format=json&exlimit=1&explaintext')
+		info=json.loads(page.read())
+
+		for key,val in info.get('query').get('pages').items():
+			for key1,val1 in info.get('query').get('pages').get(key).items():
+				print key
+				if key1 == 'extract':
+					data = val1
+
+	return data
+
 
 #fm.writeFileJSON('test_enri',politic_scrapeTable("https://es.wikipedia.org/wiki/Enrique_Santos_Castillo"))
 
