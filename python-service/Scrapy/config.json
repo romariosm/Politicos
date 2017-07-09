@@ -1,5 +1,6 @@
 {
 	"filePath": "Files/",
 	"logFile":"Scrapy.log",
+	"loads":"Files/Cargues",
 	"generatedFilePath":"Generated Files/"
 }
