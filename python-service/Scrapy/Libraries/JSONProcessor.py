@@ -1,4 +1,5 @@
 import json
+from pattern.es import predicative
 # -*- coding: utf-8 -*-
         
 #Returns a array or a string without empty values 
@@ -27,3 +28,10 @@ def addValue(dictionary,name,value):
     name = eliminateCharacters(name)
     dictionary[name]=value
     return dictionary #Return the dictionary with a new value
+
+def standard_value(value):
+
+    clean_value=predicative(value.lower().strip())
+
+    return clean_value
+
