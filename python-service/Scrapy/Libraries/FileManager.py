@@ -37,8 +37,17 @@ def writeFileJSON(file, line):
 
 #Return the file lines
 def readFile(file, dir = path["filePath"]):
-	try:      
-		print dir + "/" + file
+	try:
 		return open(dir + "/" + file,'r')
 	except IOError:
 		registerError("No se puede leer el archivo: " + file)
+
+
+
+def readJSONFile(file, dir = path["filePath"]):
+	try:      
+		print dir + "/" + file
+		with open(dir + "/" + file,'r') as c:#Open the file 
+			return json.load(c)
+	except Exception as error:
+		registerError("No se puede leer el json: " + file)
