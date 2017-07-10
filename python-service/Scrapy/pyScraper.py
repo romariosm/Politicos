@@ -93,17 +93,12 @@ def getLinks(element):
 
 def getContent(url):
 	data=''
-
 	search=url.split('https://es.wikipedia.org/wiki/')[1] if len(url.split('https://es.wikipedia.org/wiki/'))>1 else None
-
 	if search != None:
-		#url_wikipedia=urllib2
 		page=urllib2.urlopen('https://es.wikipedia.org/w/api.php?action=query&prop=extracts&titles='+search+'&utf8=1&format=json&exlimit=1&explaintext')
 		info=json.loads(page.read())
-
 		for key,val in info.get('query').get('pages').items():
 			for key1,val1 in info.get('query').get('pages').get(key).items():
-				print key
 				if key1 == 'extract':
 					data =val1
 	return data
@@ -115,4 +110,4 @@ def getContent(url):
 #parsed = json.loads()
 #print json.dumps(campo[len(campo)-1] , indent=4, sort_keys=True)
 #print json.dumps(campo[len(campo)-2] , indent=4, sort_keys=True)
-print json.dumps(politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos"), indent=4, sort_keys=True)
+#print json.dumps(politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos"), indent=4, sort_keys=True)

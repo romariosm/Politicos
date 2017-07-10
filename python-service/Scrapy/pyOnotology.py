@@ -61,6 +61,14 @@ def getStructure():
 				dic[node.replace('node:','')][property] = ""
 		return dic
 	return redis.sendRedis(function)
+def getSynonyms():
+	def function(redisClient):
+		dic = {}
+		for synom in redisClient.keys('sinonimo*'):
+			dic[synom.replace('sinonimo:','')]=redisClient.get(synom).split(':')
+		return dic
+	return redis.sendRedis(function)
+
 def cleanDataBase():
 	def function(redisClient):
 		redisClient.flushall()
@@ -72,5 +80,6 @@ def startDatabase():
 	loadSynonyms()
 	loadOntology()
 	
-startDatabase()
-print getStructure()
+#startDatabase()
+#print getStructure()
+#print getSynonyms()
