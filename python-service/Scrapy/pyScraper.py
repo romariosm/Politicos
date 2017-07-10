@@ -92,7 +92,7 @@ def getLinks(element):
 	return temp
 
 def getContent(url):
-	content=[]
+	data=''
 
 	search=url.split('https://es.wikipedia.org/wiki/')[1] if len(url.split('https://es.wikipedia.org/wiki/'))>1 else None
 
@@ -105,13 +105,8 @@ def getContent(url):
 			for key1,val1 in info.get('query').get('pages').get(key).items():
 				print key
 				if key1 == 'extract':
-					data =val1.replace('\n','')
-					data = data.split('==')
-
-					for paragraph in data:
-						if paragraph !='' and paragraph != ' ':
-							content.append(paragraph.strip())
-	return content
+					data =val1
+	return data
 
 
 #fm.writeFileJSON('test_enri',politic_scrapeTable("https://es.wikipedia.org/wiki/Enrique_Santos_Castillo"))
