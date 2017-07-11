@@ -1,6 +1,6 @@
 {
 	"nodes":{
-	"person":["name","nationality","residency","religion","gender","photo","web"]
+	"person":["name","nationality","religion","photo","facebook","twitter","web page","Ocupation"]
 	,"party":["name"]
 	,"site":["name","type"]
 	,"institution":["name"]

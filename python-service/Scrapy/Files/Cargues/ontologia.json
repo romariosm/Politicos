@@ -1,0 +1,8 @@
+{
+	"nodes":{
+	"person":["name","nationality","religion","photo","registerDate","facebook","twitter","web page"]
+	,"party":["name"]
+	,"site":["name","type"]
+	,"institution":["name"]
+	}
+}
