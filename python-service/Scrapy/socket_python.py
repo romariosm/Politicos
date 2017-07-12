@@ -37,9 +37,12 @@ def getDataSuggestion(message):
 
 
 
-#@socketio.on('my broadcast event', namespace='/')
-#def test_message(message):
-#    emit('my response', {'data': message['data']}, broadcast=True)
+@socketio.on('create create_structure', namespace='/')
+def getStructure(message):
+	print ############################################################
+	print message
+	print ############################################################
+	emit('get structure', create_structure(message))
 
 #@socketio.on('connect', namespace='/')
 #def test_connect():

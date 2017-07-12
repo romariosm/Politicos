@@ -1,9 +1,15 @@
 var properties = require('./properties.json')
 var neo4j = require('neo4j');
 module.exports = {
-createNode: function (etiqueta,file){
+createNode: function (etiqueta,file){		
 		sendNeo4j('create (p:' + etiqueta+' '+createParameters(file)+') return p')
-	}
+	},
+createRelation: function (tag_entidad_1,entidad_1,tag_entidad_2,entidad_2,tag){
+ 		sendNeo4j("CREATE ("+tag_entidad_1+" "+createParameters(entidad_1) +")-[:"+tag+"]->("+tag_entidad_2+" "+createParameters(entidad_2)+")")	
+ 	},
+ getRelation: function (salida){
+ 	sendNeo4j('MATCH p=()-[pertenece]->() return p')
+ }
 }
 function sendNeo4j(sentence){	
 	var db = new neo4j.GraphDatabase('http://' + properties.neo4j.user + ":" + properties.neo4j.password + "@" + properties.neo4j.host + ":"+properties.neo4j.port); 
@@ -11,9 +17,15 @@ function sendNeo4j(sentence){
     		query: sentence,
 		}, function (err, results) {
     		if (err) throw err;
+    		console.log(results)
     		var result = results[0];
     		console.log(result);    		
 		});	
+}
+
+function createRelation(tag_entidad_1,entidad_1,tag_entidad_2,entidad_2,tag){
+ return "("+tag_entidad_1+" "+createParameters(entidad_1) +")-[:"+tag+"]->("+tag_entidad_2+" "+createParameters(entidad_2)+")"
+
 }
 function createParameters(json_file){
 	var output = "{"

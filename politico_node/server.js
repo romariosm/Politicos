@@ -7,7 +7,7 @@ var MongoClient = require('mongodb').MongoClient,
 var properties = require('./properties.json')
 var redis = require('redis')
 var mongo = require('mongodb');
-var neo4j = require('./neo4J.js');
+var structurer = require('./structurer.js');
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
@@ -54,10 +54,8 @@ function sendMongo(callback){
 		if (err){
 			console.log("Se presentó error" + err)
 		}
-		assert.equal(null, err);
-		console.log("Se envío mensaje a mongo");
+		assert.equal(null, err);		
 		callback(db);
-		console.log(err)
 		db.close();
 	});
 
@@ -327,24 +325,23 @@ app.get('/search/getScrapy', function(request, response){
 	socket.emit('search politician', request.query.url)
 	socket.on('my response', function(msg) {    	
     	person = {}
-    	registrarEsquema(msg)
-    	sendMongo(function(database){
+    	socket.emit('create create_structure', msg)
+		socket.on('get structure', function(structure) {
+			structurer.createPerson(structure.person);
+			console.log(structure)
+			structurer.createParty(structure.party);    	
+			structurer.createRelation(structure.person,structure.party,'pertenece')
+			structurer.getRelation('')
+    	})
+    	/*sendMongo(function(database){
     		database.collection(properties.mongo.collections).insertMany([msg])
     		response.end(msg.Nombre)
 
     		
     		}
     	);
+		console.log(msg)*/
 
-		console.log(msg)
 	});
 })       
 
-function registrarEsquema(political_info){
-	nodo = {}
-	nodo['Nombre'] = political_info['Nombre']
-	nodo['Imagen'] = political_info['Imagen']
-	nodo['Url'] = political_info['Url']
-	nodo['Fecha_registro'] = political_info['Fecha de registro']
-	neo4j.createNode('Politico',nodo)
-}
