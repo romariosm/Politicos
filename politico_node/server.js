@@ -41,6 +41,7 @@ app.get('/', function(request, response){ //Start the main page
 	console.log("Conecting to Node Server...")
 	response.render('index.html');
 	console.log("Connection completed");
+	structurer.getEstructure(function(estructura){console.log(estructura)})
 	//sendNeo4j()
 	//sendRedis(testRedis);
 	//sendRedis(function(redisClient){
@@ -331,7 +332,7 @@ app.get('/search/getScrapy', function(request, response){
 			console.log(structure)
 			structurer.createParty(structure.party);    	
 			structurer.createRelation(structure.person,structure.party,'pertenece')
-			structurer.getRelation('')
+			
     	})
     	/*sendMongo(function(database){
     		database.collection(properties.mongo.collections).insertMany([msg])

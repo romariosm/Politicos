@@ -12,8 +12,9 @@ createRelation:function(entidad_1,entidad_2,tag){
 		cleanPerson(entidad_1)	
 		neo4j.createRelation('Politic',entidad_1,'Party',entidad_2['name'],tag)
 	},
-getRelation:function(salida){
-		neo4j.getRelation(salida)
+getEstructure:function(callback){
+	console.log('hola estoy en el estructurer')
+		neo4j.getEstructure(callback)
 	}
 }
 

@@ -7,8 +7,9 @@ createNode: function (etiqueta,file){
 createRelation: function (tag_entidad_1,entidad_1,tag_entidad_2,entidad_2,tag){
  		sendNeo4j("CREATE ("+tag_entidad_1+" "+createParameters(entidad_1) +")-[:"+tag+"]->("+tag_entidad_2+" "+createParameters(entidad_2)+")")	
  	},
- getRelation: function (salida){
- 	sendNeo4j('MATCH p=()-[pertenece]->() return p')
+ getEstructure: function (callback){
+ 	console.log('hola estoy en neo')
+ 	sendNeo4j_2('match (p)-[r]->(s) return p,r,s', callback)
  }
 }
 function sendNeo4j(sentence){	
@@ -17,9 +18,21 @@ function sendNeo4j(sentence){
     		query: sentence,
 		}, function (err, results) {
     		if (err) throw err;
-    		console.log(results)
+    		//.log(results)
     		var result = results[0];
-    		console.log(result);    		
+    		//console.log(result);    		
+		});	
+}
+function sendNeo4j_2(sentence,callback){	
+	var db = new neo4j.GraphDatabase('http://' + properties.neo4j.user + ":" + properties.neo4j.password + "@" + properties.neo4j.host + ":"+properties.neo4j.port); 
+		db.cypher({
+    		query: sentence,
+		}, function (err, results) {
+    		if (err) throw err;
+    		
+    		var result = results[0];
+    		callback(results)
+    		//console.log(result);    		
 		});	
 }
 
