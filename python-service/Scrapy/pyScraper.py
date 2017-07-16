@@ -73,7 +73,7 @@ def politic_scrapeTable(url):
 					else:
 						dic = jsonp.addValue(dic,fil.find_all('th')[0].text, fil.find_all('td')[0].text)
 
-		dic = jsonp.addValue(dic,'content', getContent(url))
+		#dic = jsonp.addValue(dic,'content', getContent(url))
 	except Exception as error:
 	   	fm.registerError(str(error))
 	return dic 

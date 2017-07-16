@@ -1,8 +1,9 @@
 {
 	"nodes":{
-	"person":["name","nationality","religion","photo","facebook","twitter","web_page","Ocupation"]
+	"person":["name","nationality","religion","photo","facebook","twitter","web_page","Ocupation","residency"]
 	,"party":["name"]
-	,"site":["name","type"]
-	,"institution":["name"]
+	,"family":["parent","spouse","son"]
+	,"site":["birth"]
+	,"organization":["laboral","academic"]
 	}
 }

@@ -58,7 +58,7 @@ def getStructure():
 			dic[node.replace('node:','')] = {}
 		for node in redisClient.keys('node*'):
 			for property in redisClient.smembers(node.encode('utf-8')):
-				dic[node.replace('node:','')][property] = ""
+				dic[node.replace('node:','')][property] = []
 		return dic
 	return redis.sendRedis(function)
 def getSynonyms():
