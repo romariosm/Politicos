@@ -243,7 +243,7 @@ app.get('/load/person:*', function(request, response){
 
 	sendMongo(function (db){
 	 	db.collection(properties.mongo.collections).find({"_id": political_id }).toArray(function(err, result) {
-	 		console.log({"Nombre": {"$in": [/nombre/i] } })
+	 		console.log(result)
     		
 		info={}
 
@@ -267,9 +267,53 @@ app.get('/load/person:*', function(request, response){
 					info['ocupacion']=''
 				}
 
-		context['info']=info	
+		context['info']=info
+		structurer.getEstructure(function(estructura){
+			list_nodes=[]
+			list_links=[]
+			estructura.forEach(function(element){
+				console.log(element)
 
-		response.render('graph_political.html',context)
+				for(node in element){
+
+					if(list_nodes.findIndex(i => i.id == element[node]._id) == -1 && node != 'r'){
+						console.log(node)
+
+						node_p={}
+						node_p.id=element[node]._id
+						node_p.name=element[node].properties.name
+						node_p.residency=element[node].properties.residency
+						node_p.nacionality=element[node].properties.religion
+						node_p.url=element[node].properties.Url
+						node_p.group=1
+						//console.log(node_p)
+
+						list_nodes.push(node_p)
+
+					}else if (list_links.findIndex(i => i.id == element[node]._id)== -1 && node == 'r'){
+						link={}
+						link.id=element[node]._id
+						link.type=element[node].type
+						link.source=element[node]._fromId
+						link.target=element[node]._toId
+
+						list_links.push(link)
+
+					}
+				}
+
+			})
+
+			graph={}
+			graph.nodes=list_nodes
+			graph.links=list_links
+
+			context.graph=JSON.stringify(graph)
+			response.render('graph_political.html',context)
+			
+		})	
+
+		
  		});
 	})
 
@@ -332,6 +376,7 @@ app.get('/search/getScrapy', function(request, response){
 			console.log(structure)
 			structurer.createParty(structure.party);    	
 			structurer.createRelation(structure.person,structure.party,'pertenece')
+
 			
     	})
     	/*sendMongo(function(database){

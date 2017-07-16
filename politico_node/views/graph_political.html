@@ -267,10 +267,12 @@
 	<body style="background-color: rgb(234, 236, 236);">
 		<% include header.html %>
 
+			<input type="hidden" id="graph" value="<%=graph %>"/>
+			<%= graph %>
 
 			<div class="grid" id="grid_id">
 
-			
+				
 				
 				<div class="grid-item">
 
@@ -360,18 +362,31 @@ var simulation = d3.forceSimulation()
     .force("charge", d3.forceManyBody())
     .force("center", d3.forceCenter(width / 2, height / 2));
  
-    
+console.log(JSON.parse($("#graph").val()))
 
-d3.json("/miserables.json", function(error, graph) {
-	if (error) throw error;
+var graph=JSON.parse($("#graph").val())
 
-  		var link = svg.append("g")
-	    .attr("class", "links")
-	    .selectAll("line")
+	
+
+	var link = svg
+	    .selectAll(".links")
 	    .data(graph.links)
-	    .enter().append("line")
+	    .enter().append("g")
+	    .attr("class", "links").append('line')
+	    .style("stroke-linecap", "round")
+	    .style("stroke", "black")
+	    .style("stroke-dasharray", "20,10,5,5,5,10")
+	    .attr("stroke-width", function(d) { return Math.sqrt(5); });
+		
+	var linktext=svg.selectAll('.links').data(graph.links)
+	    .append("text")
+	    .attr("font-family", "Comic Sans MS, Helvetica, sans-serif")
+	    .attr("fill", "Black")
+	    .style("font", "italic 15px Calibri")
+	    .attr("dy", ".35em")
+	    .text(function(d) { return d.type });
 
-	    .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
+	    
 
   var node = svg
     
@@ -388,13 +403,17 @@ d3.json("/miserables.json", function(error, graph) {
 
 
     node.append("circle")
-    .attr("r", 13)
-    .attr("fill", function(d) { return color(d.group); })
+    .attr("r", 20)
+    .style("fill", "white")
+    .style("stroke", function(d) { return color(d.group); })
+    .style("stroke-width", 6 )
+
 
 	node.append("text")
-    .attr("x", 15)
-    .attr("dy", ".35em")
-    .text(function(d) { return d.id; });
+    .attr("x", 18)
+    .attr("dy", ".65em")
+    .style("font", "bold 16px Arial")
+    .text(function(d) { return d.name; });
 
     node.append('title').text(function(d) { return "Información Básica:\n"+d.info; });
 
@@ -412,11 +431,26 @@ d3.json("/miserables.json", function(error, graph) {
         .attr("x2", function(d) { return d.target.x; })
         .attr("y2", function(d) { return d.target.y; });
 
-    node
-        
+    linktext
+	    .attr("x", function(d) {
+	        if (d.target.x > d.source.x) {
+	            return (d.source.x + (d.target.x - d.source.x)/2); }
+	        else {
+	            return (d.target.x + (d.source.x - d.target.x)/2); }
+	    })
+	    .attr("y", function(d) {
+	        if (d.target.y > d.source.y) {
+	            return (d.source.y + (d.target.y - d.source.y)/2); }
+	        else {
+	            return (d.target.y + (d.source.y - d.target.y)/2); }
+	    })
+
+
+    node 
         .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"});
   }
-});
+
+  
 
 function dragstarted(d) {
   if (!d3.event.active) simulation.alphaTarget(0.3).restart();
@@ -441,8 +475,8 @@ function mouseover(d) {
     //    );
 	//tip.show
   d3.select(this).select("circle").transition()
-      .duration(750)
-      .attr("r", 20)
+      .duration(550)
+      .attr("r", 30)
 
   
   
@@ -450,8 +484,8 @@ function mouseover(d) {
 
 function mouseout() {
   d3.select(this).select("circle").transition()
-      .duration(750)
-      .attr("r", 13);
+      .duration(550)
+      .attr("r", 20);
 }
 
 </script>
