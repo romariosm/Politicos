@@ -40,3 +40,4 @@ def getPageData(search):
 		print str(error)
 
 
+print(search("https://es.wikipedia.org/wiki/Enrique_Santos_Castillo"))
