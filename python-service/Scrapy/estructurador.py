@@ -43,7 +43,7 @@ def relatedFamily(structure):
 	for key in structure['family']:
 		for person in structure['family'][key]:
 			print key +' -> '+ person
-			if not CM.exists('person',{'url':person}):
+			if not CM.exists('person',{'Url':person}):
 				scrap_person = politic_scrapeTable(person)
 				family += [scrap_person]
 				clean_person = cleanStructure(create_structure(scrap_person))
@@ -54,7 +54,7 @@ def relatedFamily(structure):
 
 a = create_structure(politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos"))
 c = cleanStructure(a)
-#print savePerson(c)
+print savePerson(c)
 #print json.dumps(c, indent=4, sort_keys=True)
 
 print relatedFamily(c)
