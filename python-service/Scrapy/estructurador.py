@@ -14,8 +14,8 @@ def create_structure(table):
 						structure[synonyms[key_2.encode('utf-8')][0]][synonyms[key_2.encode('utf-8')][1]] +=  [item['url']] if item['title'] == None else [item]
 		elif type(table[key]) is list:
 			for key_2 in table[key]:
-				if key_2['title'] !=None and synonyms.has_key(key_2['title'].encode('utf-8')) and item['url'] != None:
-						structure[synonyms[key_2['title'].encode('utf-8')][0]][synonyms[key_2['title'].encode('utf-8')][1]] +=  [key_2] 
+				if key_2['title'] !=None and synonyms.has_key(key_2['title'].encode('utf-8')) and key_2['url'] != None:
+					structure[synonyms[key_2['title'].encode('utf-8')][0]][synonyms[key_2['title'].encode('utf-8')][1]] +=  [key_2] 
 		if key != "content" and type(table[key]) is not list:
 				if synonyms.has_key(key.encode('utf-8')):
 					structure[synonyms[key.encode('utf-8')][0]][synonyms[key.encode('utf-8')][1]]=table[key.encode('utf-8')]
@@ -36,7 +36,10 @@ def cleanStructure(structure):
 	return structure
 
 def savePerson(structure):
-	return True if CM.exists('person',structure['person']) else CM.create('person',structure['person']) 
+	return True if CM.exists('person',{'Url':structure['person']['Url']}) else CM.create('person',structure['person']) 
+
+def saveNode(structure,label):
+	return True if CM.exists(label,{'Url':structure['Url']}) else CM.create(label,structure) 
 
 def relatedFamily(structure):
 	family = []
@@ -49,12 +52,42 @@ def relatedFamily(structure):
 				clean_person = cleanStructure(create_structure(scrap_person))
 				print structure['person']['Url']
 				savePerson(clean_person)
-			CM.makeRelation('family','person',{'Url':structure['person']['Url']},'person',{'Url':person})
+			CM.makeRelation('family',{'type':key} ,'person',{'Url':structure['person']['Url']},'person',{'Url':person})
 	return family
 
-a = create_structure(politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos"))
+def relateOrganizations(structure,type_rel):
+	noCreated = []
+	if type_rel == 'laboral':
+		array = structure['organization'][type_rel]
+		relation = 'worksAt'
+		node = 'institution'
+	if type_rel == 'academic':
+		array = structure['organization'][type_rel]
+		relation = 'studiedAt'
+		node = 'institution'
+	elif type_rel == 'party':
+		array = structure['party']['name']
+		relation = 'belongsTo'
+		node = 'party'
+	for key in array:	
+		if not CM.exists('organization',{'Url':key}):
+			scrap = {'Url':key} ##Incluir Scrapy Organization
+			saveNode(scrap,node)
+			noCreated += [scrap]
+		CM.makeRelation(relation,{} ,'person',{'Url':structure['person']['Url']},node,{'Url':key})
+	return noCreated
+def getPersonalFamiliarInfo(url,level):
+	return CM.getPersonalFamiliarInfo({'Url':url},level)
+
+"""a = create_structure(politic_scrapeTable("https://es.wikipedia.org/wiki/Hernando_Santos_Castillo"))
 c = cleanStructure(a)
 print savePerson(c)
-#print json.dumps(c, indent=4, sort_keys=True)
-
 print relatedFamily(c)
+print relateOrganizations(c,'party')
+print relateOrganizations(c,'laboral')
+print relateOrganizations(c,'academic')"""
+"""for item in getPersonalFamiliarInfo("https://es.wikipedia.org/wiki/Juan_Manuel_Santos","1")[2]:
+	if not(type(item) is list):
+		print {list(item.labels())[0]:dict(item)}
+	else:
+		print {item[0].type():dict(item[0])}"""

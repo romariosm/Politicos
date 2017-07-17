@@ -7,9 +7,8 @@ createNode: function (etiqueta,file){
 createRelation: function (tag_entidad_1,entidad_1,tag_entidad_2,entidad_2,tag){
  		sendNeo4j("CREATE ("+tag_entidad_1+" "+createParameters(entidad_1) +")-[:"+tag+"]->("+tag_entidad_2+" "+createParameters(entidad_2)+")")	
  	},
- getEstructure: function (callback){
- 	console.log('hola estoy en neo')
- 	sendNeo4j_2('match (p)-[r]->(s) return p,r,s', callback)
+ getEstructure: function (url,level,callback){
+ 	sendNeo4j_2('match (p '+createParameters({'Url':url})+')-[r*1..'+level+']->(s) return p,r,s', callback)
  }
 }
 function sendNeo4j(sentence){	

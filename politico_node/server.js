@@ -41,7 +41,7 @@ app.get('/', function(request, response){ //Start the main page
 	console.log("Conecting to Node Server...")
 	response.render('index.html');
 	console.log("Connection completed");
-	structurer.getEstructure(function(estructura){console.log(estructura)})
+	structurer.getEstructure("https://es.wikipedia.org/wiki/Juan_Manuel_Santos",1,function(estructura){console.log(estructura)})
 	//sendNeo4j()
 	//sendRedis(testRedis);
 	//sendRedis(function(redisClient){
@@ -268,7 +268,7 @@ app.get('/load/person:*', function(request, response){
 				}
 
 		context['info']=info
-		structurer.getEstructure(function(estructura){
+		structurer.getEstructure("https://es.wikipedia.org/wiki/Juan_Manuel_Santos",1,function(estructura){
 			list_nodes=[]
 			list_links=[]
 			estructura.forEach(function(element){
@@ -372,21 +372,21 @@ app.get('/search/getScrapy', function(request, response){
     	person = {}
     	socket.emit('create create_structure', msg)
 		socket.on('get structure', function(structure) {
-			structurer.createPerson(structure.person);
-			console.log(structure)
-			structurer.createParty(structure.party);    	
-			structurer.createRelation(structure.person,structure.party,'pertenece')
+			//structurer.createPerson(structure.person);
+			//console.log(structure)
+			//structurer.createParty(structure.party);    	
+			//structurer.createRelation(structure.person,structure.party,'pertenece')
 
 			
     	})
-    	/*sendMongo(function(database){
+    	sendMongo(function(database){
     		database.collection(properties.mongo.collections).insertMany([msg])
     		response.end(msg.Nombre)
 
     		
     		}
     	);
-		console.log(msg)*/
+		console.log(msg)
 
 	});
 })       
