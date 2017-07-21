@@ -372,22 +372,31 @@ app.get('/search/getScrapy', function(request, response){
     	person = {}
     	socket.emit('create create_structure', msg)
 		socket.on('get structure', function(structure) {
-			//structurer.createPerson(structure.person);
-			//console.log(structure)
-			//structurer.createParty(structure.party);    	
-			//structurer.createRelation(structure.person,structure.party,'pertenece')
-
-			
+			console.log("Persona creada")
+			socket.emit('create savePerson',structure)
+			socket.on('create person', function(politicCreated) {
+				console.log(politicCreated)
+			})
+			console.log("Creando la familia")
+			socket.emit('relate relatedFamily',structure)
+			socket.on('create family', function(familyCreated) {
+				sendMongo(function(database){
+    				database.collection(properties.mongo.collections).insertMany(familyCreated)
+    				}
+    			);
+				
+			})
+			console.log("Creando las organizaciones")
+			socket.emit('relate relateOrganizations',structure)
+			socket.on('create organization', function(organizationCreated) {
+				console.log(organizationCreated)
+			})			
     	})
     	sendMongo(function(database){
     		database.collection(properties.mongo.collections).insertMany([msg])
-    		response.end(msg.Nombre)
-
-    		
+    		response.end(msg.Nombre)    		
     		}
     	);
-		console.log(msg)
-
 	});
 })       
 

@@ -79,15 +79,11 @@ def relateOrganizations(structure,type_rel):
 def getPersonalFamiliarInfo(url,level):
 	return CM.getPersonalFamiliarInfo({'Url':url},level)
 
-"""a = create_structure(politic_scrapeTable("https://es.wikipedia.org/wiki/Hernando_Santos_Castillo"))
-c = cleanStructure(a)
-print savePerson(c)
-print relatedFamily(c)
-print relateOrganizations(c,'party')
-print relateOrganizations(c,'laboral')
-print relateOrganizations(c,'academic')"""
-"""for item in getPersonalFamiliarInfo("https://es.wikipedia.org/wiki/Juan_Manuel_Santos","1")[2]:
-	if not(type(item) is list):
-		print {list(item.labels())[0]:dict(item)}
-	else:
-		print {item[0].type():dict(item[0])}"""
+
+
+
+
+#a = create_structure(politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos"))
+#c = cleanStructure(a)
+#message = c
+#print relateOrganizations(message,'party') + relateOrganizations(message,'laboral') + relateOrganizations(message,'academic')

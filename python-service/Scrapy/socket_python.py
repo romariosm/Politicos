@@ -39,10 +39,20 @@ def getDataSuggestion(message):
 
 @socketio.on('create create_structure', namespace='/')
 def getStructure(message):
-	print ############################################################
-	print message
-	print ############################################################
-	emit('get structure', create_structure(message))
+	emit('get structure', cleanStructure(create_structure(message)))
+
+@socketio.on('create savePerson', namespace='/')
+def createPerson(message):	
+	emit('create person', savePerson(message))
+
+@socketio.on('relate relatedFamily', namespace='/')
+def relateFamily(message):	
+	emit('create family', relatedFamily(message))
+
+
+@socketio.on('relate relateOrganizations', namespace='/')
+def relate_Organizations(message):	
+	emit('create organization', relateOrganizations(message,'party') + relateOrganizations(message,'laboral') + relateOrganizations(message,'academic'))
 
 #@socketio.on('connect', namespace='/')
 #def test_connect():
