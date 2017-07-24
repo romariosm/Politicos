@@ -45,14 +45,15 @@ def relatedFamily(structure):
 	family = []
 	for key in structure['family']:
 		for person in structure['family'][key]:
-			print key +' -> '+ person
+			#print key +' -> '+ person
 			if not CM.exists('person',{'Url':person}):
 				scrap_person = politic_scrapeTable(person)
 				family += [scrap_person]
 				clean_person = cleanStructure(create_structure(scrap_person))
-				print structure['person']['Url']
+				#print structure['person']['Url']
 				savePerson(clean_person)
-			CM.makeRelation('family',{'type':key} ,'person',{'Url':structure['person']['Url']},'person',{'Url':person})
+			if not CM.existsRelation('family',{'type':key} ,'person',{'Url':structure['person']['Url']},'person',{'Url':person}):
+				CM.makeRelation('family',{'type':key} ,'person',{'Url':structure['person']['Url']},'person',{'Url':person})
 	return family
 
 def relateOrganizations(structure,type_rel):
@@ -74,7 +75,8 @@ def relateOrganizations(structure,type_rel):
 			scrap = {'Url':key} ##Incluir Scrapy Organization
 			saveNode(scrap,node)
 			noCreated += [scrap]
-		CM.makeRelation(relation,{} ,'person',{'Url':structure['person']['Url']},node,{'Url':key})
+		if not CM.existsRelation(relation,{} ,'person',{'Url':structure['person']['Url']},node,{'Url':key}):
+			CM.makeRelation(relation,{} ,'person',{'Url':structure['person']['Url']},node,{'Url':key})
 	return noCreated
 def getPersonalFamiliarInfo(url,level):
 	return CM.getPersonalFamiliarInfo({'Url':url},level)
@@ -85,5 +87,6 @@ def getPersonalFamiliarInfo(url,level):
 
 #a = create_structure(politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos"))
 #c = cleanStructure(a)
-#message = c
-#print relateOrganizations(message,'party') + relateOrganizations(message,'laboral') + relateOrganizations(message,'academic')
+#print savePerson(c)
+#print relatedFamily(c) 
+#+ relateOrganizations(message,'laboral') + relateOrganizations(message,'academic')

@@ -15,5 +15,9 @@ def makeJsonNeo(properties):
 
 def makeRelation(label,properties, labelA,nodoA,labelI,nodoI):
 	return len(list(sendToNeo("MATCH (a:"+labelA+" "+makeJsonNeo(nodoA)+"), (i:"+labelI+" "+makeJsonNeo(nodoI)+") CREATE (a)-[r:"+label+" "+makeJsonNeo(properties)+"]->(i) return r"))) != 0
+
+def existsRelation(label,properties, labelA,nodoA,labelI,nodoI):
+	return len(list(sendToNeo("MATCH (a:"+labelA+" "+makeJsonNeo(nodoA)+")-[r:"+label+" "+makeJsonNeo(properties)+"]->(i:"+labelI+" "+makeJsonNeo(nodoI)+") return r"))) != 0
+
 def getPersonalFamiliarInfo(properties,level):
 	return list(sendToNeo("MATCH (p "+ makeJsonNeo(properties) +")-[q*1.."+level+"]->(r) return p,q,r"))

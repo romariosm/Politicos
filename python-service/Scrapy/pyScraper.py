@@ -94,4 +94,3 @@ def getContent(url):
 				if key1 == 'extract':
 					data =val1
 	return data
-print politic_scrapeTable("https://es.wikipedia.org/wiki/Luis_Fernando_Santos")
