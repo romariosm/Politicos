@@ -2,7 +2,6 @@
 from bs4 import BeautifulSoup
 import urllib
 import urllib2
-import re
 import time
 import Libraries.FileManager as fm
 import Libraries.JSONProcessor as jsonp
@@ -40,47 +39,40 @@ def politic_scrapeTable(url):
 			dic = jsonp.addValue(dic,"Fecha de registro", time.strftime("%x") + " " + time.strftime("%X"))
 			dic = jsonp.addValue(dic,"Nombre",getTitle(soup).replace(' - Wikipedia, la enciclopedia libre',''))
 			dic = jsonp.addValue(dic,"Url",url)
-			dic = jsonp.addValue(dic,"Imagen",getTableImage(url))			
-			filas = table.find_all('tr')[1:] if dic['Imagen'] == "no disponible" else table.find_all('tr')[2:]
-			dic["laboral"] = []
-			parent = ""
-			for fil in filas:
-				if len(fil.find_all('th'))>0 and len(fil.find_all('td'))<1:
-					parent = jsonp.eliminateCharacters(jsonp.clearValue(fil.find_all('th')[0].text))
-					for link in getLinks(fil.find_all('th')[0]):
-						dic["laboral"].append(link)
-					dic = jsonp.addValue(dic,parent,{})
-				elif len(fil.find_all('th')) > 0  and len(fil.find_all('td')) > 0:
-					if parent != "":						
-						data_clean=jsonp.clearValue(''.join(value for value in fil.find_all(text=True) if value.parent.name != 'a' and value.parent.name != 'th' and value != '' and value != ' ' and value != '\n' ))
-						#if fil.find_all('th')[0].text == "Nacimiento":
-						#	dic[parent]=jsonp.addValue(dic[parent], fil.find_all('th')[0].text, [{'title': jsonp.eliminateCharacters_title(data_clean), 'url': None }])
-						#print data_clean, "--------"
-						if hasattr(data_clean, '__iter__'):
-							if len(data_clean)>0:
-								dic[parent]=jsonp.addValue(dic[parent], fil.find_all('th')[0].text, [{'title': jsonp.eliminateCharacters_title(text), 'url': None } for text in data_clean if text != '' and text != ''])
-						elif data_clean != '':
-							dic[parent]=jsonp.addValue(dic[parent], fil.find_all('th')[0].text, [{'title': jsonp.eliminateCharacters_title(data_clean), 'url': None }])
-						 
-						if len(fil.find_all('td')[0].findAll('a'))>0:							
-							if dic[parent].has_key(jsonp.eliminateCharacters(fil.find_all('th')[0].text)):
-
-								for link in getLinks(fil.find_all('td')[0]):
-									if link.get('url'):
-										dic[parent][fil.find_all('th')[0].text].append(link)																
-							else:
-								dic[parent]=jsonp.addValue(dic[parent], fil.find_all('th')[0].text, getLinks(fil.find_all('td')[0]))
-					else:
-						dic = jsonp.addValue(dic,fil.find_all('th')[0].text, fil.find_all('td')[0].text)
-
-		#dic = jsonp.addValue(dic,'content', getContent(url))
+			dic = jsonp.addValue(dic,"Imagen",getTableImage(url))
+			if table is not None:						
+				filas = table.find_all('tr')[1:] if dic['Imagen'] == "no disponible" else table.find_all('tr')[2:]
+				dic["laboral"] = []
+				for fil in filas:
+					if len(fil.find_all('th'))>0 and len(fil.find_all('td'))<1:
+						parent = jsonp.eliminateCharacters(jsonp.clearValue(fil.find_all('th')[0].text))
+						for link in getLinks(fil.find_all('th')[0]):
+							dic["laboral"].append(link)
+						dic = jsonp.addValue(dic,parent,{})
+					elif len(fil.find_all('th')) > 0  and len(fil.find_all('td')) > 0:
+						if parent != "":						
+							data_clean=jsonp.clearValue(''.join(value for value in fil.find_all(text=True) if value.parent.name != 'a' and value.parent.name != 'th' and value != '' and value != ' ' and value != '\n' ))
+							if hasattr(data_clean, '__iter__'):
+								if len(data_clean)>0:
+									dic[parent]=jsonp.addValue(dic[parent], fil.find_all('th')[0].text, [{'title': jsonp.eliminateCharacters_title(text), 'url': None } for text in data_clean if text != '' and text != ''])
+							elif data_clean != '':
+								dic[parent]=jsonp.addValue(dic[parent], fil.find_all('th')[0].text, [{'title': jsonp.eliminateCharacters_title(data_clean), 'url': None }])						 
+							if len(fil.find_all('td')[0].findAll('a'))>0:							
+								if dic[parent].has_key(jsonp.eliminateCharacters(fil.find_all('th')[0].text)):
+									for link in getLinks(fil.find_all('td')[0]):
+										if link.get('url'):
+											dic[parent][fil.find_all('th')[0].text].append(link)																
+								else:
+									dic[parent]=jsonp.addValue(dic[parent], fil.find_all('th')[0].text, getLinks(fil.find_all('td')[0]))
+						else:
+							dic = jsonp.addValue(dic,fil.find_all('th')[0].text, fil.find_all('td')[0].text)
+			dic = jsonp.addValue(dic,'content', getContent(url))
 	except Exception as error:
-	   	fm.registerError(str(error))
+	   	fm.registerError(url +"\n"+str(error))
 	return dic 
 
-#fm.writeFileJSON("prueba",politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos"))
 
-
+#Get titles and URL of a structure
 def getLinks(element):
 	temp = []
 	for link in element.findAll('a'):
@@ -91,8 +83,8 @@ def getLinks(element):
 			temp.append(enlace)			
 	return temp
 
+#Get all informaction fro a page
 def getContent(url):
-	data=''
 	search=url.split('https://es.wikipedia.org/wiki/')[1] if len(url.split('https://es.wikipedia.org/wiki/'))>1 else None
 	if search != None:
 		page=urllib2.urlopen('https://es.wikipedia.org/w/api.php?action=query&prop=extracts&titles='+search+'&utf8=1&format=json&exlimit=1&explaintext')
@@ -102,12 +94,4 @@ def getContent(url):
 				if key1 == 'extract':
 					data =val1
 	return data
-
-
-#fm.writeFileJSON('test_enri',politic_scrapeTable("https://es.wikipedia.org/wiki/Enrique_Santos_Castillo"))
-
-#campo = politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos")[u'Informaci\u00f3n personal']["Nacimiento"]
-#parsed = json.loads()
-#print json.dumps(campo[len(campo)-1] , indent=4, sort_keys=True)
-#print json.dumps(campo[len(campo)-2] , indent=4, sort_keys=True)
-#print json.dumps(politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos"), indent=4, sort_keys=True)
+print politic_scrapeTable("https://es.wikipedia.org/wiki/Luis_Fernando_Santos")
