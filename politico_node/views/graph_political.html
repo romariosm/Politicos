@@ -24,6 +24,26 @@
 
 		
 	<style>
+		hr.style17 {
+		border-top: 1px solid #8c8b8b;
+		text-align: center;
+
+		}
+
+		hr.style17:after {
+			content: '§';
+			display: inline-block;
+			position: relative;
+			top: -14px;
+			padding: 0 10px;
+			background: white;
+			color: #8c8b8b;
+			font-size: 18px;
+			-webkit-transform: rotate(60deg);
+			-moz-transform: rotate(60deg);
+			transform: rotate(60deg);
+		}
+
 		.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
 		.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
 		.autocomplete-selected { background: #F0F0F0; }
@@ -268,7 +288,7 @@
 		<% include header.html %>
 
 			<input type="hidden" id="graph" value="<%=graph %>"/>
-			<%= graph %>
+			
 
 			<div class="grid" id="grid_id">
 
@@ -282,14 +302,16 @@
 
 					<center>
 					<div style="padding: 15px">
-						<strong><h4><%= info.nombre %></h4></strong>					  	
+						<b><h3><%= info.nombre %></h3></b>
+						<hr class="style17">
+											  	
 
 					</div>
 
-					<img src="<%= info.imagen %>" class="img-responsive" style="height:auto; max-width: 100%; object-fit: cover"/>
+					<img src="<%= info.imagen %>" class="img-responsive" style="height:auto; width: 100%; object-fit: cover"/>
 					</center>
 					
-					<div class="col-md-12">
+					<!--div class="col-md-12">
 					<label class="label-control" style="padding-top: 10px">
 						<h4><strong style="color: #4b4c4e">Información Básica</strong></h4>
 					</label>
@@ -300,7 +322,7 @@
 					</div>
 					<div class="col-md-12" style="margin-bottom: 15px">
 					<label><strong style="color: #4b4c4e"><i class="fa fa-suitcase" aria-hidden="true"></i> <%= info.ocupacion%></strong></label>
-					</div>
+					</div-->
 
 
 							  

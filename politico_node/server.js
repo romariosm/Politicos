@@ -140,45 +140,11 @@ app.get('/search/person:*', function(request, response){
     				dict_personaje['foto']='/images/hombre.png'
     			}
 
-    			if (result[i]['Información personal']){
-	    			if(result[i]['Información personal']['Nacionalidad']){
-	    				dict_personaje['nacionalidad']=result[i]['Información personal']['Nacionalidad']
-
-	    			}else{
-	    				dict_personaje['nacionalidad']=''
-	    			}
-	    			if(result[i]['Información personal']['Nacimiento']){
-	    				dict_personaje['nacimiento']=result[i]['Información personal']['Nacimiento'][0]
-
-	    			}else{
-	    				dict_personaje['nacimiento']=''
-	    			}
-
-	    			if(result[i]['Información personal']['Residencia']){
-	    				dict_personaje['residencia']=result[i]['Información personal']['Residencia']
-
-	    			}else{
-	    				dict_personaje['residencia']=''
-	    			}
-    			}else{
-    				dict_personaje['nacionalidad']=''
-    				dict_personaje['nacimiento']=''
-    				dict_personaje['residencia']=''
+    			if(result[i].Url){
+    				dict_personaje['Url']=result[i].Url
     			}
-   	
-    			
-				if(result[i]['Información profesional']){
-					if(result[i]['Información profesional']['Ocupación']){
-	    				dict_personaje['ocupacion']=result[i]['Información profesional']['Ocupación']
-	    			}else{
-	    				dict_personaje['ocupacion']=''
-	    			}
-				}else{
-					dict_personaje['ocupacion']=''
-				}	
 
-    			
-
+    		
 				list_political.push(dict_personaje)
 			}
 			context['political_list']=list_political
@@ -248,24 +214,9 @@ app.get('/load/person:*', function(request, response){
 		info={}
 
 		info['nombre']=result[0].Nombre
-		info['imagen']=result[0].Foto
+		info['imagen']=result[0].Imagen
 
-		if(result[0]['Información personal']['Residencia']){
-			info['residencia']=result[0]['Información personal']['Residencia']
-
-		}else{
-			info['residencia']=''
-		}
-
-		if(result[0]['Información profesional']){
-					if(result[0]['Información profesional']['Ocupación']){
-	    				info['ocupacion']=result[0]['Información profesional']['Ocupación']
-	    			}else{
-	    				info['ocupacion']=''
-	    			}
-				}else{
-					info['ocupacion']=''
-				}
+		
 
 		context['info']=info
 		structurer.getEstructure("https://es.wikipedia.org/wiki/Juan_Manuel_Santos",1,function(estructura){

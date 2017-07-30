@@ -429,15 +429,12 @@
 									    		</a>
 
 										        <h3><strong><%= political.nombre %></strong></h3>
-										        <p><strong> Nacionalidad:</strong> <%= political.nacionalidad %>
-										        <strong> Ocupación:</strong> <%= political.ocupacion %>
-										        <strong> Nacimiento:</strong> <%= political.nacimiento %>
-										        <strong> Residencia:</strong> <%= political.residencia %></p>
+										        
 										       
 										        <ul class="list-inline">
 										        	<li>
-										        <a class="btn-thumbnail"><i class="fa fa-twitter fa-fw" style="margin-top: 10px;"></i></a> </li>
-										        <li><a class="btn-thumbnail"><i class="fa fa-wikipedia-w" style="margin-top:10px;" ></i></a></li>
+										        
+										        <li><a href="<%= political.Url%>" class="btn-thumbnail"><i class="fa fa-wikipedia-w"  style="margin-top:10px;" ></i></a></li>
 										        <li><a class="btn-thumbnail"  href="/load/person:<%= political.nombre%>?id=<%= political.id%>" ><i class="fa fa-share-alt" style="margin-top:10px;" ></i></a></li>
 										        </ul>
 									      	</div>
