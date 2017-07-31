@@ -349,5 +349,11 @@ app.get('/search/getScrapy', function(request, response){
     		}
     	);
 	});
+})
+
+app.get('/nosotros/', function(request, response){ 
+
+	response.render('nosotros.html');
+	
 })       
 
