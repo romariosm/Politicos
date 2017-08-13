@@ -35,6 +35,18 @@ def loadSynonyms():
 		fm.registerError("No se puede leer el archivo: \n" + str(ierror))
 	except Exception as ex:
 		fm.registerError("Se presento el error en la carga de sinonimos: \n" + str(ex))
+def loadAsociation():
+	try:     
+		entities = fm.readJSONFile("entities.json",fm.path['loads'])
+		def function(redisClient):					
+			for clase_nodo in entities:
+				print "set CLAVE= entity:" + clase_nodo.encode('utf-8')+" VALOR= "+entities[clase_nodo].encode('utf-8')
+				print "Registros insertados: " + str(redisClient.set("entity:"+clase_nodo.encode('utf-8'),entities[clase_nodo].encode('utf-8')))
+		redis.sendRedis(function)
+	except IOError as ierror:
+		fm.registerError("No se puede leer el archivo: \n" + str(ierror))
+	except Exception as ex:
+		fm.registerError("Se presento el error en la carga de las entidades: \n" + str(ex))
 
 
 def loadOntology(): 
@@ -61,6 +73,14 @@ def getStructure():
 				dic[node.replace('node:','')][property] = []
 		return dic
 	return redis.sendRedis(function)
+
+def getEntities():
+	def function(redisClient):
+		dic = {}
+		for node in redisClient.keys('entity*'):
+			dic[node.replace('entity:','')]= redisClient.get(node)
+		return dic
+	return redis.sendRedis(function)	
 def getSynonyms():
 	def function(redisClient):
 		dic = {}
@@ -79,7 +99,8 @@ def startDatabase():
 	loadCategories()
 	loadSynonyms()
 	loadOntology()
-	
+	loadAsociation()
+
 #startDatabase()
 #print getStructure()
 #print getSynonyms()

@@ -34,6 +34,7 @@ def politic_scrapeTable(url):
 	table = soup.find('table', 'infobox')
 	table = getTable(soup)
 	dic={}
+	parent = ""
 	try:
 		if soup is not None:
 			dic = jsonp.addValue(dic,"Fecha de registro", time.strftime("%x") + " " + time.strftime("%X"))
@@ -49,8 +50,13 @@ def politic_scrapeTable(url):
 						for link in getLinks(fil.find_all('th')[0]):
 							dic["laboral"].append(link)
 						dic = jsonp.addValue(dic,parent,{})
+					elif len(fil.find_all('th')) == 0  and len(fil.find_all('td')) > 0:
+						if fil.find_all('td')[0].text.strip() != "":
+							dic[parent + " # " + fil.find_all('td')[0].text] = dic[parent]
+							del dic[parent]
+							parent += " # " + fil.find_all('td')[0].text
 					elif len(fil.find_all('th')) > 0  and len(fil.find_all('td')) > 0:
-						if parent != "":						
+						if parent != "":
 							data_clean=jsonp.clearValue(''.join(value for value in fil.find_all(text=True) if value.parent.name != 'a' and value.parent.name != 'th' and value != '' and value != ' ' and value != '\n' ))
 							if hasattr(data_clean, '__iter__'):
 								if len(data_clean)>0:
@@ -66,8 +72,9 @@ def politic_scrapeTable(url):
 									dic[parent]=jsonp.addValue(dic[parent], fil.find_all('th')[0].text, getLinks(fil.find_all('td')[0]))
 						else:
 							dic = jsonp.addValue(dic,fil.find_all('th')[0].text, fil.find_all('td')[0].text)
-			dic = jsonp.addValue(dic,'content', getContent(url))
+			#dic = jsonp.addValue(dic,'content', getContent(url))
 	except Exception as error:
+		#print error 
 	   	fm.registerError(url +"\n"+str(error))
 	return dic 
 
@@ -94,3 +101,6 @@ def getContent(url):
 				if key1 == 'extract':
 					data =val1
 	return data
+
+
+fm.writeFileJSON("sad",politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos"))
