@@ -22,5 +22,10 @@
 		"port":7474,
 		"user":"neo4j",
 		"password":"1234"
+	},
+	"email":{
+		"name":"rafasetienda@gmail.com",
+		"password":"rafase123",
+		"service":"gmail"
 	}
 }

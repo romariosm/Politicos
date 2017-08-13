@@ -8,6 +8,7 @@ var properties = require('./properties.json')
 var redis = require('redis')
 var mongo = require('mongodb');
 var structurer = require('./structurer.js');
+var nodemailer = require('nodemailer');
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
@@ -355,5 +356,48 @@ app.get('/nosotros/', function(request, response){
 
 	response.render('nosotros.html');
 	
-})       
+})
+
+app.get('/contactar/', function(request, response){ 
+
+	response.render('contacto.html');
+	
+})
+
+app.post('/send_message/', function(request, response){
+
+	console.log(request.body)
+
+	var transporter = nodemailer.createTransport({
+	  service: properties.email.service,
+	  auth: {
+	    user: properties.email.name,
+	    pass: properties.email.password
+	  }
+	});
+
+	var mailOptions = {
+	  from: properties.email.name,
+	  to: properties.email.name,
+	  subject: 'Mensaje de Contacto',
+	  html: '<b>Email</b>: '+request.body.email+'<br>'+
+	  		'<b>Nombre</b>: '+request.body.nombre+'<br><br>'+
+	  		request.body.message
+
+	};
+
+	transporter.sendMail(mailOptions, function(error, info){
+	  if (error) {
+	    console.log(error);
+	    response.end('fail')
+	  } else {
+	    console.log('Email sent: ' + info.response);
+	    response.end('ok')
+	  }
+	});
+
+
+	
+	
+})           
 
