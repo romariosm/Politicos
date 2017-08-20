@@ -41,32 +41,33 @@ def cleanStructure(structure):
 				structure[key][key_2] = temp
 	return structure
 
-def searchFamily(structure,recorded):
+def searchFamily(structure,recorded,newFamily):
 	for item in structure['family']:
 		for link in structure['family'][item]:
 			if link not in recorded:
 				recorded.append(link)
-				createTree(link,recorded)
+				createTree(link,recorded,newFamily)
 
-def createTree(link,recorded):
-	print recorded	
-	a = create_structure(politic_scrapeTable(link))
+def createTree(link,recorded,newFamily):
+	politic = politic_scrapeTable(link)
+	a = create_structure(politic)
 	c = cleanStructure(a)
-	savePerson(c)
-	relatedFamily(c,recorded)
+	if savePerson(c) == True:
+		newFamily += [politic]
+	relatedFamily(c,recorded,newFamily)
 	relateOrganizations(c,'academic')
 	relateOrganizations(c,'party')
-	relateOrganizationsLaboral(c) 
-	searchFamily(c,recorded)
+	relateOrganizationsLaboral(c)		
+	searchFamily(c,recorded,newFamily)
 
 def savePerson(structure):
-	return True if CM.exists('person',{'Url':structure['person']['Url']}) else CM.create('person',structure['person']) 
+	return False if CM.exists('person',{'Url':structure['person']['Url']}) else CM.create('person',structure['person']) 
 
 def saveNode(structure,label):
 	return True if CM.exists(label,{'Url':structure['Url']}) else CM.create(label,structure) 
 
-def relatedFamily(structure,stored=[]):
-	family = []
+def relatedFamily(structure,stored=[],newFamily=[]):
+	family = newFamily
 	for key in structure['family']:
 		for person in structure['family'][key]:
 			#print key +' -> '+ person
@@ -74,12 +75,12 @@ def relatedFamily(structure,stored=[]):
 				scrap_person = politic_scrapeTable(person)
 				family += [scrap_person]
 				clean_person = cleanStructure(create_structure(scrap_person))
-				#print structure['person']['Url']
 				savePerson(clean_person)
 			if not CM.existsRelation('family',{'type':key} ,'person',{'Url':structure['person']['Url']},'person',{'Url':person}):
 				CM.makeRelation('family',{'type':key} ,'person',{'Url':structure['person']['Url']},'person',{'Url':person})
-	searchFamily(structure,stored)			
+	searchFamily(structure,stored,family)			
 	return family
+
 def relateOrganizationsLaboral(structure):
 	noCreated = []
 	entities = getEntities()
@@ -95,6 +96,7 @@ def relateOrganizationsLaboral(structure):
 			properties['Fin'] = key.split('#')[1].split('-')[1].strip() if len(key.split('#')[1].split('-'))>1 else "" 
 			CM.makeRelation('worksAt',properties,'person',{'Url':structure['person']['Url']},'organization',{'Url':entities[key.split('#')[0].strip()]})
 	return noCreated
+	
 def relateOrganizations(structure,type_rel):
 	noCreated = []
 	if type_rel == 'academic':
@@ -113,12 +115,6 @@ def relateOrganizations(structure,type_rel):
 		if not CM.existsRelation(relation,{} ,'person',{'Url':structure['person']['Url']},node,{'Url':key}):
 			CM.makeRelation(relation,{} ,'person',{'Url':structure['person']['Url']},node,{'Url':key})
 	return noCreated
+
 def getPersonalFamiliarInfo(url,level):
 	return CM.getPersonalFamiliarInfo({'Url':url},level)
-
-
-#createTree("https://es.wikipedia.org/wiki/Juan_Manuel_Santos",[])
-link = "https://es.wikipedia.org/wiki/Juan_Manuel_Santos"
-a = create_structure(politic_scrapeTable(link))
-c = cleanStructure(a)
-relatedFamily(c,[link])
