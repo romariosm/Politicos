@@ -35,6 +35,38 @@ def loadSynonyms():
 		fm.registerError("No se puede leer el archivo: \n" + str(ierror))
 	except Exception as ex:
 		fm.registerError("Se presento el error en la carga de sinonimos: \n" + str(ex))
+
+def loadSynonyms_party(): 
+	try:     
+		with fm.readFile("cargue_party.txt",fm.path['loads']) as file:
+			def function(redisClient):
+				for line in file:
+					ajson = json.loads(line)
+					for key in ajson:
+						print "set "+"CLAVE="+"si_party:"+ajson[key].encode('utf-8') + "  VALOR=" +key.encode('utf-8')
+						print "Registros insertados: " + str(redisClient.set("si_party:"+ajson[key].encode('utf-8'),key.encode('utf-8')))
+						print
+			redis.sendRedis(function)	
+	except IOError as ierror:
+		fm.registerError("No se puede leer el archivo: \n" + str(ierror))
+	except Exception as ex:
+		fm.registerError("Se presento el error en la carga de sinonimos: \n" + str(ex))
+
+def loadParty():	
+	try:
+	    with fm.readFile("partys.json",fm.path['loads']) as partys:
+		def function(redisClient):					
+			for party in partys:
+				jparty = json.loads(party)
+				print "set CLAVE= party:" + jparty["Url"].encode('utf-8')+" VALOR= "+jparty["Name"].encode('utf-8')
+				print "Registros insertados: " + str(redisClient.set("party:" + jparty["Url"].encode('utf-8'),jparty["Name"].encode('utf-8')))
+		redis.sendRedis(function)
+	except IOError as ierror:
+		fm.registerError("No se puede leer el archivo para la carga de partidos: \n" + str(ierror))
+	except Exception as ex:
+		fm.registerError("Se presento el error en la carga de los partidos: \n" + str(ex))
+
+
 def loadAsociation():
 	try:     
 		entities = fm.readJSONFile("entities.json",fm.path['loads'])
@@ -63,6 +95,27 @@ def loadOntology():
 	except Exception as ex:
 		fm.registerError("Se presento el error en la carga de la ontologia: \n" + str(ex))
 
+def loadStrctureParty():
+	try:     
+		structureJSON = fm.readJSONFile("partyStrcture.json",fm.path['loads'])
+		def function(redisClient):
+			for prop in structureJSON:
+				print "sadd party_node" +" -> "+prop.encode('utf-8')
+				print "Registros insertados: " + str(redisClient.sadd("party_node",prop.encode('utf-8')))
+		redis.sendRedis(function)
+	except IOError as ierror:
+		fm.registerError("No se puede leer el archivo de estructura de partidos: \n" + str(ierror))
+	except Exception as ex:
+		fm.registerError("Se presento el error en la cargar la estructura de los partidos: \n" + str(ex))
+
+def getStructureParty():
+	def function(redisClient):
+		dic = {}
+		for property in redisClient.smembers("party_node"):
+			dic[property] = ""
+		return dic
+	return redis.sendRedis(function)
+
 def getStructure():
 	def function(redisClient):
 		dic = {}
@@ -71,6 +124,14 @@ def getStructure():
 		for node in redisClient.keys('node*'):
 			for property in redisClient.smembers(node.encode('utf-8')):
 				dic[node.replace('node:','')][property] = []
+		return dic
+	return redis.sendRedis(function)
+
+def getParty():
+	def function(redisClient):
+		dic = {}
+		for node in redisClient.keys('party:*'):
+			dic[node.replace('party:','')] = redisClient.get(node)
 		return dic
 	return redis.sendRedis(function)
 
@@ -88,7 +149,13 @@ def getSynonyms():
 			dic[synom.replace('sinonimo:','')]=redisClient.get(synom).split(':')
 		return dic
 	return redis.sendRedis(function)
-
+def getSy_Party():
+	def function(redisClient):
+		dic = {}
+		for synom in redisClient.keys('si_party*'):
+			dic[synom.replace('si_party:','')]=redisClient.get(synom)
+		return dic
+	return redis.sendRedis(function)
 def cleanDataBase():
 	def function(redisClient):
 		redisClient.flushall()
@@ -100,7 +167,11 @@ def startDatabase():
 	loadSynonyms()
 	loadOntology()
 	loadAsociation()
-
+	loadParty()
+	loadStrctureParty()
+	loadSynonyms_party()
+#getParty()
 #startDatabase()
+
 #print getStructure()
 #print getSynonyms()

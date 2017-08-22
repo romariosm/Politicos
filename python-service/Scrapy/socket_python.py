@@ -52,8 +52,8 @@ def relateFamily(message):
 
 @socketio.on('relate relateOrganizations', namespace='/')
 def relate_Organizations(message):	
-	emit('create organization', relateOrganizations(message,'party') + relateOrganizations(message,'laboral') + relateOrganizations(message,'academic'))
-
+	emit('create organization',relateOrganizationsAcademic(message) +	relateParty(message) + relateOrganizationsLaboral(message))		
+	
 #@socketio.on('connect', namespace='/')
 #def test_connect():
 #    emit('my response', {'data': 'Connected'})

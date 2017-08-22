@@ -103,4 +103,4 @@ def getContent(url):
 	return data
 
 
-fm.writeFileJSON("sad",politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos"))
+fm.writeFileJSON("sad",politic_scrapeTable("https://es.wikipedia.org/wiki/Partido_Social_de_Unidad_Nacional"))

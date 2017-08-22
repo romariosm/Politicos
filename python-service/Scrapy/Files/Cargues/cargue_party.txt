@@ -1,0 +1,9 @@
+{"foundation":"Fundaci\u00F3n"}
+{"addres":"Sede"}
+{"ideology":"Ideolog\u00EDa"}
+{"membership":"Miembro de"}
+{"position":"Posici\u00F3n"}
+{"Url":"Url"}
+{"image":"Imagen"}
+{"name":"Nombre"}
+{"webSite":"Sitio web"}

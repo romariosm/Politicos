@@ -25,19 +25,36 @@ def create_structure(table):
 					structure[synonyms[key.encode('utf-8')][0]][synonyms[key.encode('utf-8')][1]]=table[key.encode('utf-8')]
 	return structure
 
+def create_structure_party(table):
+	structure = getStructureParty()
+	synonyms = getSy_Party()
+	for item in table:
+		if synonyms.has_key(item.encode('utf-8')):
+			structure[synonyms[item.encode('utf-8')]] = table[item]
+	return structure
+
 def cleanStructure(structure):
 	for key in structure:
 		for key_2 in structure[key]:
 			if key.encode('utf-8') == "person":
 				value = (structure[key][key_2][0] if len(structure[key][key_2])>0 else "" ) if type(structure[key][key_2]) is list else structure[key][key_2] 
 				structure[key][key_2] = value['title'].encode('utf-8') if isinstance(value,dict) else value
+			#elif 
+			#	pass #print structure[key][key_2]
 			else:
 				temp = []
 				for item in structure[key][key_2]:
 					if isinstance(item,dict):
-						temp += [item['url'].encode('utf-8')] 
+						temp += [item['url'].encode('utf-8')]
 					else:
 						temp += [item.encode('utf-8')] 
+				if key.encode('utf-8') == "party":
+					partys = getParty()
+					subTemp = []
+					for link in temp:
+						if partys.has_key(link):
+							subTemp.append(link.encode('utf-8'))
+					temp = subTemp
 				structure[key][key_2] = temp
 	return structure
 
@@ -55,8 +72,8 @@ def createTree(link,recorded,newFamily):
 	if savePerson(c) == True:
 		newFamily += [politic]
 	relatedFamily(c,recorded,newFamily)
-	relateOrganizations(c,'academic')
-	relateOrganizations(c,'party')
+	relateOrganizationsAcademic(c)
+	relateParty(c)
 	relateOrganizationsLaboral(c)		
 	searchFamily(c,recorded,newFamily)
 
@@ -83,38 +100,54 @@ def relatedFamily(structure,stored=[],newFamily=[]):
 
 def relateOrganizationsLaboral(structure):
 	noCreated = []
+	array = structure['organization']['laboral']
+	relation = 'worksAt'
+	node = 'organization'
 	entities = getEntities()
-	for key in structure['organization']['laboral']:
-		if not CM.exists('organization',{'Url':entities[key.split('#')[0].strip()]}):
+	for key in array:
+		if not CM.exists(node,{'Url':entities[key.split('#')[0].strip()]}):
 			scrap = {'Url':entities[key.split('#')[0].strip()]} ##Incluir Scrapy Organization
-			saveNode(scrap,'organization')
+			saveNode(scrap,node)
 			noCreated += [scrap]
-		if not CM.existsRelation('worksAt',{} ,'person',{'Url':structure['person']['Url']},'organization',{'Url':entities[key.split('#')[0].strip()]}):
+		if not CM.existsRelation(relation,{} ,'person',{'Url':structure['person']['Url']},node,{'Url':entities[key.split('#')[0].strip()]}):
 			properties = {}
 			properties['Cargo'] = key.split('#')[0].strip()
 			properties['Inicio'] = key.split('#')[1].split('-')[0].strip()
 			properties['Fin'] = key.split('#')[1].split('-')[1].strip() if len(key.split('#')[1].split('-'))>1 else "" 
-			CM.makeRelation('worksAt',properties,'person',{'Url':structure['person']['Url']},'organization',{'Url':entities[key.split('#')[0].strip()]})
+			CM.makeRelation(relation,properties,'person',{'Url':structure['person']['Url']},node,{'Url':entities[key.split('#')[0].strip()]})
 	return noCreated
-	
-def relateOrganizations(structure,type_rel):
+
+def relateParty(structure):
 	noCreated = []
-	if type_rel == 'academic':
-		array = structure['organization'][type_rel]
-		relation = 'studiedAt'
-		node = 'institution'
-	elif type_rel == 'party':
-		array = structure['party']['name']
-		relation = 'belongsTo'
-		node = 'party'
+	array = structure['party']['name']
+	relation = 'belongsTo'
+	node = 'party'	
+	for key in array:
+		if not CM.exists(node,{'Url':key}):
+			party = politic_scrapeTable(key)
+			scrap = create_structure_party(party)	
+			saveNode(scrap,node)
+			noCreated += [scrap]			
+		if not CM.existsRelation(relation,{} ,'person',{'Url':structure['person']['Url']},node,{'Url':key}):
+			CM.makeRelation(relation,{} ,'person',{'Url':structure['person']['Url']},node,{'Url':key})
+	return noCreated
+
+def relateOrganizationsAcademic(structure):
+	noCreated = []
+	array = structure['organization']['academic']
+	relation = 'studiedAt'
+	node = 'institution'		
 	for key in array:	
 		if not CM.exists('organization',{'Url':key}):
 			scrap = {'Url':key} ##Incluir Scrapy Organization
 			saveNode(scrap,node)
-			noCreated += [scrap]
+			noCreated += [scrap]			
 		if not CM.existsRelation(relation,{} ,'person',{'Url':structure['person']['Url']},node,{'Url':key}):
 			CM.makeRelation(relation,{} ,'person',{'Url':structure['person']['Url']},node,{'Url':key})
 	return noCreated
 
 def getPersonalFamiliarInfo(url,level):
 	return CM.getPersonalFamiliarInfo({'Url':url},level)
+
+
+createTree("https://es.wikipedia.org/wiki/Clara_L%C3%B3pez",[],[])
