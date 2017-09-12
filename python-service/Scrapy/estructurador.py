@@ -25,6 +25,38 @@ def create_structure(table):
 					structure[synonyms[key.encode('utf-8')][0]][synonyms[key.encode('utf-8')][1]]=table[key.encode('utf-8')]
 	return structure
 
+def create_structure_organization(table):
+	structure = getStructureOrg()
+	synonyms = getSy_Org()
+	for key in table:
+		if isinstance(table[key],dict):
+			for key_2 in table[key]:
+				if type(table[key][key_2]) is list:
+					for value in table[key][key_2]:
+						if value['title'] is not None:
+							if synonyms.has_key(key_2.encode('utf-8')):
+								structure[synonyms[key_2.encode('utf-8')]] = value['title'].encode('utf-8')
+		elif type(table[key]) is not list:
+			if synonyms.has_key(key.encode('utf-8')):
+				structure[synonyms[key.encode('utf-8')]] = table[key].encode('utf-8')
+	return structure
+
+def create_structure_institution(table):
+	structure = getStructureInst()
+	synonyms = getSy_Inst()
+	for key in table:
+		if isinstance(table[key],dict):
+			for key_2 in table[key]:
+				if type(table[key][key_2]) is list:
+					for value in table[key][key_2]:
+						if value['title'] is not None:
+							if synonyms.has_key(key_2.encode('utf-8')):
+								structure[synonyms[key_2.encode('utf-8')]] = value['title'].encode('utf-8')
+		elif type(table[key]) is not list:
+			if synonyms.has_key(key.encode('utf-8')):
+				structure[synonyms[key.encode('utf-8')]] = table[key].encode('utf-8')
+	return structure
+
 def create_structure_party(table):
 	structure = getStructureParty()
 	synonyms = getSy_Party()
@@ -32,6 +64,14 @@ def create_structure_party(table):
 		if synonyms.has_key(item.encode('utf-8')):
 			structure[synonyms[item.encode('utf-8')]] = table[item]
 	return structure
+
+def create_structure_site(table):
+	structure = getStructureSite()
+	synonyms = getSy_Site()
+	for item in table:
+		if synonyms.has_key(item.encode('utf-8')):
+			structure[synonyms[item.encode('utf-8')]] = table[item]
+	return structure	
 
 def cleanStructure(structure):
 	for key in structure:
@@ -74,7 +114,8 @@ def createTree(link,recorded,newFamily):
 	relatedFamily(c,recorded,newFamily)
 	relateOrganizationsAcademic(c)
 	relateParty(c)
-	relateOrganizationsLaboral(c)		
+	relateOrganizationsLaboral(c)
+	relatePlaces(c)		
 	searchFamily(c,recorded,newFamily)
 
 def savePerson(structure):
@@ -106,8 +147,8 @@ def relateOrganizationsLaboral(structure):
 	entities = getEntities()
 	for key in array:
 		if not CM.exists(node,{'Url':entities[key.split('#')[0].strip()]}):
-			scrap = {'Url':entities[key.split('#')[0].strip()]} ##Incluir Scrapy Organization
-			saveNode(scrap,node)
+			scrap = politic_scrapeTable(entities[key.split('#')[0].strip()])			
+			saveNode(create_structure_organization(scrap),node)
 			noCreated += [scrap]
 		if not CM.existsRelation(relation,{} ,'person',{'Url':structure['person']['Url']},node,{'Url':entities[key.split('#')[0].strip()]}):
 			properties = {}
@@ -139,7 +180,8 @@ def relateOrganizationsAcademic(structure):
 	node = 'institution'		
 	for key in array:	
 		if not CM.exists('organization',{'Url':key}):
-			scrap = {'Url':key} ##Incluir Scrapy Organization
+			inst = politic_scrapeTable(key)
+			scrap = create_structure_institution(inst)
 			saveNode(scrap,node)
 			noCreated += [scrap]			
 		if not CM.existsRelation(relation,{} ,'person',{'Url':structure['person']['Url']},node,{'Url':key}):
@@ -149,5 +191,34 @@ def relateOrganizationsAcademic(structure):
 def getPersonalFamiliarInfo(url,level):
 	return CM.getPersonalFamiliarInfo({'Url':url},level)
 
+def relatePlaces(structure):
+	array = structure['site']['birth']
+	dic = {}
+	site_no_registered = []
+	for cosa in array:
+		dom = cosa.split("/")
+		valor = dom[len(dom)-1]
+		if valor.split("_")[0].isdigit():
+			if len(valor.split("_")) > 1:
+				dic['day'] = valor.split("_")[0] # Mejorar esto, no creo que funcione para todos 
+				dic['moth'] = valor.split("_")[2]
+			else:
+				dic['year'] = valor
+			array = [x for x in array if x != cosa]
+	for site in array:
+		if not CM.exists('Site',{'Url':site}):
+			scrap_site = politic_scrapeTable(site)
+			site_no_registered += [scrap_site]
+			saveNode(create_structure_site(scrap_site),"site")
+		if not CM.existsRelation('born',{} ,'person',{'Url':structure['person']['Url']},'site',{'Url':site}):
+			CM.makeRelation('born',dic ,'person',{'Url':structure['person']['Url']},'site',{'Url':site})
 
-createTree("https://es.wikipedia.org/wiki/Clara_L%C3%B3pez",[],[])
+print createTree("https://es.wikipedia.org/wiki/Juan_Manuel_Santos",[],[])
+
+
+url = "https://es.wikipedia.org/wiki/Escuela_de_Econom%C3%ADa_y_Ciencia_Pol%C3%ADtica_de_Londres"
+inst = politic_scrapeTable(url)
+print create_structure_institution(inst)
+			
+
+

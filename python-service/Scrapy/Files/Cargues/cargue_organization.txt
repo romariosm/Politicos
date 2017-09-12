@@ -1,0 +1,9 @@
+{"Url":"Url"}
+{"image":"Imagen"}
+{"name":"Nombre"}
+{"registerDate":"Fecha de registro"}
+{"acronym":"Acr\u00F3nimo"}
+{"type":"Tipo"}
+{"jurisdiction":"Jurisdicci\u00F3n"}
+{"fundation":"Fundaci\u00F3n"}
+{"scope":"\u00C1mbito"}

@@ -41,21 +41,24 @@ def politic_scrapeTable(url):
 			dic = jsonp.addValue(dic,"Nombre",getTitle(soup).replace(' - Wikipedia, la enciclopedia libre',''))
 			dic = jsonp.addValue(dic,"Url",url)
 			dic = jsonp.addValue(dic,"Imagen",getTableImage(url))
+
 			if table is not None:						
 				filas = table.find_all('tr')[1:] if dic['Imagen'] == "no disponible" else table.find_all('tr')[2:]
 				dic["laboral"] = []
 				for fil in filas:
 					if len(fil.find_all('th'))>0 and len(fil.find_all('td'))<1:
+						#print 1
 						parent = jsonp.eliminateCharacters(jsonp.clearValue(fil.find_all('th')[0].text))
 						for link in getLinks(fil.find_all('th')[0]):
 							dic["laboral"].append(link)
 						dic = jsonp.addValue(dic,parent,{})
 					elif len(fil.find_all('th')) == 0  and len(fil.find_all('td')) > 0:
-						if fil.find_all('td')[0].text.strip() != "":
+						if fil.find_all('td')[0].text.strip() != "" and parent != "":
 							dic[parent + " # " + fil.find_all('td')[0].text] = dic[parent]
 							del dic[parent]
 							parent += " # " + fil.find_all('td')[0].text
 					elif len(fil.find_all('th')) > 0  and len(fil.find_all('td')) > 0:
+						#print 3
 						if parent != "":
 							data_clean=jsonp.clearValue(''.join(value for value in fil.find_all(text=True) if value.parent.name != 'a' and value.parent.name != 'th' and value != '' and value != ' ' and value != '\n' ))
 							if hasattr(data_clean, '__iter__'):
@@ -102,5 +105,4 @@ def getContent(url):
 					data =val1
 	return data
 
-
-fm.writeFileJSON("sad",politic_scrapeTable("https://es.wikipedia.org/wiki/Partido_Social_de_Unidad_Nacional"))
+#fm.writeFileJSON("juan_santos",politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos"))

@@ -16,7 +16,6 @@ def loadCategories():
 		fm.registerError("No se puede leer el archivo: \n" + str(ierror))
 	except Exception as ex:
 		fm.registerError("Se presento el error en la carga de las categorias: \n" + str(ex))
-
 def loadSynonyms(): 
 	try:     
 
@@ -35,7 +34,6 @@ def loadSynonyms():
 		fm.registerError("No se puede leer el archivo: \n" + str(ierror))
 	except Exception as ex:
 		fm.registerError("Se presento el error en la carga de sinonimos: \n" + str(ex))
-
 def loadSynonyms_party(): 
 	try:     
 		with fm.readFile("cargue_party.txt",fm.path['loads']) as file:
@@ -45,6 +43,21 @@ def loadSynonyms_party():
 					for key in ajson:
 						print "set "+"CLAVE="+"si_party:"+ajson[key].encode('utf-8') + "  VALOR=" +key.encode('utf-8')
 						print "Registros insertados: " + str(redisClient.set("si_party:"+ajson[key].encode('utf-8'),key.encode('utf-8')))
+						print
+			redis.sendRedis(function)	
+	except IOError as ierror:
+		fm.registerError("No se puede leer el archivo: \n" + str(ierror))
+	except Exception as ex:
+		fm.registerError("Se presento el error en la carga de sinonimos: \n" + str(ex))
+def loadSy_Site():
+	try:     
+		with fm.readFile("cargue_site.txt",fm.path['loads']) as file:
+			def function(redisClient):
+				for line in file:
+					ajson = json.loads(line)
+					for key in ajson:
+						print "set "+"CLAVE="+"si_site:"+ajson[key].encode('utf-8') + "  VALOR=" +key.encode('utf-8')
+						print "Registros insertados: " + str(redisClient.set("si_site:"+ajson[key].encode('utf-8'),key.encode('utf-8')))
 						print
 			redis.sendRedis(function)	
 	except IOError as ierror:
@@ -65,8 +78,6 @@ def loadParty():
 		fm.registerError("No se puede leer el archivo para la carga de partidos: \n" + str(ierror))
 	except Exception as ex:
 		fm.registerError("Se presento el error en la carga de los partidos: \n" + str(ex))
-
-
 def loadAsociation():
 	try:     
 		entities = fm.readJSONFile("entities.json",fm.path['loads'])
@@ -79,7 +90,37 @@ def loadAsociation():
 		fm.registerError("No se puede leer el archivo: \n" + str(ierror))
 	except Exception as ex:
 		fm.registerError("Se presento el error en la carga de las entidades: \n" + str(ex))
+def loadSy_Org():
+	try:     
+		with fm.readFile("cargue_organization.txt",fm.path['loads']) as file:
+			def function(redisClient):
+				for line in file:
+					ajson = json.loads(line)
+					for key in ajson:
+						print "set "+"CLAVE="+"si_org:"+ajson[key].encode('utf-8') + "  VALOR=" +key.encode('utf-8')
+						print "Registros insertados: " + str(redisClient.set("si_org:"+ajson[key].encode('utf-8'),key.encode('utf-8')))
+						print
+			redis.sendRedis(function)	
+	except IOError as ierror:
+		fm.registerError("No se puede leer el archivo: \n" + str(ierror))
+	except Exception as ex:
+		fm.registerError("Se presento el error en la carga de sinonimos para organizaciones: \n" + str(ex))
 
+def loadSy_inst():
+	try:     
+		with fm.readFile("cargue_institution.txt",fm.path['loads']) as file:
+			def function(redisClient):
+				for line in file:
+					ajson = json.loads(line)
+					for key in ajson:
+						print "set "+"CLAVE="+"si_inst:"+ajson[key].encode('utf-8') + "  VALOR=" +key.encode('utf-8')
+						print "Registros insertados: " + str(redisClient.set("si_inst:"+ajson[key].encode('utf-8'),key.encode('utf-8')))
+						print
+			redis.sendRedis(function)	
+	except IOError as ierror:
+		fm.registerError("No se puede leer el archivo: \n" + str(ierror))
+	except Exception as ex:
+		fm.registerError("Se presento el error en la carga de sinonimos para instuciones: \n" + str(ex))
 
 def loadOntology(): 
 	try:     
@@ -94,7 +135,6 @@ def loadOntology():
 		fm.registerError("No se puede leer el archivo: \n" + str(ierror))
 	except Exception as ex:
 		fm.registerError("Se presento el error en la carga de la ontologia: \n" + str(ex))
-
 def loadStrctureParty():
 	try:     
 		structureJSON = fm.readJSONFile("partyStrcture.json",fm.path['loads'])
@@ -107,11 +147,86 @@ def loadStrctureParty():
 		fm.registerError("No se puede leer el archivo de estructura de partidos: \n" + str(ierror))
 	except Exception as ex:
 		fm.registerError("Se presento el error en la cargar la estructura de los partidos: \n" + str(ex))
+def loadStructureSite():
+	try:     
+		structureJSON = fm.readJSONFile("siteStructure.json",fm.path['loads'])
+		def function(redisClient):
+			for prop in structureJSON:
+				print "sadd site_node" +" -> "+prop.encode('utf-8')
+				print "Registros insertados: " + str(redisClient.sadd("site_node",prop.encode('utf-8')))
+		redis.sendRedis(function)
+	except IOError as ierror:
+		fm.registerError("No se puede leer el archivo de estructura de sitios: \n" + str(ierror))
+	except Exception as ex:
+		fm.registerError("Se presento el error en la cargar la estructura de los sitios: \n" + str(ex))
+
+def loadStructureOrg():
+	try:     
+		structureJSON = fm.readJSONFile("organizationStructure.json",fm.path['loads'])
+		print structureJSON 
+		def function(redisClient):
+			for prop in structureJSON:
+				print "sadd site_node" +" -> "+prop.encode('utf-8')
+				print "Registros insertados: " + str(redisClient.sadd("org_node",prop.encode('utf-8')))
+		redis.sendRedis(function)
+	except IOError as ierror:
+		fm.registerError("No se puede leer el archivo de estructura organizaciones: \n" + str(ierror))
+	except Exception as ex:
+		fm.registerError("Se presento el error en la cargar la estructura de las organizaciones: \n" + str(ex))
+
+def loadStructureSite():
+	try:     
+		structureJSON = fm.readJSONFile("siteStructure.json",fm.path['loads'])
+		def function(redisClient):
+			for prop in structureJSON:
+				print "sadd site_node" +" -> "+prop.encode('utf-8')
+				print "Registros insertados: " + str(redisClient.sadd("site_node",prop.encode('utf-8')))
+		redis.sendRedis(function)
+	except IOError as ierror:
+		fm.registerError("No se puede leer el archivo de estructura de sitios: \n" + str(ierror))
+	except Exception as ex:
+		fm.registerError("Se presento el error en la cargar la estructura de los sitios: \n" + str(ex))
+
+def loadStructureInsitution():
+	try:     
+		structureJSON = fm.readJSONFile("institutionStructure.json",fm.path['loads'])
+		def function(redisClient):
+			for prop in structureJSON:
+				print "sadd inst_node" +" -> "+prop.encode('utf-8')
+				print "Registros insertados: " + str(redisClient.sadd("inst_node",prop.encode('utf-8')))
+		redis.sendRedis(function)
+	except IOError as ierror:
+		fm.registerError("No se puede leer el archivo de estructura de instuciones: \n" + str(ierror))
+	except Exception as ex:
+		fm.registerError("Se presento el error en la cargar la estructura de los instuciones: \n" + str(ex))
+
 
 def getStructureParty():
 	def function(redisClient):
 		dic = {}
 		for property in redisClient.smembers("party_node"):
+			dic[property] = ""
+		return dic
+	return redis.sendRedis(function)
+def getStructureSite():
+	def function(redisClient):
+		dic = {}
+		for property in redisClient.smembers("site_node"):
+			dic[property] = ""
+		return dic
+	return redis.sendRedis(function)
+
+def getStructureInst():
+	def function(redisClient):
+		dic = {}
+		for property in redisClient.smembers("site_node"):
+			dic[property] = ""
+		return dic
+	return redis.sendRedis(function)
+def getStructureOrg():
+	def function(redisClient):
+		dic = {}
+		for property in redisClient.smembers("org_node"):
 			dic[property] = ""
 		return dic
 	return redis.sendRedis(function)
@@ -126,7 +241,6 @@ def getStructure():
 				dic[node.replace('node:','')][property] = []
 		return dic
 	return redis.sendRedis(function)
-
 def getParty():
 	def function(redisClient):
 		dic = {}
@@ -134,7 +248,6 @@ def getParty():
 			dic[node.replace('party:','')] = redisClient.get(node)
 		return dic
 	return redis.sendRedis(function)
-
 def getEntities():
 	def function(redisClient):
 		dic = {}
@@ -142,6 +255,10 @@ def getEntities():
 			dic[node.replace('entity:','')]= redisClient.get(node)
 		return dic
 	return redis.sendRedis(function)	
+
+
+	
+
 def getSynonyms():
 	def function(redisClient):
 		dic = {}
@@ -156,11 +273,33 @@ def getSy_Party():
 			dic[synom.replace('si_party:','')]=redisClient.get(synom)
 		return dic
 	return redis.sendRedis(function)
+def getSy_Site():
+	def function(redisClient):
+		dic = {}
+		for synom in redisClient.keys('si_site*'):
+			dic[synom.replace('si_site:','')]=redisClient.get(synom)
+		return dic
+	return redis.sendRedis(function)
+
+def getSy_Org():
+	def function(redisClient):
+		dic = {}
+		for synom in redisClient.keys('si_org*'):
+			dic[synom.replace('si_org:','')]=redisClient.get(synom)
+		return dic
+	return redis.sendRedis(function)
+
+def getSy_Inst():
+	def function(redisClient):
+		dic = {}
+		for synom in redisClient.keys('si_inst*'):
+			dic[synom.replace('si_inst:','')]=redisClient.get(synom)
+		return dic
+	return redis.sendRedis(function)
 def cleanDataBase():
 	def function(redisClient):
 		redisClient.flushall()
 	redis.sendRedis(function)
-
 def startDatabase():
 	cleanDataBase()	
 	loadCategories()
@@ -170,8 +309,12 @@ def startDatabase():
 	loadParty()
 	loadStrctureParty()
 	loadSynonyms_party()
-#getParty()
-#startDatabase()
+	loadStructureSite()
+	loadSy_Site()
+	loadSy_Org()
+	loadStructureOrg()
+#loadStructureInsitution()
+#loadSy_inst()
 
-#print getStructure()
-#print getSynonyms()
+
+#startDatabase()

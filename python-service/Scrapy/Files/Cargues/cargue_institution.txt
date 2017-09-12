@@ -1,0 +1,9 @@
+{"Url":"Url"}
+{"image":"Imagen"}
+{"name":"Nombre"}
+{"registerDate":"Fecha de registro"}
+{"acronym":"Sigla"}
+{"type":"Tipo"}
+{"fundation":"Fundaci\u00F3n"}
+{"motto":"Lema"}
+{"campus":"Campus"}

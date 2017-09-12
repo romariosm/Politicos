@@ -1,0 +1,5 @@
+{"Url":"Url"}
+{"image":"Imagen"}
+{"name":"Nombre"}
+{"registerDate":"Fecha de registro"}
+{"demonyn":"Gentilicio"}
