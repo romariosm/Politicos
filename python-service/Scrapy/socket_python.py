@@ -4,6 +4,8 @@ import pyWiki
 from pyScraper import *
 import Libraries.FileManager as fm
 from estructurador import *
+from pyOnotology import *
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
@@ -53,6 +55,11 @@ def relateFamily(message):
 @socketio.on('relate relateOrganizations', namespace='/')
 def relate_Organizations(message):	
 	emit('create organization',relateOrganizationsAcademic(message) +	relateParty(message) + relateOrganizationsLaboral(message))		
+
+
+@socketio.on('get getNode', namespace='/')
+def relate_Organizations():	
+	emit('getInfo nodeInfo',getGranEstructura())		
 	
 #@socketio.on('connect', namespace='/')
 #def test_connect():

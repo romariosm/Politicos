@@ -154,7 +154,13 @@ def relateOrganizationsLaboral(structure):
 			properties = {}
 			properties['Cargo'] = key.split('#')[0].strip()
 			properties['Inicio'] = key.split('#')[1].split('-')[0].strip()
+			dateInicio = properties['Inicio'].replace('Desde el ','').split(' de ')
+			properties['InicioJul'] = str(gregToJul(dateInicio[0],dateInicio[1],dateInicio[2]))
 			properties['Fin'] = key.split('#')[1].split('-')[1].strip() if len(key.split('#')[1].split('-'))>1 else "" 
+			if properties['Fin'] != "":
+				dateFin = properties['Fin'].split(' de ')
+				properties['FinJul'] = str(gregToJul(dateFin[0],dateFin[1],dateFin[2]))
+			print properties			
 			CM.makeRelation(relation,properties,'person',{'Url':structure['person']['Url']},node,{'Url':entities[key.split('#')[0].strip()]})
 	return noCreated
 
@@ -213,12 +219,35 @@ def relatePlaces(structure):
 		if not CM.existsRelation('born',{} ,'person',{'Url':structure['person']['Url']},'site',{'Url':site}):
 			CM.makeRelation('born',dic ,'person',{'Url':structure['person']['Url']},'site',{'Url':site})
 
+
+def gregToJul(day,month,year):
+	day,month,year = int(day),Representsmonth(month),int(year)
+	if (month > 2):
+		month = month - 3
+	else:
+		month = month + 9
+		year = year - 1
+	cen = year / 100
+	dec = year - 100 * cen
+	return (146097 * cen) / 4 + (1461 * dec) / 4 + (153 * month + 2) / 5 + day + 1721119
+
+def Representsmonth(s):
+    try: 
+        return int(s)
+    except ValueError:
+        return {
+        'enero': 1,
+        'febrero': 2,
+        'marzo': 3,
+        'abril': 4,
+        'mayo': 5,
+        'junio': 6,
+        'julio': 7,
+        'agosto': 8,
+        'septiembre': 9,
+        'octubre': 10,
+		'noviembre': 11,
+		'diciembre': 12,
+    	}[s]
+
 print createTree("https://es.wikipedia.org/wiki/Juan_Manuel_Santos",[],[])
-
-
-url = "https://es.wikipedia.org/wiki/Escuela_de_Econom%C3%ADa_y_Ciencia_Pol%C3%ADtica_de_Londres"
-inst = politic_scrapeTable(url)
-print create_structure_institution(inst)
-			
-
-

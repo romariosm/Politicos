@@ -234,9 +234,9 @@ def getStructureOrg():
 def getStructure():
 	def function(redisClient):
 		dic = {}
-		for node in redisClient.keys('node*'):
+		for node in redisClient.keys('node:*'):
 			dic[node.replace('node:','')] = {}
-		for node in redisClient.keys('node*'):
+		for node in redisClient.keys('node:*'):
 			for property in redisClient.smembers(node.encode('utf-8')):
 				dic[node.replace('node:','')][property] = []
 		return dic
@@ -300,6 +300,37 @@ def cleanDataBase():
 	def function(redisClient):
 		redisClient.flushall()
 	redis.sendRedis(function)
+
+
+def recorrerGranEstructra():
+	try:     
+		structureJSON = fm.readJSONFile("generalStructure.json",fm.path['loads'])
+		def function(redisClient):
+			for prop in structureJSON:				
+				for item in structureJSON[prop]:
+					if isinstance(structureJSON[prop][item] ,dict):
+						for key in structureJSON[prop][item]:
+							for key_2 in structureJSON[prop][item][key]:
+								print "hset noderel_" + prop.encode('utf-8')+"_"+key.encode('utf-8') +" "+key_2+" "+str(structureJSON[prop][item][key][key_2])
+								print "Registros insertados: " + str(redisClient.hset("noderel_"+prop.encode('utf-8')+"_"+key.encode('utf-8') ,key_2,str(structureJSON[prop][item][key][key_2])))
+					else:					
+						print "hset node_" + prop.encode('utf-8') +" "+item.encode('utf-8') +" "+structureJSON[prop][item]
+						print "Registros insertados: " + str(redisClient.hset("node_" + prop.encode('utf-8'),item.encode('utf-8'),structureJSON[prop][item].encode('utf8')))
+		redis.sendRedis(function)
+	except IOError as ierror:
+		fm.registerError("No se puede leer el archivo de estructura de instuciones: \n" + str(ierror))
+	except Exception as ex:
+		fm.registerError("Se presento el error en la cargar la estructura de los instuciones: \n" + str(ex))	
+def getGranEstructura():
+	def function(redisClient):
+		dic = {}
+		for synom in redisClient.keys('node_*'):
+			dic[synom.replace('node_','')]= {'relation':{},'style':redisClient.hgetall(synom)}			
+			for synom_2 in redisClient.keys('noderel_'+synom.replace('node_','')+'*'):
+				dic[synom.replace('node_','')]['relation'][synom_2.replace('noderel_'+synom.replace('node_','')+'_','')]= redisClient.hgetall(synom_2)			
+		return dic
+	return redis.sendRedis(function)
+
 def startDatabase():
 	cleanDataBase()	
 	loadCategories()
@@ -313,8 +344,11 @@ def startDatabase():
 	loadSy_Site()
 	loadSy_Org()
 	loadStructureOrg()
+	recorrerGranEstructra()
+
 #loadStructureInsitution()
 #loadSy_inst()
-
-
+#cleanDataBase()	
+#
+getStructure()
 #startDatabase()

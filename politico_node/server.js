@@ -5,7 +5,6 @@ var bodyParser = require('body-parser'); //Hacer get y post desde el front
 var MongoClient = require('mongodb').MongoClient, 
 					assert = require('assert'); //May be es errores
 var properties = require('./properties.json')
-var redis = require('redis')
 var mongo = require('mongodb');
 var structurer = require('./structurer.js');
 var nodemailer = require('nodemailer');
@@ -15,26 +14,6 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.set('views', __dirname + '/views'); //REderizar vistas
 app.engine('html', require('ejs').renderFile); // Para procesar todo el HTML 
 app.use(express.static('static')); //Donde voy a guardar archivos estaticos (java script y sus librerias)
-
-
-
-function testRedis(redisClient){
-	//redisClient.set('test','It's working,redis.print)
-	redisClient.get('test',function(error,value){
-			if(error){
-				throw error
-			}
-			console.log("Testing a query in redis")
-			console.log("-->" + value)
-		})
-}
-
-function getSetRedis(redisClient,query,callback){
-	redisClient.smembers(query, function(err,result){
-		callback(result)
-	})
-}
-
 
 var options = { root: __dirname + '/static/'}
 
@@ -62,14 +41,7 @@ function sendMongo(callback){
 	});
 
 }
-function sendRedis(callback){	
-	var redisClient = redis.createClient(properties.redis.port, properties.redis.host)
-	redisClient.on('error',function(error){
-		console.log("Se presentó un error con redis")
-	})
-	callback(redisClient)
-	redisClient.quit();
-}
+
 
 app.use(express.static('static')); 
 
