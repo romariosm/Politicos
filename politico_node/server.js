@@ -8,6 +8,7 @@ var properties = require('./properties.json')
 var mongo = require('mongodb');
 var structurer = require('./structurer.js');
 var nodemailer = require('nodemailer');
+var redis = require('./pruebaRedis.js');
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
@@ -21,11 +22,11 @@ app.get('/', function(request, response){ //Start the main page
 	console.log("Conecting to Node Server...")
 	response.render('index.html');
 	console.log("Connection completed");
-	structurer.getEstructure("https://es.wikipedia.org/wiki/Juan_Manuel_Santos",1,function(estructura){console.log(estructura)})
+	//structurer.getEstructure("https://es.wikipedia.org/wiki/Juan_Manuel_Santos",1,function(estructura){console.log(estructura)})
 	//sendNeo4j()
 	//sendRedis(testRedis);
-	//sendRedis(function(redisClient){
-	//	getSetRedis(redisClient,"nodos:Lugar", function(result){console.log(result)})
+	//redis.sendRedis(function(redisClient){
+	//	redis.getSetRedis(redisClient,"nodos:Lugar", function(result){console.log(result)})
 	//})
 }).listen(properties.node.port) 
 
@@ -192,7 +193,7 @@ app.get('/load/person:*', function(request, response){
 		
 
 		context['info']=info
-		structurer.getEstructure("https://es.wikipedia.org/wiki/Juan_Manuel_Santos",1,function(estructura){
+		/*structurer.getEstructure("https://es.wikipedia.org/wiki/Juan_Manuel_Santos",1,function(estructura){
 			list_nodes=[]
 			list_links=[]
 			estructura.forEach(function(element){
@@ -235,7 +236,22 @@ app.get('/load/person:*', function(request, response){
 			context.graph=JSON.stringify(graph)
 			response.render('graph_political.html',context)
 			
-		})	
+		})*/
+
+		
+
+		redis.sendtoPython(
+			function(result){
+
+				console.log(result)
+				context.graph={'hola':''}
+				context.nodes=JSON.stringify(result)
+
+				response.render('graph_political.html',context)
+
+		},'get getNode','getInfo nodeInfo')
+
+
 
 		
  		});

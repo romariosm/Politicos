@@ -1,3 +1,4 @@
 *.pyc
 *.log
 /python-service/wptools
+/python-service/politico-env
