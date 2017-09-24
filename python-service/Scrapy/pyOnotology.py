@@ -344,8 +344,9 @@ def startDatabase():
 	loadSy_Site()
 	loadSy_Org()
 	loadStructureOrg()
+	loadSy_inst()
 	recorrerGranEstructra()
-
+#startDatabase()
 #loadStructureInsitution()
 #loadSy_inst()
 #cleanDataBase()	

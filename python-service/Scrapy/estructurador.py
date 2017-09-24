@@ -8,11 +8,12 @@ def create_structure(table):
 	synonyms = getSynonyms()
 	for key in table:
 		if isinstance(table[key],dict):
-			if "#" in key:
-				if synonyms.has_key(key.encode('utf-8').split("#")[0].strip()):
-					structure[synonyms[key.encode('utf-8').split("#")[0].strip()][0]][synonyms[key.encode('utf-8').split("#")[0].strip()][1]].append(key)
+			if table[key].has_key('Perido del cargo'):
+				print key.encode('utf-8')
+				table[key]['Cargo'] = key
+				structure['organization']['laboral'].append(table[key])
 			else:				
-				for key_2 in table[key]:				
+				for key_2 in table[key]:
 					for item in table[key][key_2]:
 						if synonyms.has_key(key_2.encode('utf-8')) and item['url'] != None:
 							structure[synonyms[key_2.encode('utf-8')][0]][synonyms[key_2.encode('utf-8')][1]] +=  [item['url']] if item['title'] == None else [item]
@@ -20,9 +21,9 @@ def create_structure(table):
 			for key_2 in table[key]:
 				if key_2['title'] !=None and synonyms.has_key(key_2['title'].encode('utf-8')) and key_2['url'] != None:
 					structure[synonyms[key_2['title'].encode('utf-8')][0]][synonyms[key_2['title'].encode('utf-8')][1]] +=  [key_2] 
-		if key != "content" and type(table[key]) is not list:
-				if synonyms.has_key(key.encode('utf-8')):
-					structure[synonyms[key.encode('utf-8')][0]][synonyms[key.encode('utf-8')][1]]=table[key.encode('utf-8')]
+		else:
+			if synonyms.has_key(key.encode('utf-8')):
+				structure[synonyms[key.encode('utf-8')][0]][synonyms[key.encode('utf-8')][1]]=table[key.encode('utf-8')]
 	return structure
 
 def create_structure_organization(table):
@@ -79,13 +80,14 @@ def cleanStructure(structure):
 			if key.encode('utf-8') == "person":
 				value = (structure[key][key_2][0] if len(structure[key][key_2])>0 else "" ) if type(structure[key][key_2]) is list else structure[key][key_2] 
 				structure[key][key_2] = value['title'].encode('utf-8') if isinstance(value,dict) else value
-			#elif 
-			#	pass #print structure[key][key_2]
 			else:
 				temp = []
 				for item in structure[key][key_2]:
 					if isinstance(item,dict):
-						temp += [item['url'].encode('utf-8')]
+						if not item.has_key('Perido del cargo'):
+							temp += [item['url'].encode('utf-8')]
+						else:
+							temp += [item]
 					else:
 						temp += [item.encode('utf-8')] 
 				if key.encode('utf-8') == "party":
@@ -96,6 +98,7 @@ def cleanStructure(structure):
 							subTemp.append(link.encode('utf-8'))
 					temp = subTemp
 				structure[key][key_2] = temp
+	fm.writeFileJSON("juan_santos_clean",structure)
 	return structure
 
 def searchFamily(structure,recorded,newFamily):
@@ -144,24 +147,24 @@ def relateOrganizationsLaboral(structure):
 	array = structure['organization']['laboral']
 	relation = 'worksAt'
 	node = 'organization'
-	entities = getEntities()
 	for key in array:
-		if not CM.exists(node,{'Url':entities[key.split('#')[0].strip()]}):
-			scrap = politic_scrapeTable(entities[key.split('#')[0].strip()])			
+		if not CM.exists(node,{'Url':key['Entidad'][0]['url']}):
+			scrap = politic_scrapeTable(key['Entidad'][0]['url'])			
 			saveNode(create_structure_organization(scrap),node)
 			noCreated += [scrap]
-		if not CM.existsRelation(relation,{} ,'person',{'Url':structure['person']['Url']},node,{'Url':entities[key.split('#')[0].strip()]}):
+		if not CM.existsRelation(relation,{} ,'person',{'Url':structure['person']['Url']},node,{'Url':key['Entidad'][0]['url']}):
 			properties = {}
-			properties['Cargo'] = key.split('#')[0].strip()
-			properties['Inicio'] = key.split('#')[1].split('-')[0].strip()
+			properties['Cargo'] = key['Cargo']
+			properties['Inicio'] = key['Perido del cargo'].split('-')[0].strip()
 			dateInicio = properties['Inicio'].replace('Desde el ','').split(' de ')
 			properties['InicioJul'] = str(gregToJul(dateInicio[0],dateInicio[1],dateInicio[2]))
-			properties['Fin'] = key.split('#')[1].split('-')[1].strip() if len(key.split('#')[1].split('-'))>1 else "" 
+			properties['Fin'] = key['Perido del cargo'].split('-')[1].strip() if len(key['Perido del cargo'].split('-'))>1 else "" 
 			if properties['Fin'] != "":
 				dateFin = properties['Fin'].split(' de ')
 				properties['FinJul'] = str(gregToJul(dateFin[0],dateFin[1],dateFin[2]))
-			print properties			
-			CM.makeRelation(relation,properties,'person',{'Url':structure['person']['Url']},node,{'Url':entities[key.split('#')[0].strip()]})
+			else:
+				properties['FinJul'] = "5000000"			
+			CM.makeRelation(relation,properties,'person',{'Url':structure['person']['Url']},node,{'Url':key['Entidad'][0]['url']})
 	return noCreated
 
 def relateParty(structure):
@@ -201,12 +204,13 @@ def relatePlaces(structure):
 	array = structure['site']['birth']
 	dic = {}
 	site_no_registered = []
+	print array
 	for cosa in array:
 		dom = cosa.split("/")
 		valor = dom[len(dom)-1]
 		if valor.split("_")[0].isdigit():
 			if len(valor.split("_")) > 1:
-				dic['day'] = valor.split("_")[0] # Mejorar esto, no creo que funcione para todos 
+				dic['day'] = valor.split("_")[0] 
 				dic['moth'] = valor.split("_")[2]
 			else:
 				dic['year'] = valor
@@ -249,5 +253,10 @@ def Representsmonth(s):
 		'noviembre': 11,
 		'diciembre': 12,
     	}[s]
-
-print createTree("https://es.wikipedia.org/wiki/Juan_Manuel_Santos",[],[])
+link = "https://es.wikipedia.org/wiki/Juan_Manuel_Santos"
+print createTree(link,[],[])
+"""politic = politic_scrapeTable(link)
+a = create_structure(politic)
+c = cleanStructure(a)
+print relateOrganizationsLaboral(c)
+#fm.writeFileJSON("juan_santos_2",a)"""

@@ -22,7 +22,7 @@ app.get('/', function(request, response){ //Start the main page
 	console.log("Conecting to Node Server...")
 	response.render('index.html');
 	console.log("Connection completed");
-	//structurer.getEstructure("https://es.wikipedia.org/wiki/Juan_Manuel_Santos",1,function(estructura){console.log(estructura)})
+	structurer.getEstructure("https://es.wikipedia.org/wiki/Juan_Manuel_Santos",1,function(estructura){console.log(estructura)})
 	//sendNeo4j()
 	//sendRedis(testRedis);
 	//redis.sendRedis(function(redisClient){

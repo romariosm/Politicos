@@ -8,6 +8,7 @@ def exists(label,properties):
 	return len(list(sendToNeo("MATCH (p:"+label+" "+makeJsonNeo(properties)+") return p"))) != 0
 
 def create(label,properties):
+	print "CREATE (p:"+label+" "+makeJsonNeo(properties)+") return p"
 	return len(list(sendToNeo("CREATE (p:"+label+" "+makeJsonNeo(properties)+") return p"))) != 0
 
 def makeJsonNeo(properties):	

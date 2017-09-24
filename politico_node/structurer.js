@@ -14,7 +14,7 @@ createRelation:function(entidad_1,entidad_2,tag){
 	},
 getEstructure:function(url,level,callback){
 	console.log('hola estoy en el estructurer')
-		neo4j.getEstructure(url,level,callback)
+		neo4j.getEstructure({'Url':url},level,callback)
 	}
 }
 

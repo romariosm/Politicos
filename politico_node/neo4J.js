@@ -1,8 +1,17 @@
 var properties = require('./properties.json')
 var neo4j = require('neo4j');
 module.exports = {
- getEstructure: function (json,callback){
+ getEstructure: function (json,level,callback){
  	return sendNeo4j('match (p '+createParameters(json)+') RETURN p',callback)
+ },
+  getJul: function (json,callback){
+ 	return sendNeo4j('match (p '+createParameters(json)+')-[r:worksAt]->(q) RETURN q.name as inst,toInt(r.InicioJul) as ini,toInt(r.FinJul) as fin',callback)
+ },
+  getPartner: function (jsonI,inicio,fin,callback){
+  	var rule = "(toInt(r.InicioJul) <= "+ inicio +" and toInt(r.FinJul) >= "+ fin +")"  +
+	" or (toInt(r.InicioJul) >= "+ inicio +" and toInt(r.FinJul) >= "+ fin +" and toInt(r.InicioJul) <= "+ fin +")"+ 
+	" or (toInt(r.InicioJul) <= "+ inicio +" and toInt(r.FinJul) <= "+ fin +" and toInt(r.FinJul) >= "+ inicio +")"
+	return sendNeo4j('match all = (p)-[r:worksAt]->(q'+createParameters(jsonI)+') WHERE '+rule+' RETURN all',callback)
  }
 }
 function sendNeo4j(sentence,callback){	
@@ -11,8 +20,7 @@ function sendNeo4j(sentence,callback){
     		query: sentence,
 		}, function (err, results) {
     		if (err) throw err;
-    		var result = results[0];
-    		callback(result)
+    		callback(results)
 		});			
 }
 
@@ -24,5 +32,3 @@ function createParameters(json_file){
 	return output.slice(0, output.length - 1) + "}"
 	 
 }
-
-
