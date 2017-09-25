@@ -346,10 +346,10 @@ def startDatabase():
 	loadStructureOrg()
 	loadSy_inst()
 	recorrerGranEstructra()
-#startDatabase()
+startDatabase()
 #loadStructureInsitution()
 #loadSy_inst()
 #cleanDataBase()	
 #
-getStructure()
+#getStructure()
 #startDatabase()

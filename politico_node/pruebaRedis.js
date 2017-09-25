@@ -44,5 +44,3 @@ getNodes: function (){
 }
 
 }
-
-//getNodes()

@@ -2,7 +2,8 @@
   "person": {
     "relation": {
       "family": {
-        "scrolleable": 1
+        "scrolleable": 1,
+        "query":"MATCH p=({Url:?Url})-[r:family*1..?scrolleable]->() RETURN p"
       }
     },
     "color": "#F44336"
@@ -10,7 +11,8 @@
   "site": {
     "relation": {
       "born": {
-        "scrolleable": 0
+        "scrolleable": 0,
+        "query":"MATCH p=({Url:?Url})-[r:born*1..1]->() RETURN p"
       }
     },
     "color": "#009688"
@@ -18,7 +20,8 @@
   "party": {
     "relation": {
       "belongsTo": {
-        "scrolleable": 0
+        "scrolleable": 0,
+        "query":"MATCH p=({Url:?Url})-[r:belongsTo*1..1]->() RETURN p"
       }
     },
     "color": "#CDDC39"
@@ -26,7 +29,8 @@
   "institution": {
     "relation": {
       "belongsTo": {
-        "scrolleable": 0
+        "scrolleable": 0,
+        "query":"MATCH p=({Url:?Url})-[r:studiedAt*1..1]->() RETURN p"
       }
     },
     "color": "#673AB7"
@@ -34,9 +38,10 @@
   "organization": {
     "relation": {
       "belongsTo": {
-        "scrolleable": 0
+        "scrolleable": 0,
+        "query":"MATCH p=({Url:?Url})-[r:worksAt*1..1]->() RETURN p"
       }
     },
-    "color": "#FF9800"
+    "color": "#FF9800"  
   }
 }
