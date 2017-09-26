@@ -253,8 +253,8 @@ def Representsmonth(s):
 		'noviembre': 11,
 		'diciembre': 12,
     	}[s]
-link = "https://es.wikipedia.org/wiki/Juan_Manuel_Santos"
-print createTree(link,[],[])
+#link = "https://es.wikipedia.org/wiki/Juan_Manuel_Santos"
+#print createTree(link,[],[])
 """politic = politic_scrapeTable(link)
 a = create_structure(politic)
 c = cleanStructure(a)
