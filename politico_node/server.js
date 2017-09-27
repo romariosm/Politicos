@@ -225,7 +225,7 @@ app.get('/load/person:*', function(request, response){
 					for(node in element){
 
 						if(list_nodes.findIndex(i => i.id == element[node]._id) == -1 && node != 'r'){
-							console.log(element[node])
+							//console.log(element[node])
 
 							node_p={}
 							node_p.id=element[node]._id
@@ -243,13 +243,19 @@ app.get('/load/person:*', function(request, response){
 							list_nodes.push(node_p)
 
 						}else if (list_links.findIndex(i => i.id == element[node]._id) == -1 && node == 'r'){
-							//console.log(element[node][0])
+							console.log(element[node][0])
 							if(element[node][0]._id != undefined){
 								link={}
 								link.id=element[node][0]._id
 								link.type=element[node][0].type
 								link.source=element[node][0]._fromId
 								link.target=element[node][0]._toId
+
+								link.info='<div class="col-md-12 dont-break-out"><ul class="list-group">'
+								for(subprop in element[node][0].properties){
+									link.info=link.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong>'+element[node][0].properties[subprop]+'</div></li>'
+								}
+								link.info+='</ul></div>'
 
 								list_links.push(link)
 							}
