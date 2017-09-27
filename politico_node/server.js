@@ -9,6 +9,7 @@ var mongo = require('mongodb');
 var structurer = require('./structurer.js');
 var nodemailer = require('nodemailer');
 var redis = require('./pruebaRedis.js');
+var neo4j = require('./neo4J.js');
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
@@ -174,6 +175,19 @@ app.get("/autocomplete/politicos", function (request,response) {
 	})
 })
 
+function hexToRgbA(hex){
+    var c;
+    if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+        c= hex.substring(1).split('');
+        if(c.length== 3){
+            c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+        }
+        c= '0x'+c.join('');
+        return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',1)';
+    }
+    throw new Error('Bad Hex');
+}
+
 app.get('/load/person:*', function(request, response){
 
 
@@ -190,69 +204,99 @@ app.get('/load/person:*', function(request, response){
 		info['nombre']=result[0].Nombre
 		info['imagen']=result[0].Imagen
 
+		var url=result[0].Url
+		console.log(result[0].Url)
 		
 
 		context['info']=info
-		/*structurer.getEstructure("https://es.wikipedia.org/wiki/Juan_Manuel_Santos",1,function(estructura){
-			list_nodes=[]
-			list_links=[]
-			estructura.forEach(function(element){
-				console.log(element)
 
-				for(node in element){
+		var estructura;
+		var sender = function(cadena){
 
-					if(list_nodes.findIndex(i => i.id == element[node]._id) == -1 && node != 'r'){
-						console.log(node)
-
-						node_p={}
-						node_p.id=element[node]._id
-						node_p.name=element[node].properties.name
-						node_p.residency=element[node].properties.residency
-						node_p.nacionality=element[node].properties.religion
-						node_p.url=element[node].properties.Url
-						node_p.group=1
-						//console.log(node_p)
-
-						list_nodes.push(node_p)
-
-					}else if (list_links.findIndex(i => i.id == element[node]._id)== -1 && node == 'r'){
-						link={}
-						link.id=element[node]._id
-						link.type=element[node].type
-						link.source=element[node]._fromId
-						link.target=element[node]._toId
-
-						list_links.push(link)
-
-					}
-				}
-
-			})
-
-			graph={}
-			graph.nodes=list_nodes
-			graph.links=list_links
-
-			context.graph=JSON.stringify(graph)
-			response.render('graph_political.html',context)
-			
-		})*/
-
-		
-
-		redis.sendtoPython(
+			redis.sendtoPython(
 			function(result){
 
-				console.log(result)
-				context.graph={'hola':''}
+				list_nodes=[]
+				list_links=[]
+
+				cadena.forEach(function(element){
+					
+				
+					for(node in element){
+
+						if(list_nodes.findIndex(i => i.id == element[node]._id) == -1 && node != 'r'){
+							console.log(element[node])
+
+							node_p={}
+							node_p.id=element[node]._id
+							node_p.name=element[node].properties.name
+
+							node_p.info='<div class="col-md-12 dont-break-out"><ul class="list-group">'
+							for(subprop in element[node].properties){
+								node_p.info=node_p.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong>'+element[node].properties[subprop]+'</div></li>'
+							}
+							node_p.info+='</ul></div>'
+
+							node_p.group=hexToRgbA(result[element[node].labels[0]].style.color)
+							//console.log(node_p)
+
+							list_nodes.push(node_p)
+
+						}else if (list_links.findIndex(i => i.id == element[node]._id) == -1 && node == 'r'){
+							//console.log(element[node][0])
+							if(element[node][0]._id != undefined){
+								link={}
+								link.id=element[node][0]._id
+								link.type=element[node][0].type
+								link.source=element[node][0]._fromId
+								link.target=element[node][0]._toId
+
+								list_links.push(link)
+							}
+							
+
+						}
+					}
+
+				})
+
+				graph={}
+				graph.nodes=list_nodes
+				graph.links=list_links
+
+				//console.log(list_links)
+				
+				context.graph=JSON.stringify(graph)
 				context.nodes=JSON.stringify(result)
+
+
 
 				response.render('graph_political.html',context)
 
-		},'get getNode','getInfo nodeInfo')
+			},'get getNode','getInfo nodeInfo')
 
 
-
+		}
+		redis.sendtoPython(
+					function(result){
+						var nodos = result
+						var level = 3
+						var query = []
+						for(key in nodos){
+							for(subkey in nodos[key]['relation']){
+								var subquery = nodos[key]['relation'][subkey].query.replace('?Url','"'+url+'"')
+								console.log(nodos[key]['relation'][subkey].scrolleable)
+								if (nodos[key]['relation'][subkey].scrolleable == 1){
+									query.push(subquery.replace('?scrolleable',level))
+								}
+								else{
+									query.push(subquery)	
+								}
+								
+							}
+						}
+						neo4j.sendNeo4j(query.join(' UNION ALL '),sender)
+				},'get getNode','getInfo nodeInfo')
 		
  		});
 	})
