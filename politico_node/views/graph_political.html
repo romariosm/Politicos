@@ -484,6 +484,7 @@ var graph=JSON.parse($("#graph").val())
     .attr("class", "nodes")
     .on("mouseover", mouseover)
     .on("mouseout", mouseout)
+    .on("click", clicknode)
     .call(d3.drag()
 		.on("start", dragstarted)
 		.on("drag", dragged)
@@ -541,7 +542,7 @@ var graph=JSON.parse($("#graph").val())
   
 
 function dragstarted(d) {
-  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+  if (!d3.event.active) simulation.alphaTarget(1).restart();
   d.fx = d.x;
   d.fy = d.y;
 }
@@ -557,9 +558,7 @@ function dragended(d) {
   d.fy = null;
 }
 
-function mouseover(d) {
-	console.log(d)
-
+function clicknode(d){
 	$("#tooltip_1").append(d.info)
 	$("#tooltip_1").popover('show')
 	if(!noty_status){
@@ -584,6 +583,12 @@ function mouseover(d) {
 
 		});
 	}
+}
+
+function mouseover(d) {
+	console.log(d)
+
+	
 	 
 	
   d3.select(this).select("circle").transition()
