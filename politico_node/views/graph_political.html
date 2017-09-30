@@ -332,6 +332,7 @@
 
 			<input type="hidden" id="graph" value="<%=graph %>"/>
 			<input type="hidden" id="nodes" value="<%=nodes %>"/>
+			<input type="hidden" id="url_person" value="<%=url %>"/>
 			
 
 			<div class="grid" id="grid_id">
@@ -406,7 +407,7 @@
 			   		
 
 			   		<center>
-						<h4><strong><i class="fa fa-info-circle" aria-hidden="true"></i> Convenciones</strong></h4>
+						<h4><strong><i class="fa fa-filter" aria-hidden="true"></i> Filtros</strong></h4>
 					</center>
 
 					<div id="nodes_types">
@@ -424,6 +425,52 @@
 			</div>
 
 			</div>
+
+			<div class="modal fade" id="loading_div" data-backdrop="static" data-keyboard="false">
+
+				 <div class="modal-dialog">
+
+				    <!-- Modal content-->
+				    <div class="modal-content">
+				    	
+				      	<div class="modal-body" align="center">
+				      		<h3><i class="fa fa-paper-plane" aria-hidden="true"></i> Estamos recolectando información...</h3>
+				        	<img src="/images/loading.gif" />
+				      	</div>
+				      
+				    </div>
+
+				  </div>
+
+			</div>
+
+			<div class="modal fade" id="loading_error" data-backdrop="static" data-keyboard="false">
+
+				 <div class="modal-dialog">
+
+				    <!-- Modal content-->
+				    <div class="modal-content">
+
+				    	<div class="modal-header">
+        					<button type="button" class="close" data-dismiss="modal">&times;</button>
+        					<h4 class="modal-title"> <i class="fa fa-exclamation-circle" aria-hidden="true"></i> Advertencia</h4>
+      					</div>
+				    	
+				      	<div class="modal-body" align="center">
+				      		<h3><i class="fa fa-exclamation-circle" aria-hidden="true"></i>  Por favor seleccione por lo menos un filtro</h3>
+				        	
+				      	</div>
+
+				      	<div class="modal-footer">
+				    		<button type="button" class="btn btn-danger" data-dismiss="modal"> <i class="fa fa-window-close" aria-hidden="true"></i> Cerrar</button>
+				    	</div>
+				      
+				    </div>
+				    
+
+				  </div>
+
+			</div>
 			
 	</body>
 
@@ -432,88 +479,111 @@
 
 <script>
 
-$(document).ready(function(){
-    $('[data-toggle="popover"]').popover();   
-});
-
 var noty=null
 var noty_status=false;
+var link=null
+var linktext=null
+var node=null
+var svg=null
+var color=null
+var simulation=null
 
-var svg = d3.select("svg"),
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover(); 
+
+
+    
+
+	var graph=JSON.parse($("#graph").val())
+
+	load_graph(graph)
+});
+
+
+
+function load_graph(graph){
+
+	svg = d3.select("svg"),
+
     width = +svg.attr("width"),
     height = +svg.attr("height");
 
-var color = d3.scaleOrdinal(d3.schemeCategory20);
 
-var simulation = d3.forceSimulation()
-    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(250).strength(0.9))
-    .force("charge", d3.forceManyBody())
-    .force("center", d3.forceCenter(width / 2, height / 2));
- 
-console.log(JSON.parse($("#graph").val()))
+	color = d3.scaleOrdinal(d3.schemeCategory20);
 
-var graph=JSON.parse($("#graph").val())
+	simulation = d3.forceSimulation()
+	    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(250).strength(0.9))
+	    .force("charge", d3.forceManyBody())
+	    .force("center", d3.forceCenter(width / 2, height / 2));
+	 
 
-	
 
-	var link = svg
-	    .selectAll(".links")
-	    .data(graph.links)
-	    .enter().append("g")
-	    .attr("class", "links").append('line')
-	    .style("stroke-linecap", "round")
-	    .style("stroke", "black")
-	    //.on('click', clicklink)
-	    .style("stroke-dasharray", "20,10,5,5,5,10")
-	    .attr("stroke-width", function(d) { return Math.sqrt(8); });
+
+
 		
-	var linktext=svg.selectAll('.links').data(graph.links)
-	    .append("text")
-	    .attr("font-family", "Comic Sans MS, Helvetica, sans-serif")
-	    .attr("fill", "Black")
-	    .style("font", "italic 15px Calibri")
-	    .on('click', clicklink)
-	    .attr("dy", ".35em")
-	    .text(function(d) { return d.type });
 
+		link = svg
+		    .selectAll(".links")
+		    .data(graph.links)
+		    .enter().append("g")
+		    .attr("class", "links").append('line')
+		    .style("stroke-linecap", "round")
+		    .style("stroke", "black")
+		    //.on('click', clicklink)
+		    .style("stroke-dasharray", "20,10,5,5,5,10")
+		    .attr("stroke-width", function(d) { return Math.sqrt(8); });
+			
+		linktext=svg.selectAll('.links').data(graph.links)
+		    .append("text")
+		    .attr("font-family", "Comic Sans MS, Helvetica, sans-serif")
+		    .attr("fill", "Black")
+		    .style("font", "italic 15px Calibri")
+		    .on('click', clicklink)
+		    .attr("dy", ".35em")
+		    .text(function(d) { return d.type });
+
+		    
+
+	  node = svg
 	    
-
-  var node = svg
-    
-    .selectAll(".nodes")
-    .data(graph.nodes)
-    .enter().append('g')
-    .attr("class", "nodes")
-    .on("mouseover", mouseover)
-    .on("mouseout", mouseout)
-    .on("click", clicknode)
-    .call(d3.drag()
-		.on("start", dragstarted)
-		.on("drag", dragged)
-		.on("end", dragended));
+	    .selectAll(".nodes")
+	    .data(graph.nodes)
+	    .enter().append('g')
+	    .attr("class", "nodes")
+	    .on("mouseover", mouseover)
+	    .on("mouseout", mouseout)
+	    .on("click", clicknode)
+	    .call(d3.drag()
+			.on("start", dragstarted)
+			.on("drag", dragged)
+			.on("end", dragended));
 
 
-    node.append("circle")
-    .attr("r", 20)
-    .style("fill", "white")
-    .style("stroke", function(d) { return d.group })
-    .style("stroke-width", 6 )
+	    node.append("circle")
+	    .attr("r", 20)
+	    .style("fill", "white")
+	    .style("stroke", function(d) { return d.group })
+	    .style("stroke-width", 6 )
 
 
-	node.append("text")
-    .attr("x", 18)
-    .attr("dy", ".65em")
-    .style("font", "bold 16px Arial")
-    .text(function(d) { return d.name; });
+		node.append("text")
+	    .attr("x", 18)
+	    .attr("dy", ".65em")
+	    .style("font", "bold 16px Arial")
+	    .text(function(d) { return d.name; });
 
-    node.append('title').text(function(d) { return "Información Básica:\n"+d.info; });
+	    node.append('title').text(function(d) { return "Información Básica:\n"+d.info; });
 
-  simulation
-      .nodes(graph.nodes)
-      .on("tick", ticked);
+	  simulation
+	      .nodes(graph.nodes)
+	      .on("tick", ticked);
 
-  simulation.force("link")
-      .links(graph.links);
+	  simulation.force("link")
+	      .links(graph.links);
+
+}
+
+
 
   function ticked() {
     link
@@ -645,7 +715,7 @@ for(key in nodes_type){
 
 	for(rel in nodes_type[key].relation){
 		if(nodes_type[key].relation[rel].scrolleable == '1'){
-			slider='<input id="ex1" class="slider" type="text" data-slider-min="1" data-slider-max="5" data-slider-step="1" data-slider-value="1"/>'
+			slider='<br><br><label><i class="fa fa-level-down" aria-hidden="true"></i> <i class="fa fa-level-up" aria-hidden="true"></i> Nivel:</label><br><input id="'+key+'_slider" class="slider" type="text" data-slider-min="1" data-slider-max="5" data-slider-step="1" data-slider-value="1"/><br>'
 		}
 	}
 	$("#nodes_types").append('<div class="col-md-12" style="margin-bottom:5px;"><button class="btn btn-default btn-circle btn-lg" id="'+key+'_button" onclick="create_query(\''+key+'\')" style="border-color:'+nodes_type[key].style.color+'; border-width:4px"></button>\
@@ -657,11 +727,6 @@ $('.slider').slider({
 		return 'Valor: ' + value;
 	}
 });
-/*node.append("circle")
-    .attr("r", 20)
-    .style("fill", "white")
-    .style("stroke", function(d) { return color(d.group); })
-    .style("stroke-width", 6 )*/
 
 var consult=''
 
@@ -678,6 +743,54 @@ function create_query(key){
 }
 
 function search_query(){
+	var query=[]
+
+	var atLeastOneQuery=false;
+
+	for(key in nodes_type){
+
+		if(nodes_type[key].status){
+			atLeastOneQuery=true;
+
+			for(rel in nodes_type[key].relation){
+
+				if(nodes_type[key].relation[rel].scrolleable == '1'){
+
+					query.push(nodes_type[key].relation[rel].query.replace('?Url','"'+$("#url_person").val()+'"').replace('?scrolleable', $("#"+key+'_slider').val()))
+
+				}else{
+
+					query.push(nodes_type[key].relation[rel].query.replace('?Url','"'+$("#url_person").val()+'"'))
+
+				}
+			}
+
+		}
+
+
+	}
+
+	if(atLeastOneQuery){
+		$("#loading_div").modal('show')
+		$.ajax({
+			url:'/getGraphPerson/',
+			data:{'query': query.join(' UNION ALL ')},
+			success: function(response){
+
+				$("#loading_div").modal('hide')
+				svg.selectAll("*").remove();
+				load_graph(JSON.parse(JSON.parse(response).graph))
+			}
+
+		})
+	}else{
+
+		$("#loading_error").modal('show')
+	}
+
+	
+	console.log(query.join(' UNION ALL '))
+
 
 }
 

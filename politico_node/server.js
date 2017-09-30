@@ -274,7 +274,7 @@ app.get('/load/person:*', function(request, response){
 				
 				context.graph=JSON.stringify(graph)
 				context.nodes=JSON.stringify(result)
-
+				context.url=url
 
 
 				response.render('graph_political.html',context)
@@ -399,6 +399,87 @@ app.get('/nosotros/', function(request, response){
 app.get('/contactar/', function(request, response){ 
 
 	response.render('contacto.html');
+	
+})
+
+app.get('/getGraphPerson/', function(request, response){ 
+
+	var context={}
+
+	var sender=function(cadena){
+		console.log(cadena)
+
+		
+
+		redis.sendtoPython(
+			function(result){
+
+				list_nodes=[]
+				list_links=[]
+
+				cadena.forEach(function(element){
+					
+				
+					for(node in element){
+
+						if(list_nodes.findIndex(i => i.id == element[node]._id) == -1 && node != 'r'){
+							//console.log(element[node])
+
+							node_p={}
+							node_p.id=element[node]._id
+							node_p.name=element[node].properties.name
+
+							node_p.info='<div class="col-md-12 dont-break-out"><ul class="list-group">'
+							for(subprop in element[node].properties){
+								node_p.info=node_p.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong>'+element[node].properties[subprop]+'</div></li>'
+							}
+							node_p.info+='</ul></div>'
+
+							node_p.group=hexToRgbA(result[element[node].labels[0]].style.color)
+							//console.log(node_p)
+
+							list_nodes.push(node_p)
+
+						}else if (list_links.findIndex(i => i.id == element[node]._id) == -1 && node == 'r'){
+							console.log(element[node][0])
+							if(element[node][0]._id != undefined){
+								link={}
+								link.id=element[node][0]._id
+								link.type=element[node][0].type
+								link.source=element[node][0]._fromId
+								link.target=element[node][0]._toId
+
+								link.info='<div class="col-md-12 dont-break-out"><ul class="list-group">'
+								for(subprop in element[node][0].properties){
+									link.info=link.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong>'+element[node][0].properties[subprop]+'</div></li>'
+								}
+								link.info+='</ul></div>'
+
+								list_links.push(link)
+							}
+							
+
+						}
+					}
+
+				})
+
+				graph={}
+				graph.nodes=list_nodes
+				graph.links=list_links
+
+
+				context.graph=JSON.stringify(graph)
+				response.end(JSON.stringify(context))
+
+			},'get getNode','getInfo nodeInfo')
+
+	}
+
+
+
+	neo4j.sendNeo4j(request.query.query,sender)
+
 	
 })
 
