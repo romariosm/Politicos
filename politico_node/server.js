@@ -233,7 +233,18 @@ app.get('/load/person:*', function(request, response){
 
 							node_p.info='<div class="col-md-12 dont-break-out"><ul class="list-group">'
 							for(subprop in element[node].properties){
-								node_p.info=node_p.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong>'+element[node].properties[subprop]+'</div></li>'
+
+								if(checkImageURL(element[node].properties[subprop])){
+									node_p.info=node_p.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+' <i class="fa fa-arrow-right" aria-hidden="true"></i>\
+									            </strong><img style="object-fit: cover" class="avatar2" height = "70px" width="70px" src="'+element[node].properties[subprop]+'"></div></li>'
+								}
+								else if(ValidURL(element[node].properties[subprop])){
+									node_p.info=node_p.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong><a href="'+element[node].properties[subprop]+'" >'+element[node].properties[subprop]+'</a></div></li>'
+								}
+								else{
+									node_p.info=node_p.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong>'+element[node].properties[subprop]+'</div></li>'
+								}
+								
 							}
 							node_p.info+='</ul></div>'
 
@@ -431,7 +442,17 @@ app.get('/getGraphPerson/', function(request, response){
 
 							node_p.info='<div class="col-md-12 dont-break-out"><ul class="list-group">'
 							for(subprop in element[node].properties){
-								node_p.info=node_p.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong>'+element[node].properties[subprop]+'</div></li>'
+								
+								if(checkImageURL(element[node].properties[subprop])){
+									node_p.info=node_p.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+' <i class="fa fa-arrow-right" aria-hidden="true"></i>\
+									            </strong><img style="object-fit: cover" class="avatar2" height = "70px" width="70px" src="'+element[node].properties[subprop]+'"></div></li>'
+								}
+								else if(ValidURL(element[node].properties[subprop])){
+									node_p.info=node_p.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong><a href="'+element[node].properties[subprop]+'" >'+element[node].properties[subprop]+'</a></div></li>'
+								}
+								else{
+									node_p.info=node_p.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong>'+element[node].properties[subprop]+'</div></li>'
+								}
 							}
 							node_p.info+='</ul></div>'
 
@@ -520,3 +541,16 @@ app.post('/send_message/', function(request, response){
 	
 })           
 
+function checkImageURL(url) {
+    return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
+}
+
+function ValidURL(str) {
+  var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
+  if(!regex .test(str)) {
+    //alert("Please enter valid URL.");
+    return false;
+  } else {
+    return true;
+  }
+}

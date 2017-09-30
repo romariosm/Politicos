@@ -97,6 +97,15 @@
 		    
 		    
 		}
+		.avatar2 {
+					/* cambia estos dos valores para definir el tamaño de tu círculo */  
+		    width:80px;
+		    height:80px;
+		    border-radius:100%;
+		    border:3px solid white;
+		    
+		    
+		}
 		
 
 		.political-thumbnail{
@@ -572,7 +581,7 @@ function load_graph(graph){
 	    .style("font", "bold 16px Arial")
 	    .text(function(d) { return d.name; });
 
-	    node.append('title').text(function(d) { return "Información Básica:\n"+d.info; });
+	   
 
 	  simulation
 	      .nodes(graph.nodes)
