@@ -365,7 +365,7 @@
 
 					</div>
 
-					<img src="<%= info.imagen %>" class="img-responsive" style="height:auto; width: 100%; object-fit: cover"/>
+					<img src="<%= info.imagen %>" class="img-responsive" style="height:auto; width: 50%; object-fit: cover"/>
 					</center>
 					
 					<!--div class="col-md-12">
@@ -422,14 +422,14 @@
 					<div id="nodes_types">
 					</div>
 
-					<div class="col-md-12" style="margin-top:20px">
+					<!--div class="col-md-12" style="margin-top:20px">
 						<button type="button" id="search" class="col-md-12 btn btn-site no-border" onclick="search_query()"><i class="fa fa-search" aria-hidden="true"></i> Buscar</button>
-					</div>
+					</div-->
 
 			   		
 		
 				</div><!-- /.row -->
-			</div>
+			</div-->
 
 			</div>
 
@@ -500,9 +500,6 @@ var simulation=null
 $(document).ready(function(){
     $('[data-toggle="popover"]').popover(); 
 
-
-    
-
 	var graph=JSON.parse($("#graph").val())
 
 	load_graph(graph)
@@ -511,25 +508,17 @@ $(document).ready(function(){
 
 
 function load_graph(graph){
-
 	svg = d3.select("svg"),
 
     width = +svg.attr("width"),
     height = +svg.attr("height");
-
 
 	color = d3.scaleOrdinal(d3.schemeCategory20);
 
 	simulation = d3.forceSimulation()
 	    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(250).strength(0.9))
 	    .force("charge", d3.forceManyBody())
-	    .force("center", d3.forceCenter(width / 2, height / 2));
-	 
-
-
-
-
-		
+	    .force("center", d3.forceCenter(width / 2, height / 2));	
 
 		link = svg
 		    .selectAll(".links")
@@ -553,8 +542,7 @@ function load_graph(graph){
 
 		    
 
-	  node = svg
-	    
+	  node = svg	    
 	    .selectAll(".nodes")
 	    .data(graph.nodes)
 	    .enter().append('g')
@@ -633,17 +621,13 @@ function dragged(d) {
   d.fy = d3.event.y;
 }
 
-function clicklink(d){
-	console.log(d)
-
+function clicklink(d){	
 	if(!noty_status){
 		noty_status=true;
 		noty=$.notify({
-
 			title: '<center><h4><strong>'+d.source.name+' <i class="fa fa-arrow-right" aria-hidden="true"></i> '+d.target.name+'</strong></h4></center><hr>',
 			message: d.info 
 		},{
-			// settings
 			type: 'success',
 			placement: {
 				from: "top",
@@ -654,9 +638,9 @@ function clicklink(d){
 			onClose: function(){
 				noty_status=false;
 			}
-
-
 		});
+	}else{
+		noty.close()
 	}
 
 }
@@ -668,15 +652,12 @@ function dragended(d) {
 }
 
 function clicknode(d){
-
 	if(!noty_status){
 		noty_status=true;
 		noty=$.notify({
-
 			title: '<center><h4><strong>'+d.name+'</strong></h4></center><hr>',
 			message: d.info 
 		},{
-			// settings
 			type: 'info',
 			placement: {
 				from: "top",
@@ -687,20 +668,16 @@ function clicknode(d){
 			onClose: function(){
 				noty_status=false;
 			}
-
-
 		});
+	}else{
+		noty.close();
 	}
 }
 
 function mouseover(d) {
-
   d3.select(this).select("circle").transition()
       .duration(550)
-      .attr("r", 30)
-
-  
-  
+      .attr("r", 30) 
 }
 
 function mouseout() {
@@ -714,8 +691,6 @@ function mouseout() {
 
 var nodes_type=JSON.parse($("#nodes").val())
 
-console.log(nodes_type)
-
 for(key in nodes_type){
 
 	nodes_type[key].status=false;
@@ -724,12 +699,13 @@ for(key in nodes_type){
 
 	for(rel in nodes_type[key].relation){
 		if(nodes_type[key].relation[rel].scrolleable == '1'){
-			slider='<br><br><label><i class="fa fa-level-down" aria-hidden="true"></i> <i class="fa fa-level-up" aria-hidden="true"></i> Nivel:</label><br><input id="'+key+'_slider" class="slider" type="text" data-slider-min="1" data-slider-max="5" data-slider-step="1" data-slider-value="1"/><br>'
+			slider='<br><br><label><i class="fa fa-level-down" aria-hidden="true"></i> <i class="fa fa-level-up" aria-hidden="true"></i> Nivel:</label><br><input id="'+key+'_slider" class="slider" type="text" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="1" onChange="search_query()"/><br>'
 		}
 	}
-	$("#nodes_types").append('<div class="col-md-12" style="margin-bottom:5px;"><button class="btn btn-default btn-circle btn-lg" id="'+key+'_button" onclick="create_query(\''+key+'\')" style="border-color:'+nodes_type[key].style.color+'; border-width:4px"></button>\
+	$("#nodes_types").append('<div class="col-md-12" style="margin-bottom:5px;"><button class="btn btn-default btn-circle btn-lg" id="'+key+'_button" onclick="create_query(\''+key+'\')" style="border-color:'+nodes_type[key].style.color+'; border-width:4px"><i class="fa fa fa-check fa-3x" aria-hidden="true"></i></button>\
 		<strong><label style="font-size:20px; margin-left:10px; color:#455A64;">'+key+'</label></strong>'
 		+slider+'</div>')
+	nodes_type[key].status = true
 }
 $('.slider').slider({
 	formatter: function(value) {
@@ -740,7 +716,6 @@ $('.slider').slider({
 var consult=''
 
 function create_query(key){
-
 	if(nodes_type[key].status == false ){
 		$("#"+key+'_button').append('<i class="fa fa fa-check fa-3x" aria-hidden="true"></i>')
 		nodes_type[key].status = true
@@ -748,7 +723,7 @@ function create_query(key){
 		$("#"+key+'_button').empty()
 		nodes_type[key].status = false
 	}
-	
+	search_query()	
 }
 
 function search_query(){
@@ -757,28 +732,18 @@ function search_query(){
 	var atLeastOneQuery=false;
 
 	for(key in nodes_type){
-
 		if(nodes_type[key].status){
 			atLeastOneQuery=true;
-
 			for(rel in nodes_type[key].relation){
-
 				if(nodes_type[key].relation[rel].scrolleable == '1'){
-
 					query.push(nodes_type[key].relation[rel].query.replace('?Url','"'+$("#url_person").val()+'"').replace('?scrolleable', $("#"+key+'_slider').val()))
-
 				}else{
-
 					query.push(nodes_type[key].relation[rel].query.replace('?Url','"'+$("#url_person").val()+'"'))
 
 				}
 			}
-
 		}
-
-
 	}
-
 	if(atLeastOneQuery){
 		$("#loading_div").modal('show')
 		$.ajax({
@@ -793,14 +758,8 @@ function search_query(){
 
 		})
 	}else{
-
 		$("#loading_error").modal('show')
 	}
-
-	
-	console.log(query.join(' UNION ALL '))
-
-
 }
 
 </script>

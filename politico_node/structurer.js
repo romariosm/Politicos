@@ -5,7 +5,6 @@ createPerson: function (structure){
 		neo4j.createNode('Politic',structure)
 	},
 createParty: function (structure){	
-		console.log(structure['name'])	
 		neo4j.createNode('Party',structure['name'])
 	},
 createRelation:function(entidad_1,entidad_2,tag){
@@ -13,7 +12,6 @@ createRelation:function(entidad_1,entidad_2,tag){
 		neo4j.createRelation('Politic',entidad_1,'Party',entidad_2['name'],tag)
 	},
 getEstructure:function(url,level,callback){
-	console.log('hola estoy en el estructurer')
 		neo4j.getEstructure({'Url':url},level,callback)
 	}
 }

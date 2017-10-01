@@ -164,8 +164,7 @@ app.get("/autocomplete/politicos", function (request,response) {
 
 	sendMongo(function (db){
 	 	db.collection(properties.mongo.collections).find({"Nombre": {"$in": [new RegExp(nombre, "i") ]} }).toArray(function(err, result) {
-	 		console.log({"Nombre": {"$in": [/nombre/i] } })
-    		for(var i=0;i<result.length;i++){
+	 		for(var i=0;i<result.length;i++){
 				arreglo.push({'data':String(result[i]._id),'value':result[i].Nombre})
 			}
 			response.end(
@@ -191,50 +190,32 @@ function hexToRgbA(hex){
 app.get('/load/person:*', function(request, response){
 
 
-	console.log(request.query.id)
 	var political_id = new mongo.ObjectID(request.query.id);
 	context={}
 
 	sendMongo(function (db){
 	 	db.collection(properties.mongo.collections).find({"_id": political_id }).toArray(function(err, result) {
-	 		console.log(result)
-    		
-		info={}
-
+	 	info={}
 		info['nombre']=result[0].Nombre
 		info['imagen']=result[0].Imagen
-
 		var url=result[0].Url
-		console.log(result[0].Url)
-		
-
 		context['info']=info
-
 		var estructura;
 		var sender = function(cadena){
-
 			redis.sendtoPython(
 			function(result){
-
 				list_nodes=[]
 				list_links=[]
-
 				cadena.forEach(function(element){
-					
-				
 					for(node in element){
-
 						if(list_nodes.findIndex(i => i.id == element[node]._id) == -1 && node != 'r'){
-							//console.log(element[node])
-
 							node_p={}
 							node_p.id=element[node]._id
 							node_p.name=element[node].properties.name
-
 							node_p.info='<div class="col-md-12 dont-break-out"><ul class="list-group">'
 							for(subprop in element[node].properties){
-
 								if(checkImageURL(element[node].properties[subprop])){
+									console.log(element[node].properties[subprop])
 									node_p.info=node_p.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+' <i class="fa fa-arrow-right" aria-hidden="true"></i>\
 									            </strong><img style="object-fit: cover" class="avatar2" height = "70px" width="70px" src="'+element[node].properties[subprop]+'"></div></li>'
 								}
@@ -242,26 +223,22 @@ app.get('/load/person:*', function(request, response){
 									node_p.info=node_p.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong><a href="'+element[node].properties[subprop]+'" >'+element[node].properties[subprop]+'</a></div></li>'
 								}
 								else{
-									node_p.info=node_p.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong>'+element[node].properties[subprop]+'</div></li>'
-								}
-								
+									if (element[node].properties[subprop] != ""){
+										node_p.info += '\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong>'+element[node].properties[subprop]+'</div></li>'	
+									}
+									
+								}								
 							}
 							node_p.info+='</ul></div>'
-
 							node_p.group=hexToRgbA(result[element[node].labels[0]].style.color)
-							//console.log(node_p)
-
 							list_nodes.push(node_p)
-
 						}else if (list_links.findIndex(i => i.id == element[node]._id) == -1 && node == 'r'){
-							console.log(element[node][0])
 							if(element[node][0]._id != undefined){
 								link={}
 								link.id=element[node][0]._id
 								link.type=element[node][0].type
 								link.source=element[node][0]._fromId
 								link.target=element[node][0]._toId
-
 								link.info='<div class="col-md-12 dont-break-out"><ul class="list-group">'
 								for(subprop in element[node][0].properties){
 									link.info=link.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong>'+element[node][0].properties[subprop]+'</div></li>'
@@ -279,20 +256,12 @@ app.get('/load/person:*', function(request, response){
 
 				graph={}
 				graph.nodes=list_nodes
-				graph.links=list_links
-
-				//console.log(list_links)
-				
+				graph.links=list_links				
 				context.graph=JSON.stringify(graph)
 				context.nodes=JSON.stringify(result)
 				context.url=url
-
-
 				response.render('graph_political.html',context)
-
 			},'get getNode','getInfo nodeInfo')
-
-
 		}
 		redis.sendtoPython(
 					function(result){
@@ -302,26 +271,18 @@ app.get('/load/person:*', function(request, response){
 						for(key in nodos){
 							for(subkey in nodos[key]['relation']){
 								var subquery = nodos[key]['relation'][subkey].query.replace('?Url','"'+url+'"')
-								console.log(nodos[key]['relation'][subkey].scrolleable)
 								if (nodos[key]['relation'][subkey].scrolleable == 1){
 									query.push(subquery.replace('?scrolleable',level))
 								}
 								else{
 									query.push(subquery)	
-								}
-								
+								}								
 							}
 						}
 						neo4j.sendNeo4j(query.join(' UNION ALL '),sender)
-				},'get getNode','getInfo nodeInfo')
-		
+				},'get getNode','getInfo nodeInfo')		
  		});
 	})
-
-
-	
-
-
 })
 
 app.get('/search/getDataSuggestion', function(request, response){		
@@ -418,19 +379,13 @@ app.get('/getGraphPerson/', function(request, response){
 	var context={}
 
 	var sender=function(cadena){
-		console.log(cadena)
-
-		
-
 		redis.sendtoPython(
 			function(result){
 
 				list_nodes=[]
 				list_links=[]
 
-				cadena.forEach(function(element){
-					
-				
+				cadena.forEach(function(element){				
 					for(node in element){
 
 						if(list_nodes.findIndex(i => i.id == element[node]._id) == -1 && node != 'r'){
@@ -455,59 +410,37 @@ app.get('/getGraphPerson/', function(request, response){
 								}
 							}
 							node_p.info+='</ul></div>'
-
 							node_p.group=hexToRgbA(result[element[node].labels[0]].style.color)
-							//console.log(node_p)
-
 							list_nodes.push(node_p)
-
 						}else if (list_links.findIndex(i => i.id == element[node]._id) == -1 && node == 'r'){
-							console.log(element[node][0])
 							if(element[node][0]._id != undefined){
 								link={}
 								link.id=element[node][0]._id
 								link.type=element[node][0].type
 								link.source=element[node][0]._fromId
 								link.target=element[node][0]._toId
-
 								link.info='<div class="col-md-12 dont-break-out"><ul class="list-group">'
 								for(subprop in element[node][0].properties){
-									link.info=link.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong>'+element[node][0].properties[subprop]+'</div></li>'
-								}
+									link.info=link.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong>'+element[node][0].properties[subprop]+'</div></li>'							}
 								link.info+='</ul></div>'
-
 								list_links.push(link)
 							}
-							
-
 						}
 					}
 
 				})
-
 				graph={}
 				graph.nodes=list_nodes
 				graph.links=list_links
-
-
 				context.graph=JSON.stringify(graph)
 				response.end(JSON.stringify(context))
-
 			},'get getNode','getInfo nodeInfo')
 
 	}
-
-
-
-	neo4j.sendNeo4j(request.query.query,sender)
-
-	
+	neo4j.sendNeo4j(request.query.query,sender)	
 })
 
 app.post('/send_message/', function(request, response){
-
-	console.log(request.body)
-
 	var transporter = nodemailer.createTransport({
 	  service: properties.email.service,
 	  auth: {
