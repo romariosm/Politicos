@@ -422,9 +422,9 @@
 					<div id="nodes_types">
 					</div>
 
-					<!--div class="col-md-12" style="margin-top:20px">
-						<button type="button" id="search" class="col-md-12 btn btn-site no-border" onclick="search_query()"><i class="fa fa-search" aria-hidden="true"></i> Buscar</button>
-					</div-->
+					<div class="col-md-12" style="margin-top:20px">
+						<button type="button" id="search" class="col-md-12 btn btn-site no-border" onclick="search_query()">Actualizar</button>
+					</div>
 
 			   		
 		
@@ -530,7 +530,6 @@ function load_graph(graph){
 		    //.on('click', clicklink)
 		    .style("stroke-dasharray", "20,10,5,5,5,10")
 		    .attr("stroke-width", function(d) { return Math.sqrt(8); });
-			
 		linktext=svg.selectAll('.links').data(graph.links)
 		    .append("text")
 		    .attr("font-family", "Comic Sans MS, Helvetica, sans-serif")
@@ -684,8 +683,6 @@ function mouseout() {
   d3.select(this).select("circle").transition()
       .duration(550)
       .attr("r", 20);
-
-  //noty.close();
 }
 
 
@@ -699,7 +696,7 @@ for(key in nodes_type){
 
 	for(rel in nodes_type[key].relation){
 		if(nodes_type[key].relation[rel].scrolleable == '1'){
-			slider='<br><br><label><i class="fa fa-level-down" aria-hidden="true"></i> <i class="fa fa-level-up" aria-hidden="true"></i> Nivel:</label><br><input id="'+key+'_slider" class="slider" type="text" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="1" onChange="search_query()"/><br>'
+			slider='<br><br><label><i class="fa fa-level-down" aria-hidden="true"></i> <i class="fa fa-level-up" aria-hidden="true"></i> Nivel:</label><br><input id="'+key+'_slider" class="slider" type="text" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="1" "/><br>'
 		}
 	}
 	$("#nodes_types").append('<div class="col-md-12" style="margin-bottom:5px;"><button class="btn btn-default btn-circle btn-lg" id="'+key+'_button" onclick="create_query(\''+key+'\')" style="border-color:'+nodes_type[key].style.color+'; border-width:4px"><i class="fa fa fa-check fa-3x" aria-hidden="true"></i></button>\
@@ -722,8 +719,7 @@ function create_query(key){
 	}else{
 		$("#"+key+'_button').empty()
 		nodes_type[key].status = false
-	}
-	search_query()	
+	}	
 }
 
 function search_query(){

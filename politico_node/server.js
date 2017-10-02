@@ -214,19 +214,17 @@ app.get('/load/person:*', function(request, response){
 							node_p.name=element[node].properties.name
 							node_p.info='<div class="col-md-12 dont-break-out"><ul class="list-group">'
 							for(subprop in element[node].properties){
-								if(checkImageURL(element[node].properties[subprop])){
-									console.log(element[node].properties[subprop])
-									node_p.info=node_p.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+' <i class="fa fa-arrow-right" aria-hidden="true"></i>\
+								if(checkImageURL(element[node].properties[subprop])){									
+									node_p.info += '\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+' <i class="fa fa-arrow-right" aria-hidden="true"></i>\
 									            </strong><img style="object-fit: cover" class="avatar2" height = "70px" width="70px" src="'+element[node].properties[subprop]+'"></div></li>'
 								}
 								else if(ValidURL(element[node].properties[subprop])){
-									node_p.info=node_p.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong><a href="'+element[node].properties[subprop]+'" >'+element[node].properties[subprop]+'</a></div></li>'
+									node_p.info += '\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong><a href="'+element[node].properties[subprop]+'" >'+element[node].properties[subprop]+'</a></div></li>'
 								}
 								else{
-									if (element[node].properties[subprop] != ""){
+									if (element[node].properties[subprop].trim() != ""){
 										node_p.info += '\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong>'+element[node].properties[subprop]+'</div></li>'	
-									}
-									
+									}									
 								}								
 							}
 							node_p.info+='</ul></div>'
@@ -244,7 +242,6 @@ app.get('/load/person:*', function(request, response){
 									link.info=link.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong>'+element[node][0].properties[subprop]+'</div></li>'
 								}
 								link.info+='</ul></div>'
-
 								list_links.push(link)
 							}
 							
@@ -381,16 +378,12 @@ app.get('/getGraphPerson/', function(request, response){
 	var sender=function(cadena){
 		redis.sendtoPython(
 			function(result){
-
 				list_nodes=[]
 				list_links=[]
-
 				cadena.forEach(function(element){				
 					for(node in element){
 
 						if(list_nodes.findIndex(i => i.id == element[node]._id) == -1 && node != 'r'){
-							//console.log(element[node])
-
 							node_p={}
 							node_p.id=element[node]._id
 							node_p.name=element[node].properties.name
@@ -413,7 +406,7 @@ app.get('/getGraphPerson/', function(request, response){
 							node_p.group=hexToRgbA(result[element[node].labels[0]].style.color)
 							list_nodes.push(node_p)
 						}else if (list_links.findIndex(i => i.id == element[node]._id) == -1 && node == 'r'){
-							if(element[node][0]._id != undefined){
+
 								link={}
 								link.id=element[node][0]._id
 								link.type=element[node][0].type
@@ -423,11 +416,12 @@ app.get('/getGraphPerson/', function(request, response){
 								for(subprop in element[node][0].properties){
 									link.info=link.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong>'+element[node][0].properties[subprop]+'</div></li>'							}
 								link.info+='</ul></div>'
+								
+								console.log(link)
 								list_links.push(link)
-							}
+							
 						}
 					}
-
 				})
 				graph={}
 				graph.nodes=list_nodes
