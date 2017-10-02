@@ -398,7 +398,7 @@
 				<div class="panel-body">
 
 				
-					<svg id="algo" width="750" height="900"></svg>
+					<svg id="algo" width="950" height="900"></svg>
 
 
 
@@ -509,15 +509,17 @@ $(document).ready(function(){
 
 function load_graph(graph){
 	svg = d3.select("svg"),
-
+	radius=6
     width = +svg.attr("width"),
     height = +svg.attr("height");
+    console.log(width)
 
 	color = d3.scaleOrdinal(d3.schemeCategory20);
 
 	simulation = d3.forceSimulation()
 	    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(250).strength(0.9))
-	    .force("charge", d3.forceManyBody())
+	    .force("charge", d3.forceManyBody().strength(-250))
+	    //.force("size", )
 	    .force("center", d3.forceCenter(width / 2, height / 2));	
 
 		link = svg
@@ -604,7 +606,7 @@ function load_graph(graph){
 
 
     node 
-        .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"});
+        .attr("transform", function(d) { return "translate(" + Math.max(radius, Math.min(width - radius, d.x)) + "," + Math.max(radius, Math.min(height - radius, d.y)) + ")"});
   }
 
   
