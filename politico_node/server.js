@@ -400,15 +400,17 @@ app.get('/getGraphPerson/', function(request, response){
 							node_p.info='<div class="col-md-12 dont-break-out"><ul class="list-group">'
 							for(subprop in element[node].properties){
 								
-								if(checkImageURL(element[node].properties[subprop])){
-									node_p.info=node_p.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+' <i class="fa fa-arrow-right" aria-hidden="true"></i>\
+								if(checkImageURL(element[node].properties[subprop])){									
+									node_p.info += '\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+' <i class="fa fa-arrow-right" aria-hidden="true"></i>\
 									            </strong><img style="object-fit: cover" class="avatar2" height = "70px" width="70px" src="'+element[node].properties[subprop]+'"></div></li>'
 								}
 								else if(ValidURL(element[node].properties[subprop])){
-									node_p.info=node_p.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong><a href="'+element[node].properties[subprop]+'" >'+element[node].properties[subprop]+'</a></div></li>'
+									node_p.info += '\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong><a href="'+element[node].properties[subprop]+'" >'+element[node].properties[subprop]+'</a></div></li>'
 								}
 								else{
-									node_p.info=node_p.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong>'+element[node].properties[subprop]+'</div></li>'
+									if (element[node].properties[subprop].trim() != ""){
+										node_p.info += '\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong>'+element[node].properties[subprop]+'</div></li>'	
+									}									
 								}
 							}
 							node_p.info+='</ul></div>'
