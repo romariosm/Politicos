@@ -509,7 +509,7 @@ $(document).ready(function(){
 
 function load_graph(graph){
 	svg = d3.select("svg"),
-	radius=6
+	radius=10
     width = +svg.attr("width"),
     height = +svg.attr("height");
     console.log(width)
@@ -517,7 +517,7 @@ function load_graph(graph){
 	color = d3.scaleOrdinal(d3.schemeCategory20);
 
 	simulation = d3.forceSimulation()
-	    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(250).strength(0.9))
+	    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(200).strength(0.5))
 	    .force("charge", d3.forceManyBody().strength(-250))
 	    //.force("size", )
 	    .force("center", d3.forceCenter(width / 2, height / 2));	
@@ -558,16 +558,16 @@ function load_graph(graph){
 
 
 	    node.append("circle")
-	    .attr("r", 20)
+	    .attr("r", 15)
 	    .style("fill", "white")
 	    .style("stroke", function(d) { return d.group })
 	    .style("stroke-width", 6 )
 
 
 		node.append("text")
-	    .attr("x", 18)
+	    .attr("dx", 18)
 	    .attr("dy", ".65em")
-	    .style("font", "bold 16px Arial")
+	    .style("font", "bold 11px Arial")
 	    .text(function(d) { return d.name; });
 
 	   
