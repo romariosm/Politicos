@@ -232,17 +232,23 @@ app.get('/load/person:*', function(request, response){
 							list_nodes.push(node_p)
 						}else if (list_links.findIndex(i => i.id == element[node]._id) == -1 && node == 'r'){
 							if(element[node][0]._id != undefined){
-								link={}
-								link.id=element[node][0]._id
-								link.type=element[node][0].type
-								link.source=element[node][0]._fromId
-								link.target=element[node][0]._toId
-								link.info='<div class="col-md-12 dont-break-out"><ul class="list-group">'
-								for(subprop in element[node][0].properties){
-									link.info=link.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong>'+element[node][0].properties[subprop]+'</div></li>'
-								}
-								link.info+='</ul></div>'
-								list_links.push(link)
+								
+								element[node].forEach( function(element_r, index) {
+
+									link={}
+									link.id=element_r._id
+									link.type=element_r.type
+									link.source=element_r._fromId
+									link.target=element_r._toId
+									link.info='<div class="col-md-12 dont-break-out"><ul class="list-group">'
+									for(subprop in element_r.properties){
+										link.info=link.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+element_r.properties[subprop]+'</div></li>'							}
+									link.info+='</ul></div>'
+									
+									console.log(link)
+									list_links.push(link)
+										// statements
+								});
 							}
 							
 
@@ -406,19 +412,25 @@ app.get('/getGraphPerson/', function(request, response){
 							node_p.group=hexToRgbA(result[element[node].labels[0]].style.color)
 							list_nodes.push(node_p)
 						}else if (list_links.findIndex(i => i.id == element[node]._id) == -1 && node == 'r'){
+								console.log(element[node])
 
-								link={}
-								link.id=element[node][0]._id
-								link.type=element[node][0].type
-								link.source=element[node][0]._fromId
-								link.target=element[node][0]._toId
-								link.info='<div class="col-md-12 dont-break-out"><ul class="list-group">'
-								for(subprop in element[node][0].properties){
-									link.info=link.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+subprop.toUpperCase()+': </strong>'+element[node][0].properties[subprop]+'</div></li>'							}
-								link.info+='</ul></div>'
+								element[node].forEach( function(element_r, index) {
+
+									link={}
+									link.id=element_r._id
+									link.type=element_r.type
+									link.source=element_r._fromId
+									link.target=element_r._toId
+									link.info='<div class="col-md-12 dont-break-out"><ul class="list-group">'
+									for(subprop in element_r.properties){
+										link.info=link.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+element_r.properties[subprop]+'</div></li>'							}
+									link.info+='</ul></div>'
+									
+									console.log(link)
+									list_links.push(link)
+										// statements
+								});
 								
-								console.log(link)
-								list_links.push(link)
 							
 						}
 					}
