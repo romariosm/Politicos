@@ -232,21 +232,24 @@ app.get('/load/person:*', function(request, response){
 							list_nodes.push(node_p)
 						}else if (list_links.findIndex(i => i.id == element[node]._id) == -1 && node == 'r'){
 							if(element[node][0]._id != undefined){
-								
+
 								element[node].forEach( function(element_r, index) {
 
-									link={}
-									link.id=element_r._id
-									link.type=element_r.type
-									link.source=element_r._fromId
-									link.target=element_r._toId
-									link.info='<div class="col-md-12 dont-break-out"><ul class="list-group">'
-									for(subprop in element_r.properties){
-										link.info=link.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+element_r.properties[subprop]+'</div></li>'							}
-									link.info+='</ul></div>'
-									
-									console.log(link)
-									list_links.push(link)
+									if(list_links.findIndex(i => i.id == element_r._id) == -1){
+										link={}
+										link.id=element_r._id
+										link.type=element_r.type
+										link.source=element_r._fromId
+										link.target=element_r._toId
+										link.info='<div class="col-md-12 dont-break-out"><ul class="list-group">'
+										for(subprop in element_r.properties){
+											link.info=link.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+element_r.properties[subprop]+'</div></li>'							}
+										link.info+='</ul></div>'
+										
+										
+										list_links.push(link)
+
+									}
 										// statements
 								});
 							}
@@ -411,23 +414,27 @@ app.get('/getGraphPerson/', function(request, response){
 							node_p.info+='</ul></div>'
 							node_p.group=hexToRgbA(result[element[node].labels[0]].style.color)
 							list_nodes.push(node_p)
-						}else if (list_links.findIndex(i => i.id == element[node]._id) == -1 && node == 'r'){
-								console.log(element[node])
+						}else if (node == 'r'){
+								
 
 								element[node].forEach( function(element_r, index) {
 
-									link={}
-									link.id=element_r._id
-									link.type=element_r.type
-									link.source=element_r._fromId
-									link.target=element_r._toId
-									link.info='<div class="col-md-12 dont-break-out"><ul class="list-group">'
-									for(subprop in element_r.properties){
-										link.info=link.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+element_r.properties[subprop]+'</div></li>'							}
-									link.info+='</ul></div>'
+									if(list_links.findIndex(i => i.id == element_r._id) == -1){
+										link={}
+										link.id=element_r._id
+										link.type=element_r.type
+										link.source=element_r._fromId
+										link.target=element_r._toId
+										link.info='<div class="col-md-12 dont-break-out"><ul class="list-group">'
+										for(subprop in element_r.properties){
+											link.info=link.info+'\n'+'<li class="list-group-item flex-column "><div class="d-flex w-10 justify-content-between"><strong>'+element_r.properties[subprop]+'</div></li>'							}
+										link.info+='</ul></div>'
+										
+										
+										list_links.push(link)
+
+									}
 									
-									console.log(link)
-									list_links.push(link)
 										// statements
 								});
 								
@@ -481,7 +488,7 @@ app.post('/send_message/', function(request, response){
 })           
 
 function checkImageURL(url) {
-    return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
+    return(url.match(/\.(jpeg|jpg|gif|png|JPG)$/) != null);
 }
 
 function ValidURL(str) {
