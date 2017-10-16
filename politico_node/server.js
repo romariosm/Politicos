@@ -380,6 +380,11 @@ app.get('/contactar/', function(request, response){
 	
 })
 
+app.get('/como_funciona/', function(request, response){ 
+
+	response.render('how_work.html');
+	
+})
 app.get('/getGraphPerson/', function(request, response){ 
 
 	var context={}
