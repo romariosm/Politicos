@@ -7,24 +7,26 @@ module.exports = {
   getJul: function (json,callback){
  	return sendNeo4j('match (p '+createParameters(json)+')-[r:worksAt]->(q) RETURN q.name as inst,toInt(r.InicioJul) as ini,toInt(r.FinJul) as fin',callback)
  },
-  getPartner: function (jsonI,inicio,fin,callback){
+  getPartner: function (jsonI,inicio,fin){ //,callback){
   	var rule = "(toInt(r.InicioJul) <= "+ inicio +" and toInt(r.FinJul) >= "+ fin +")"  +
-	" or (toInt(r.InicioJul) >= "+ inicio +" and toInt(r.FinJul) >= "+ fin +" and toInt(r.InicioJul) <= "+ fin +")"+ 
-	" or (toInt(r.InicioJul) <= "+ inicio +" and toInt(r.FinJul) <= "+ fin +" and toInt(r.FinJul) >= "+ inicio +")"
-	return sendNeo4j('match all = (p)-[r:worksAt]->(q'+createParameters(jsonI)+') WHERE '+rule+' RETURN all',callback)
+	" or (toInt(r.InicioJul) >= "+ inicio +" and toInt(r.InicioJul) <= "+ fin +")"+
+	" or (toInt(r.FinJul) <= "+ fin +" and toInt(r.FinJul) >= "+ inicio +")"
+  return 'match (a)-[r:worksAt]->(i)-[r_2]->(q '+createParameters(jsonI)+') WHERE '+rule+' RETURN a,r,i,r_2,q'
+  //console.log('match all = (p)-[r:worksAt]->()-[]->(q'+createParameters(jsonI)+') WHERE '+rule+' RETURN all')
+	//return sendNeo4j('match all = (p)-[r:worksAt]->(q'+createParameters(jsonI)+') WHERE '+rule+' RETURN all',callback)
  },
  sendNeo4j: function(sentence,callback){
  	return sendNeo4j(sentence,callback)
  }
 }
-function sendNeo4j(sentence,callback){	
-	var db = new neo4j.GraphDatabase('http://' + properties.neo4j.user + ":" + properties.neo4j.password + "@" + properties.neo4j.host + ":"+properties.neo4j.port); 
+function sendNeo4j(sentence,callback){
+	var db = new neo4j.GraphDatabase('http://' + properties.neo4j.user + ":" + properties.neo4j.password + "@" + properties.neo4j.host + ":"+properties.neo4j.port);
 		db.cypher({
     		query: sentence,
 		}, function (err, results) {
     		if (err) throw err;
     		callback(results)
-		});			
+		});
 }
 
 function createParameters(json_file){
@@ -33,5 +35,5 @@ function createParameters(json_file){
 		output += key + ':"'+json_file[key]+'"'+","
 	}
 	return output.slice(0, output.length - 1) + "}"
-	 
+
 }

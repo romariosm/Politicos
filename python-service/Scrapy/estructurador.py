@@ -9,7 +9,6 @@ def create_structure(table):
 	for key in table:
 		if isinstance(table[key],dict):
 			if table[key].has_key('Perido del cargo'):
-				print key.encode('utf-8')
 				table[key]['Cargo'] = key
 				structure['organization']['laboral'].append(table[key])
 			else:				
@@ -131,7 +130,6 @@ def relatedFamily(structure,stored=[],newFamily=[]):
 	family = newFamily
 	for key in structure['family']:
 		for person in structure['family'][key]:
-			#print key +' -> '+ person
 			if not CM.exists('person',{'Url':person}):
 				scrap_person = politic_scrapeTable(person)
 				family += [scrap_person]
@@ -157,11 +155,13 @@ def relateOrganizationsLaboral(structure):
 			properties['Cargo'] = key['Cargo']
 			properties['Inicio'] = key['Perido del cargo'].split('-')[0].strip()
 			dateInicio = properties['Inicio'].replace('Desde el ','').split(' de ')
+			dateInicio = [dateInicio[0] if len(dateInicio)==3 else '1',dateInicio[1] if len(dateInicio)==3 else dateInicio[0] if len(dateInicio)==2 else '1',dateInicio[2] if len(dateInicio)==3 else dateInicio[1] if len(dateInicio)==2 else dateInicio[0]]
 			properties['InicioJul'] = str(gregToJul(dateInicio[0],dateInicio[1],dateInicio[2]))
 			properties['Fin'] = key['Perido del cargo'].split('-')[1].strip() if len(key['Perido del cargo'].split('-'))>1 else "" 
 			if properties['Fin'] != "":
 				dateFin = properties['Fin'].split(' de ')
-				properties['FinJul'] = str(gregToJul(dateFin[0],dateFin[1],dateFin[2]))
+				dateFin = [dateFin[0] if len(dateFin)==3 else '1',dateFin[1] if len(dateFin)==3 else dateFin[0] if len(dateFin)==2 else '1',dateFin[2] if len(dateFin)==3 else dateFin[1] if len(dateFin)==2 else dateFin[0]]
+				properties['FinJul'] = str(gregToJul(dateFin[0] if len(dateFin)==3 else '31',dateFin[1] if len(dateFin)==3 else '12',dateFin[2] if len(dateFin)==3 else dateFin[0]))
 			else:
 				properties['FinJul'] = "5000000"			
 			CM.makeRelation(relation,properties,'person',{'Url':structure['person']['Url']},node,{'Url':key['Entidad'][0]['url']})
@@ -204,7 +204,6 @@ def relatePlaces(structure):
 	array = structure['site']['birth']
 	dic = {}
 	site_no_registered = []
-	print array
 	for cosa in array:
 		dom = cosa.split("/")
 		valor = dom[len(dom)-1]
@@ -236,8 +235,9 @@ def gregToJul(day,month,year):
 	return (146097 * cen) / 4 + (1461 * dec) / 4 + (153 * month + 2) / 5 + day + 1721119
 
 def Representsmonth(s):
+
     try: 
-        return int(s)
+    	return int(s)
     except ValueError:
         return {
         'enero': 1,
@@ -253,8 +253,8 @@ def Representsmonth(s):
 		'noviembre': 11,
 		'diciembre': 12,
     	}[s]
-#link = "https://es.wikipedia.org/wiki/Juan_Manuel_Santos"
-#print createTree(link,[],[])
+link = "https://es.wikipedia.org/wiki/%C3%81lvaro_Uribe"
+print createTree(link,[],[])
 """politic = politic_scrapeTable(link)
 a = create_structure(politic)
 c = cleanStructure(a)

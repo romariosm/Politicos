@@ -99,4 +99,4 @@ def getContent(url):
 	return data
 
 
-fm.writeFileJSON("juan_santos_prueba",politic_scrapeTable("https://es.wikipedia.org/wiki/Hernando_Santos_Castillo"))
+fm.writeFileJSON("juan_santos_prueba",politic_scrapeTable("https://es.wikipedia.org/wiki/Germ%C3%A1n_Vargas_Lleras"))
