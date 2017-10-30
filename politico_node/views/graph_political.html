@@ -29,6 +29,9 @@
 		
 		<script src="/bootstrap-notify-3.1.3/dist/bootstrap-notify.js"></script>
 
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js" type="text/javascript" charset="utf-8" async defer></script>
+
 
 		
 	<style>
@@ -54,12 +57,12 @@
 		}
 
 		.btn-circle.btn-lg {
-		  width: 70px;
-		  height: 70px;
-		  padding: 10px 16px;
+		  width: 50px;
+		  height: 50px;
+		  padding: 5px 7px;
 		  font-size: 10px;
 		  line-height: 1.33;
-		  border-radius: 35px;
+		  border-radius: 25px;
 		}
 		hr.style17 {
 		border-top: 1px solid #8c8b8b;
@@ -299,6 +302,9 @@
 		  color: #fff;
 		  border-radius: 2px;
 		}
+		#modal_subgraph{
+			overflow-y: scroll;
+		}
 		
 
 	</style>
@@ -321,12 +327,11 @@
 		});
 
 		
-
-	
-
-		
-		
-
+		$('input[name="my-checkbox"]').on('switchChange.bootstrapSwitch', function(event, state) {
+			  console.log(this); // DOM element
+			  console.log(event); // jQuery event
+			  console.log(state); // true | false
+		});		
 
 	});
 
@@ -338,6 +343,8 @@
 
 	<body style="background-color: rgb(234, 236, 236);">
 		<% include header.html %>
+
+		
 
 			<input type="hidden" id="graph" value="<%=graph %>"/>
 			<input type="hidden" id="nodes" value="<%=nodes %>"/>
@@ -368,20 +375,6 @@
 					<img src="<%= info.imagen %>" class="img-responsive" style="height:auto; width: 50%; object-fit: cover"/>
 					</center>
 					
-					<!--div class="col-md-12">
-					<label class="label-control" style="padding-top: 10px">
-						<h4><strong style="color: #4b4c4e">Información Básica</strong></h4>
-					</label>
-					</div>
-					<div class="col-md-12">
-						<label ><strong style="color: #4b4c4e"><i class="fa fa-map-marker" aria-hidden="true"></i> <%=info.residencia %></strong></label>
-						
-					</div>
-					<div class="col-md-12" style="margin-bottom: 15px">
-					<label><strong style="color: #4b4c4e"><i class="fa fa-suitcase" aria-hidden="true"></i> <%= info.ocupacion%></strong></label>
-					</div-->
-
-
 							  
 					</div><!-- /.row -->
 
@@ -398,7 +391,7 @@
 				<div class="panel-body">
 
 				
-					<svg id="algo" width="950" height="900"></svg>
+					<svg id="algo" width="800" height="900"></svg>
 
 
 
@@ -453,6 +446,34 @@
 
 			</div>
 
+			<div class="modal fade" id="modal_subgraph" role="dialog">
+
+				 <div class="modal-dialog" style="width: 75%">
+
+				    <!-- Modal content-->
+				    <div class="modal-content">
+
+				    	<div class="modal-header">
+        					<button type="button" class="close" data-dismiss="modal">&times;</button>
+        					<h4 class="modal-title"> <i class="fa fa-code-fork" aria-hidden="true"></i> Consulta</h4>
+      					</div>
+				    	
+				      	<div class="modal-body">
+				      		<div style="height: 900px !important">
+				      			<svg id="algo1" width="800" height="900"></svg>
+				      		</div>
+				      	</div>
+
+				      	<div class="modal-footer">
+				    		<button type="button" class="btn btn-danger" data-dismiss="modal"> <i class="fa fa-window-close" onclik="reloadStartGraph()" aria-hidden="true"></i> Cerrar</button>
+				    	</div>
+				      
+				    </div>
+
+				  </div>
+
+			</div>
+
 			<div class="modal fade" id="loading_error" data-backdrop="static" data-keyboard="false">
 
 				 <div class="modal-dialog">
@@ -480,6 +501,7 @@
 				  </div>
 
 			</div>
+		
 			
 	</body>
 
@@ -496,33 +518,38 @@ var node=null
 var svg=null
 var color=null
 var simulation=null
+var list_people_selected=[]
+var dict_div={}
 
 $(document).ready(function(){
     $('[data-toggle="popover"]').popover(); 
 
 	var graph=JSON.parse($("#graph").val())
 
-	load_graph(graph)
+	load_graph(graph,'algo')
 });
 
 
 
-function load_graph(graph){
-	svg = d3.select("svg"),
-	radius=10
-    width = +svg.attr("width"),
-    height = +svg.attr("height");
-    console.log(width)
+function load_graph(graph,div){
 
-	color = d3.scaleOrdinal(d3.schemeCategory20);
+	dict_div[div]={}
 
-	simulation = d3.forceSimulation()
+	dict_div[div].svg = d3.select('#'+div),
+	dict_div[div].radius=10
+    dict_div[div].width = +dict_div[div].svg.attr("width"),
+    dict_div[div].height = +dict_div[div].svg.attr("height");
+
+
+	dict_div[div].color = d3.scaleOrdinal(d3.schemeCategory20);
+
+	dict_div[div].simulation = d3.forceSimulation()
 	    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(200).strength(0.5))
 	    .force("charge", d3.forceManyBody().strength(-250))
 	    //.force("size", )
-	    .force("center", d3.forceCenter(width / 2, height / 2));	
+	    .force("center", d3.forceCenter(dict_div[div].width / 2, dict_div[div].height / 2));	
 
-		link = svg
+		dict_div[div].link = dict_div[div].svg
 		    .selectAll(".links")
 		    .data(graph.links)
 		    .enter().append("g")
@@ -532,7 +559,7 @@ function load_graph(graph){
 		    //.on('click', clicklink)
 		    .style("stroke-dasharray", "20,10,5,5,5,10")
 		    .attr("stroke-width", function(d) { return Math.sqrt(8); });
-		linktext=svg.selectAll('.links').data(graph.links)
+		dict_div[div].linktext=dict_div[div].svg.selectAll('.links').data(graph.links)
 		    .append("text")
 		    .attr("font-family", "Comic Sans MS, Helvetica, sans-serif")
 		    .attr("fill", "Black")
@@ -543,28 +570,29 @@ function load_graph(graph){
 
 		    
 
-	  node = svg	    
+	  dict_div[div].node = dict_div[div].svg	    
 	    .selectAll(".nodes")
 	    .data(graph.nodes)
 	    .enter().append('g')
 	    .attr("class", "nodes")
 	    .on("mouseover", mouseover)
 	    .on("mouseout", mouseout)
-	    .on("click", clicknode)
+	    //.on("click", clicknode)
 	    .call(d3.drag()
-			.on("start", dragstarted)
-			.on("drag", dragged)
-			.on("end", dragended));
+			.on("start", function(d){dragstarted(d,div)})
+			.on("drag", function(d){dragged(d,div)})
+			.on("end", function(d){dragended(d,div)}));
 
 
-	    node.append("circle")
+	    dict_div[div].node.append("circle")
 	    .attr("r", 15)
 	    .style("fill", "white")
 	    .style("stroke", function(d) { return d.group })
 	    .style("stroke-width", 6 )
+	    .on("click", clicknode)
 
 
-		node.append("text")
+		dict_div[div].node.append("text")
 	    .attr("dx", 18)
 	    .attr("dy", ".65em")
 	    .style("font", "bold 11px Arial")
@@ -572,25 +600,25 @@ function load_graph(graph){
 
 	   
 
-	  simulation
+	  dict_div[div].simulation
 	      .nodes(graph.nodes)
-	      .on("tick", ticked);
+	      .on("tick", function(d){ticked(d,div)});
 
-	  simulation.force("link")
+	  dict_div[div].simulation.force("link")
 	      .links(graph.links);
 
 }
 
 
 
-  function ticked() {
-    link
+  function ticked(d,div) {
+    dict_div[div].link
         .attr("x1", function(d) { return d.source.x; })
         .attr("y1", function(d) { return d.source.y; })
         .attr("x2", function(d) { return d.target.x; })
         .attr("y2", function(d) { return d.target.y; });
 
-    linktext
+    dict_div[div].linktext
 	    .attr("x", function(d) {
 	        if (d.target.x > d.source.x) {
 	            return (d.source.x + (d.target.x - d.source.x)/2); }
@@ -605,24 +633,24 @@ function load_graph(graph){
 	    })
 
 
-    node 
-        .attr("transform", function(d) { return "translate(" + Math.max(radius, Math.min(width - radius, d.x)) + "," + Math.max(radius, Math.min(height - radius, d.y)) + ")"});
+    dict_div[div].node 
+        .attr("transform", function(d) { return "translate(" + Math.max(dict_div[div].radius, Math.min(dict_div[div].width - dict_div[div].radius, d.x)) + "," + Math.max(dict_div[div].radius, Math.min(dict_div[div].height - dict_div[div].radius, d.y)) + ")"});
   }
 
   
 
-function dragstarted(d) {
-  if (!d3.event.active) simulation.alphaTarget(1).restart();
+function dragstarted(d,div) {
+  if (!d3.event.active) dict_div[div].simulation.alphaTarget(1).restart();
   d.fx = d.x;
   d.fy = d.y;
 }
 
-function dragged(d) {
+function dragged(d,div) {
   d.fx = d3.event.x;
   d.fy = d3.event.y;
 }
 
-function clicklink(d){	
+function clicklink(d,div){	
 	if(!noty_status){
 		noty_status=true;
 		noty=$.notify({
@@ -646,36 +674,55 @@ function clicklink(d){
 
 }
 
-function dragended(d) {
-  if (!d3.event.active) simulation.alphaTarget(0);
+function dragended(d,div) {
+  if (!d3.event.active) dict_div[div].simulation.alphaTarget(0);
   d.fx = null;
   d.fy = null;
 }
 
 function clicknode(d){
-	if(!noty_status){
-		noty_status=true;
-		noty=$.notify({
-			title: '<center><h4><strong>'+d.name+'</strong></h4></center><hr>',
-			message: d.info 
-		},{
-			type: 'info',
-			placement: {
-				from: "top",
-				align: "right"
-			},
-			allow_dismiss: true,
-			timer: 1000000000,
-			onClose: function(){
-				noty_status=false;
-			}
-		});
+	console.log(d)
+
+	if($("#"+d.labels+"_switch").bootstrapSwitch('state') == true){
+		index=list_people_selected.indexOf(d.url)
+		if( index == -1){
+			list_people_selected.push(d.url)
+			d3.select(this).style("fill", d.group)
+		}else{
+			list_people_selected.splice(index, 1);
+			d3.select(this).style("fill", 'white')
+		}
+		
+
 	}else{
-		noty.close();
+
+		if(!noty_status){
+			noty_status=true;
+			noty=$.notify({
+				title: '<center><h4><strong>'+d.name+'</strong></h4></center><hr>',
+				message: d.info 
+			},{
+				type: 'info',
+				placement: {
+					from: "top",
+					align: "right"
+				},
+				allow_dismiss: true,
+				timer: 1000000000,
+				onClose: function(){
+					noty_status=false;
+				}
+			});
+		}else{
+			noty.close();
+		}
+
 	}
+
+	
 }
 
-function mouseover(d) {
+function mouseover() {
   d3.select(this).select("circle").transition()
       .duration(550)
       .attr("r", 30) 
@@ -691,10 +738,16 @@ function mouseout() {
 var nodes_type=JSON.parse($("#nodes").val())
 
 for(key in nodes_type){
-
+	console.log(nodes_type)
 	nodes_type[key].status=false;
 
 	slider=''
+
+	switch_element=''
+
+	if (key =='person'){
+		switch_element='<br><label>Seleccionar Nodos</label><br><input class="switch_bootstrap" type="checkbox" id="'+key+'_switch" name="my-checkbox"><br>'
+	}
 
 	for(rel in nodes_type[key].relation){
 		if(nodes_type[key].relation[rel].scrolleable == '1'){
@@ -703,7 +756,7 @@ for(key in nodes_type){
 	}
 	$("#nodes_types").append('<div class="col-md-12" style="margin-bottom:5px;"><button class="btn btn-default btn-circle btn-lg" id="'+key+'_button" onclick="create_query(\''+key+'\')" style="border-color:'+nodes_type[key].style.color+'; border-width:4px"><i class="fa fa fa-check fa-3x" aria-hidden="true"></i></button>\
 		<strong><label style="font-size:20px; margin-left:10px; color:#455A64;">'+key+'</label></strong>'
-		+slider+'</div>')
+		+slider+switch_element+'</div>')
 	nodes_type[key].status = true
 }
 $('.slider').slider({
@@ -711,6 +764,8 @@ $('.slider').slider({
 		return 'Valor: ' + value;
 	}
 });
+
+$(".switch_bootstrap").bootstrapSwitch();
 
 var consult=''
 
@@ -726,15 +781,32 @@ function create_query(key){
 
 function search_query(){
 	var query=[]
+	var query_list_person=[]
 
-	var atLeastOneQuery=false;
+	var atLeastOneQuery = false;
+	var switch_element_person = false; 
 
 	for(key in nodes_type){
 		if(nodes_type[key].status){
 			atLeastOneQuery=true;
 			for(rel in nodes_type[key].relation){
-				if(nodes_type[key].relation[rel].scrolleable == '1'){
+
+				if($("#"+key+'_switch').bootstrapSwitch('state') == true){
+
+					if(list_people_selected.length > 1){
+						switch_element_person=true
+						first=list_people_selected[0]
+						query_multiple="match (a:person {Url:?url1})-[r*1..1]-(i)-[r2*1..1]-(n1)-[r3*1..1]-(n2)-[r4*1..1]-(n3:person {Url:?url2}) return a,r,i,n1,r2,n2,r3,n3,r4".replace('?url1','"'+first+'"')
+						for(i=1;i<list_people_selected.length;i++){
+
+							query_list_person.push(query_multiple.replace('?url2','"'+list_people_selected[i]+'"'))
+						}
+						
+					}
+						
+				}else if(nodes_type[key].relation[rel].scrolleable == '1'){
 					query.push(nodes_type[key].relation[rel].query.replace('?Url','"'+$("#url_person").val()+'"').replace('?scrolleable', $("#"+key+'_slider').val()))
+
 				}else{
 					query.push(nodes_type[key].relation[rel].query.replace('?Url','"'+$("#url_person").val()+'"'))
 
@@ -742,16 +814,31 @@ function search_query(){
 			}
 		}
 	}
-	if(atLeastOneQuery){
+	if(atLeastOneQuery || switch_element_person ){
 		$("#loading_div").modal('show')
+
+		if( switch_element_person == true ){
+			var data = query_list_person.join(' UNION ALL ')
+			console.log(data)
+		}else{
+			var data = query.join(' UNION ALL ')
+		}
 		$.ajax({
 			url:'/getGraphPerson/',
-			data:{'query': query.join(' UNION ALL ')},
+			data:{'query': data},
 			success: function(response){
 
 				$("#loading_div").modal('hide')
-				svg.selectAll("*").remove();
-				load_graph(JSON.parse(JSON.parse(response).graph))
+				if(switch_element_person == true){
+					d3.select("#algo1").selectAll("*").remove();
+					load_graph(JSON.parse(JSON.parse(response).graph),'algo1')
+					$("#modal_subgraph").modal('show')
+
+				}else{
+					d3.select("#algo").selectAll("*").remove();
+					load_graph(JSON.parse(JSON.parse(response).graph),'algo')
+				}
+				
 			}
 
 		})
@@ -759,6 +846,8 @@ function search_query(){
 		$("#loading_error").modal('show')
 	}
 }
+
+
 
 </script>
 

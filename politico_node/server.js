@@ -197,10 +197,15 @@ app.get('/load/person:*', function(request, response){
 				list_nodes=[]
 				list_links=[]
 				cadena.forEach(function(element){
+					console.log(element)
 					for(node in element){
+						
+
 						if(list_nodes.findIndex(i => i.id == element[node]._id) == -1 && node.indexOf('r') == -1 && element[node].properties!= undefined){
 							node_p={}
 							node_p.id=element[node]._id
+							node_p.labels=element[node].labels[0]
+							node_p.url=element[node].properties.Url
 							node_p.name=element[node].properties.name
 							node_p.info='<div class="col-md-12 dont-break-out"><ul class="list-group">'
 							for(subprop in element[node].properties){
@@ -262,7 +267,7 @@ app.get('/load/person:*', function(request, response){
 					function(result){
 						var nodos = result
 						var level = 1
-						/*var query = []
+						var query = []
 						for(key in nodos){
 							for(subkey in nodos[key]['relation']){
 								var subquery = nodos[key]['relation'][subkey].query.replace('?Url','"'+url+'"')
@@ -274,7 +279,7 @@ app.get('/load/person:*', function(request, response){
 								}								
 							}
 						}						
-						neo4j.sendNeo4j(query.join(' UNION ALL '),sender)*/
+						neo4j.sendNeo4j(query.join(' UNION ALL '),sender)
 
 						/*
 						Para Romario:
@@ -282,8 +287,8 @@ app.get('/load/person:*', function(request, response){
 						casos para que no quede tan paila la consulta desde aquí toda adicionar una condiciòn para que no traiga 
 						los sitios en que naciò la persona, pero ps lo importante es por lo menos tener este grafo
 						*/
-						var query = "match (a:person {Url:'https://es.wikipedia.org/wiki/Germ%C3%A1n_Vargas_Lleras'})-[r*1..1]-(i)-[r2*1..1]-(n1)-[r3*1..1]-(n2)-[r4*1..1]-(n3:person {Url:'https://es.wikipedia.org/wiki/Francisco_Santos_Calder%C3%B3n'}) return a,r,i,n1,r2,n2,r3,n3,r4"
-						neo4j.sendNeo4j(query,sender)
+						/*var query = "match (a:person {Url:'https://es.wikipedia.org/wiki/Germ%C3%A1n_Vargas_Lleras'})-[r*1..1]-(i)-[r2*1..1]-(n1)-[r3*1..1]-(n2)-[r4*1..1]-(n3:person {Url:'https://es.wikipedia.org/wiki/Francisco_Santos_Calder%C3%B3n'}) return a,r,i,n1,r2,n2,r3,n3,r4"
+						neo4j.sendNeo4j(query,sender)*/
 				},'get getNode','getInfo nodeInfo')		
  		});
 	})
@@ -395,12 +400,12 @@ app.get('/getGraphPerson/', function(request, response){
 				cadena.forEach(function(element){				
 					for(node in element){
 
-						if(list_nodes.findIndex(i => i.id == element[node]._id) == -1 && node != 'r'){
+						if(list_nodes.findIndex(i => i.id == element[node]._id) == -1 && (node != 'r' && node != 'r2' && node != 'r3' && node != 'r4')){
 							node_p={}
 							node_p.id=element[node]._id
-							console.log(element[node].properties)
+							node_p.labels=element[node].labels[0]
+							node_p.url=element[node].properties.Url
 							node_p.name=element[node].properties.name
-
 							node_p.info='<div class="col-md-12 dont-break-out"><ul class="list-group">'
 							for(subprop in element[node].properties){
 								
@@ -418,12 +423,12 @@ app.get('/getGraphPerson/', function(request, response){
 								}
 							}
 							node_p.info+='</ul></div>'
-							console.log(result[element[node].labels])
+							
 							if (result[element[node].labels]!= undefined){
 								node_p.group=hexToRgbA(result[element[node].labels[0]].style.color)
 							}
 							list_nodes.push(node_p)
-						}else if (node == 'r'){
+						}else if (node == 'r' || node == 'r2' || node == 'r3' || node == 'r4'){
 								
 
 								element[node].forEach( function(element_r, index) {
