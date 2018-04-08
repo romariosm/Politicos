@@ -11,14 +11,14 @@ import json
 #Returns a Beutiful object
 def getSoup(url):
 	response = urllib2.urlopen(url) #Load the URL
-	return BeautifulSoup(response.read(),"html.parser")  #Load the structure html to the library     
+	return BeautifulSoup(response.read(),"html.parser")  #Load the structure html to the library
 
 #Get the title of the page
 def getTitle(soup):
 	return soup.title.string
 
 #Returns a element with infobox table
-def getTable(soup): 
+def getTable(soup):
 	return soup.find('table', 'infobox')
 
 #Scrapy of the imge in the infobix table
@@ -27,7 +27,7 @@ def getTableImage(url):
 		return "https:" + getTable(getSoup(url)).find_all('tr')[1].find_all('img')[0]['src']
 	except Exception as error:
 		return "no disponible"
-		
+
 #Scrapy infobox (Proven for politicians) into json structure
 def politic_scrapeTable(url):
 	soup = getSoup(url)
@@ -39,9 +39,9 @@ def politic_scrapeTable(url):
 		if soup is not None:
 			dic = jsonp.addValue(dic,"Fecha de registro", time.strftime("%x") + " " + time.strftime("%X"))
 			dic = jsonp.addValue(dic,"Nombre",getTitle(soup).replace(' - Wikipedia, la enciclopedia libre',''))
-			dic = jsonp.addValue(dic,"Url",url)
+			dic = jsonp.addValue(dic,"Url",url.strip())
 			dic = jsonp.addValue(dic,"Imagen",getTableImage(url))
-			if table is not None:						
+			if table is not None:
 				filas = table.find_all('tr')[1:] if dic['Imagen'] == "No disponible" else table.find_all('tr')[1:]
 				for fil in filas:
 					if len(fil.find_all('th'))>0:
@@ -55,12 +55,12 @@ def politic_scrapeTable(url):
 								if hasattr(data_clean, '__iter__')and len(data_clean)>0:
 									dic[parent]=jsonp.addValue(dic[parent], fil.find_all('th')[0].text, [{'title': jsonp.eliminateCharacters_title(text), 'url': None } for text in data_clean if text != '' and text != ''])
 								elif data_clean != '':
-									dic[parent]=jsonp.addValue(dic[parent], fil.find_all('th')[0].text, [{'title': jsonp.eliminateCharacters_title(data_clean), 'url': None }])						 
-								if len(fil.find_all('td')[0].findAll('a'))>0:							
+									dic[parent]=jsonp.addValue(dic[parent], fil.find_all('th')[0].text, [{'title': jsonp.eliminateCharacters_title(data_clean), 'url': None }])
+								if len(fil.find_all('td')[0].findAll('a'))>0:
 									if dic[parent].has_key(jsonp.eliminateCharacters(fil.find_all('th')[0].text)):
 										for link in getLinks(fil.find_all('td')[0]):
 											if link.get('url'):
-												dic[parent][fil.find_all('th')[0].text].append(link)																
+												dic[parent][fil.find_all('th')[0].text].append(link)
 									else:
 										dic[parent]=jsonp.addValue(dic[parent], fil.find_all('th')[0].text, getLinks(fil.find_all('td')[0]))
 							else:
@@ -69,10 +69,10 @@ def politic_scrapeTable(url):
 						if len(fil.find_all('td')) > 0 and fil.find_all('td')[0].text.strip() != "" and parent != "" and "Wikidata" not in fil.find_all('td')[0].text:
 								dic[parent] = jsonp.addValue(dic[parent], 'Perido del cargo', fil.find_all('td')[0].text)
 								dic[parent] = jsonp.addValue(dic[parent], 'Entidad', getLinks(cargo))
-					
+
 	except Exception as error:
 		fm.registerError(url +"\n"+str(error))
-	return dic 
+	return dic
 
 
 #Get titles and URL of a structure
@@ -83,7 +83,7 @@ def getLinks(element):
 			enlace = {}
 			enlace["title"] = link.get('title')
 			enlace["url"] = link.get('href') if "http" in link.get('href') else "https://es.wikipedia.org" + link.get('href')
-			temp.append(enlace)			
+			temp.append(enlace)
 	return temp
 
 #Get all informaction fro a page
@@ -99,4 +99,4 @@ def getContent(url):
 	return data
 
 
-fm.writeFileJSON("juan_santos_prueba",politic_scrapeTable("https://es.wikipedia.org/wiki/Germ%C3%A1n_Vargas_Lleras"))
+#fm.writeFileJSON("juan_santos_prueba",politic_scrapeTable("https://es.wikipedia.org/wiki/Germ%C3%A1n_Vargas_Lleras"))
