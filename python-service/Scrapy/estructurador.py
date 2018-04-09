@@ -119,7 +119,6 @@ def createTree(link,recorded,newFamily):
 	relateOrganizationsLaboral(c)
 	relatePlaces(c)
 	searchFamily(c,recorded,newFamily)
-
 def savePerson(structure):
 	return False if CM.exists('person',{'Url':structure['person']['Url']}) else CM.create('person',structure['person'])
 
@@ -155,15 +154,21 @@ def relateOrganizationsLaboral(structure):
 			if not CM.existsRelation(relation,{} ,'person',{'Url':structure['person']['Url']},node,{'Url':key['Entidad'][0]['url']}):
 				properties = {}
 				properties['Cargo'] = key['Cargo']
-				properties['Inicio'] = key['Perido del cargo'].split('-')[0].strip().replace(u'\xba','').replace(' del ',' de ')
+				properties['Inicio'] = key['Perido del cargo'].split('-')[0].strip().replace(u'\xba','').replace(' del ',' de ').replace('de de ','')
 				dateInicio = properties['Inicio'].replace('Desde el ','').split(' de ')
 				dateInicio = [dateInicio[0] if len(dateInicio)==3 else '1',dateInicio[1] if len(dateInicio)==3 else dateInicio[0] if len(dateInicio)==2 else '1',dateInicio[2] if len(dateInicio)==3 else dateInicio[1] if len(dateInicio)==2 else dateInicio[0]]
-				properties['InicioJul'] = str(gregToJul(dateInicio[0],dateInicio[1],dateInicio[2]))
+				try:
+					properties['InicioJul'] = str(gregToJul(dateInicio[0],dateInicio[1],dateInicio[2]))
+				except:
+					properties['InicioJul'] = '0'
 				properties['Fin'] = key['Perido del cargo'].replace(u'\xba','').split('-')[1].strip() if len(key['Perido del cargo'].split('-'))>1 else ""
 				if properties['Fin'] != "":
-					dateFin = properties['Fin'].split(' de ')
+					dateFin = properties['Fin'].replace(' del ',' de ').replace('de de ','').split(' de ')
 					dateFin = [dateFin[0] if len(dateFin)==3 else '1',dateFin[1] if len(dateFin)==3 else dateFin[0] if len(dateFin)==2 else '1',dateFin[2] if len(dateFin)==3 else dateFin[1] if len(dateFin)==2 else dateFin[0]]
-					properties['FinJul'] = str(gregToJul(dateFin[0] if len(dateFin)==3 else '31',dateFin[1] if len(dateFin)==3 else '12',dateFin[2] if len(dateFin)==3 else dateFin[0]))
+					try:
+						properties['FinJul'] = str(gregToJul(dateFin[0] if len(dateFin)==3 else '31',dateFin[1] if len(dateFin)==3 else '12',dateFin[2] if len(dateFin)==3 else dateFin[0]))
+					except:
+						properties['FinJul'] = "0"
 				else:
 					properties['FinJul'] = "5000000"
 				CM.makeRelation(relation,properties,'person',{'Url':structure['person']['Url']},node,{'Url':key['Entidad'][0]['url']})
@@ -258,8 +263,9 @@ def Representsmonth(s):
     	}[s]
 
 
-link = "https://es.wikipedia.org/wiki/Aura_Marleny_Arcila"
-politic = politic_scrapeTable(link)
+#link = "https://es.wikipedia.org/wiki/Enrique_G%C3%B3mez_Hurtado"
+#createTree(link,[],[])
+"""politic = politic_scrapeTable(link)
 a = create_structure(politic)
 c = cleanStructure(a)
 print relateOrganizationsLaboral(c)

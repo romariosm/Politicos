@@ -28,10 +28,10 @@ try:
 					"""for info in c['person']:
 						linea +=  "|"  + c['person'][info]
 					g.write(linea.encode("utf8").replace("\n","").replace("\r","") + "\n")"""
-					if i == 30:
-						break
+					#if i == 30:
+					#	break
 				except Exception as subEx:
-					print (item) + ":	" + str(subEx)
+					print estructurador.fm.registerError((item) + ":	" + str(subEx))
 					pass
 except Exception as error:
 	print "Error: " + str(error)

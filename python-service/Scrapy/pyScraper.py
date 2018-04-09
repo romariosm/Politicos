@@ -47,6 +47,7 @@ def politic_scrapeTable(url):
 					if len(fil.find_all('th'))>0:
 						if len(fil.find_all('td')) == 0:
 							parent = jsonp.eliminateCharacters(jsonp.clearValue(fil.find_all('th')[0].text))
+							parent = jsonp.eliminateCharacters(parent)
 							dic = jsonp.addValue(dic,parent,{})
 							cargo = fil.find_all('th')[0]
 						else:
@@ -60,7 +61,7 @@ def politic_scrapeTable(url):
 									if dic[parent].has_key(jsonp.eliminateCharacters(fil.find_all('th')[0].text)):
 										for link in getLinks(fil.find_all('td')[0]):
 											if link.get('url'):
-												dic[parent][fil.find_all('th')[0].text].append(link)
+												dic[parent][jsonp.eliminateCharacters(fil.find_all('th')[0].text)].append(link)
 									else:
 										dic[parent]=jsonp.addValue(dic[parent], fil.find_all('th')[0].text, getLinks(fil.find_all('td')[0]))
 							else:
@@ -69,7 +70,6 @@ def politic_scrapeTable(url):
 						if len(fil.find_all('td')) > 0 and fil.find_all('td')[0].text.strip() != "" and parent != "" and "Wikidata" not in fil.find_all('td')[0].text:
 								dic[parent] = jsonp.addValue(dic[parent], 'Perido del cargo', fil.find_all('td')[0].text)
 								dic[parent] = jsonp.addValue(dic[parent], 'Entidad', getLinks(cargo))
-
 	except Exception as error:
 		fm.registerError(url +"\n"+str(error))
 	return dic
@@ -98,5 +98,5 @@ def getContent(url):
 					data =val1
 	return data
 
-
+politic_scrapeTable("https://es.wikipedia.org/wiki/Enrique_G%C3%B3mez_Hurtado")
 #fm.writeFileJSON("juan_santos_prueba",politic_scrapeTable("https://es.wikipedia.org/wiki/Germ%C3%A1n_Vargas_Lleras"))

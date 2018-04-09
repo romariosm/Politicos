@@ -11,7 +11,7 @@ def create(label,properties):
 	return len(list(sendToNeo("CREATE (p:"+label+" "+makeJsonNeo(properties)+") return p"))) != 0
 
 def makeJsonNeo(properties):
-	return u"{"+",".join([key + ":'" +properties[key]+"'" for key in properties]).encode('utf-8').strip()+u"}"
+	return u"{"+",".join([key + ":'" +properties[key].replace("'","")+"'" for key in properties]).encode('utf-8').strip()+u"}"
 
 def makeRelation(label,properties, labelA,nodoA,labelI,nodoI):
 	return len(list(sendToNeo("MATCH (a:"+labelA+" "+makeJsonNeo(nodoA)+"), (i:"+labelI+" "+makeJsonNeo(nodoI)+") CREATE (a)-[r:"+label+" "+makeJsonNeo(properties)+"]->(i) return r"))) != 0
