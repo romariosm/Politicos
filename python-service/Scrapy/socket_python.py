@@ -7,12 +7,10 @@ from estructurador import *
 from pyOnotology import *
 
 app = Flask(__name__)
+print app
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
-#@app.route('/')
-#def index():
-#    return render_template('index.html')
 
 @socketio.on('search politician', namespace='/')
 def test_message(message):
@@ -61,14 +59,6 @@ def relate_Organizations(message):
 def relate_Organizations():	
 	emit('getInfo nodeInfo',getGranEstructura())		
 	
-#@socketio.on('connect', namespace='/')
-#def test_connect():
-#    emit('my response', {'data': 'Connected'})
-
-#@socketio.on('disconnect', namespace='/')
-#def test_disconnect():
-#    print('Client disconnected')
-
 if __name__ == '__main__':
     socketio.run(app)
 

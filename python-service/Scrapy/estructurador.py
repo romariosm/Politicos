@@ -222,7 +222,7 @@ def relatePlaces(structure):
 				dic['year'] = valor
 			array = [x for x in array if x != cosa]
 	for site in array:
-		if "http:" in site:
+		if "http" in site:
 			if not CM.exists('Site',{'Url':site}):
 				scrap_site = politic_scrapeTable(site)
 				site_no_registered += [scrap_site]
@@ -263,7 +263,7 @@ def Representsmonth(s):
     	}[s]
 
 
-#link = "https://es.wikipedia.org/wiki/Enrique_G%C3%B3mez_Hurtado"
+#link = "https://es.wikipedia.org/wiki/Juan_Manuel_Santos"
 #createTree(link,[],[])
 """politic = politic_scrapeTable(link)
 a = create_structure(politic)

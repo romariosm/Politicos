@@ -2,5 +2,15 @@
 	"filePath": "Files/",
 	"logFile":"Scrapy.log",
 	"loads":"Files/Cargues",
-	"generatedFilePath":"Generated Files/"
+	"generatedFilePath":"Generated Files/",
+	"databases":{
+		"neo4j":{
+			"host":"localhost",
+			"port":7472,
+			"auth":{
+				"user":"neo4j",
+				"psw": "1234"
+			}
+		}
+	}
 }

@@ -1,0 +1,21 @@
+{
+	"filePath": "python-service/Scrapy/Files/",
+	"logFile":"UMAOntology.log",
+	"loads":"python-service/Scrapy/Files/Cargues",
+	"generatedFilePath":"python-service/Scrapy/Generated Files/",
+	"databases":{
+		"redis":{
+			"host":"localhost",
+			"port":6381,
+			"db":0
+		},
+		"neo4j":{
+			"host":"localhost",
+			"port":7472,
+			"auth":{
+				"user":"neo4j",
+				"psw": "1234"
+			}
+		}
+	}
+}
