@@ -1,0 +1,5 @@
+4089:C 11 Apr 00:08:01.302 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+4089:C 11 Apr 00:08:01.303 # Redis version=4.0.9, bits=64, commit=00000000, modified=0, pid=4089, just started
+4089:C 11 Apr 00:08:01.303 # Configuration loaded
+4089:M 11 Apr 00:08:01.306 * Increased maximum number of open files to 10032 (it was originally set to 1024).
+4089:M 11 Apr 00:08:01.306 # Creating Server TCP listening socket *:6380: bind: Address already in use

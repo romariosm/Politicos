@@ -2,3 +2,4 @@
 *.log
 /python-service/wptools
 /python-service/politico-env
+/nohup.out
