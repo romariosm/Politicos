@@ -35,20 +35,7 @@
 
 
 	<style>
-		.svg-container {
-		    display: inline-block;
-		    position: relative;
-		    width: 100%;
-		    padding-bottom: 100%;
-		    vertical-align: top;
-		    overflow: hidden;
-		}
-		.svg-content {
-		    display: inline-block;
-		    position: absolute;
-		    top: 0;
-		    left: 0;
-		}
+		
 
 		.dont-break-out {
 
@@ -402,7 +389,7 @@
 
 
 
-				<div class="panel-body svg-container" >
+				<div class="panel-body" >
 
 
 					<svg id="algo" width="100%" height="900"></svg>
@@ -550,12 +537,10 @@ function load_graph(graph,div){
 	dict_div[div]={}
 
 	dict_div[div].svg = d3.select('#'+div)
-		.attr("preserveAspectRatio", "xMinYMin meet")
-		.attr("viewBox", "0 0 300 300")
-		.classed("svg-content", true);
+		
 	dict_div[div].radius=10
-    dict_div[div].width = +dict_div[div].svg.attr("width"),
-    dict_div[div].height = +dict_div[div].svg.attr("height");
+    dict_div[div].width = +$('#'+div).width(),
+    dict_div[div].height = +$('#'+div).height();
 
 
 	dict_div[div].color = d3.scaleOrdinal(d3.schemeCategory20);
