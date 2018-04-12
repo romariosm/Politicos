@@ -832,9 +832,10 @@ function search_query(){
 
 				$("#loading_div").modal('hide')
 				if(switch_element_person == true){
+					$("#modal_subgraph").modal('show')
 					d3.select("#algo1").selectAll("*").remove();
 					load_graph(JSON.parse(JSON.parse(response).graph),'algo1')
-					$("#modal_subgraph").modal('show')
+					
 
 				}else{
 					d3.select("#algo").selectAll("*").remove();
