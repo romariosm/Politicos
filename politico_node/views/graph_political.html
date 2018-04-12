@@ -1,784 +1,852 @@
+
 <!DOCTYPE html>
 <html>
 
-<head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css">
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.9.0/css/bootstrap-slider.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
-  <!-- Latest compiled and minified JavaScript -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.3.0/jquery.autocomplete.js"></script>
-  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.9.0/bootstrap-slider.js"></script>
-  <script src="/bootstrap-notify-3.1.3/dist/bootstrap-notify.js"></script>
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js" type="text/javascript" charset="utf-8" async defer></script>
-  <style>
-  .dont-break-out {
+	<head>
+		<meta charset="utf-8">
 
-    /* These are technically the same, but use both */
-    overflow-wrap: break-word;
-    word-wrap: break-word;
+		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css">
 
-    -ms-word-break: break-all;
-    /* This is the dangerous one in WebKit, as it breaks things wherever */
-    word-break: break-all;
-    /* Instead use this non-standard one: */
-    word-break: break-word;
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
 
-    /* Adds a hyphen where the word breaks, if supported (No Blink) */
-    -ms-hyphens: auto;
-    -moz-hyphens: auto;
-    -webkit-hyphens: auto;
-    hyphens: auto;
-  }
-
-  .btn-circle.btn-lg {
-    width: 50px;
-    height: 50px;
-    padding: 5px 7px;
-    font-size: 10px;
-    line-height: 1.33;
-    border-radius: 25px;
-  }
-
-  hr.style17 {
-    border-top: 1px solid #8c8b8b;
-    text-align: center;
-  }
-
-  hr.style17:after {
-    content: '§';
-    display: inline-block;
-    position: relative;
-    top: -14px;
-    padding: 0 10px;
-    background: white;
-    color: #8c8b8b;
-    font-size: 18px;
-    -webkit-transform: rotate(60deg);
-    -moz-transform: rotate(60deg);
-    transform: rotate(60deg);
-  }
-
-  .autocomplete-suggestions {
-    border: 1px solid #999;
-    background: #FFF;
-    overflow: auto;
-  }
-
-  .autocomplete-suggestion {
-    padding: 2px 5px;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-
-  .autocomplete-selected {
-    background: #F0F0F0;
-  }
-
-  .autocomplete-suggestions strong {
-    font-weight: normal;
-    color: #3399FF;
-  }
-
-  .autocomplete-group {
-    padding: 2px 5px;
-  }
-
-  .autocomplete-group strong {
-    display: block;
-    border-bottom: 1px solid #000;
-  }
-
-  .avatar {
-    /* cambia estos dos valores para definir el tamaño de tu círculo */
-    width: 120px;
-    height: 120px;
-    border-radius: 100%;
-    border: 3px solid white;
-  }
-
-  .avatar2 {
-    /* cambia estos dos valores para definir el tamaño de tu círculo */
-    width: 80px;
-    height: 80px;
-    border-radius: 100%;
-    border: 3px solid white;
-  }
-
-
-  .political-thumbnail {
-    background: rgba(255, 255, 255, 0);
-    border-radius: 0px;
-
-    border: 20px solid rgba(0, 0, 0, 0);
-    margin: 8px;
-    flex-direction: column;
-
-    -webkit-box-shadow: 0 8px 6px -6px #999 !important;
-    -moz-box-shadow: 0 8px 6px -6px #999 !important;
-    box-shadow: 0 4px 8px 0px #999 !important;
-  }
-
-  .shadow {
-    -webkit-box-shadow: 0 8px 6px -6px #999 !important;
-    -moz-box-shadow: 0 8px 6px -6px #999 !important;
-    box-shadow: 0 4px 8px 0px #999 !important;
-  }
-
-  .btn-thumbnail {
-
-    display: block;
-    border-radius: 100%;
-    background-color: #222;
-    height: 40px;
-    width: 40px;
-    border: rgba(0, 0, 0, 1);
-    font-size: 20px;
-    text-align: center;
-    cursor: pointer;
-    color: #fff;
-    outline: 0;
-    -webkit-transition: all .3s;
-    -moz-transition: all .3s;
-    transition: all .3s;
-  }
-
-  .btn-thumbnail:hover {
-    background-color: #148f76;
-    color: white;
-  }
-
-  .political-thumbnail:hover {
-
-    background-color: rgba(62, 75, 88, 0.7);
-
-    background-color: rgba(19, 44, 56, 0.4);
-
-    background-color: rgba(19, 44, 56, 0.7);
-  }
-
-  .margin-top-panel {
-    margin-top: 20px
-  }
-
-  .no-border {
-    border-radius: 0px;
-  }
-
-  .panel-header {
-    margin-top: 0px;
-    margin-bottom: 0px;
-    margin-right: 0px;
-    margin-left: 0px;
-  }
-
-  .nav-shadow {
-    -webkit-box-shadow: 0 8px 6px -6px #999 !important;
-    -moz-box-shadow: 0 8px 6px -6px #999 !important;
-    box-shadow: 0 4px 8px 0px #999 !important;
-    background-image: url('/images/sayata.png');
-  }
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.9.0/css/bootstrap-slider.css">
 
 
 
-  .grid-item {
-    width: 25%;
-    padding-left: 10px
-  }
-
-  .grid-item--width2 {
-    width: 75%;
-    padding-right: 10px
-  }
 
 
-  .btn-site {
-    background-color: #1ab394;
-    border-color: #1ab394;
-    color: #FFFFFF;
-  }
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
 
-  .btn-site:hover {
-    background-color: #148f76;
-    border-color: #148f76;
-    color: #FFFFFF;
-  }
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
-  .btn-site-info {
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.3.0/jquery.autocomplete.js"></script>
 
-    background-color: #969292;
-    border-color: #969292;
-    color: #FFFFFF;
-  }
+		<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.9.0/bootstrap-slider.js"></script>
 
-  .btn-site-info:hover {
+		<script src="/bootstrap-notify-3.1.3/dist/bootstrap-notify.js"></script>
 
-    background-color: #a7b1c2;
-    border-color: #a7b1c2;
-    color: #FFFFFF;
-  }
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js" type="text/javascript" charset="utf-8" async defer></script>
 
 
 
-  .footer-bottom {
-    background-color: #e7eaec;
-    min-height: 30px;
-    width: 100%;
-  }
+	<style>
 
-  .copyright {
-    color: #676a6c;
-    line-height: 30px;
-    min-height: 30px;
-    padding: 7px 0;
-  }
+		.dont-break-out {
 
-  .design {
-    color: #676a6c;
-    line-height: 30px;
-    min-height: 30px;
-    padding: 7px 0;
-    text-align: right;
-  }
+		  /* These are technically the same, but use both */
+		  overflow-wrap: break-word;
+		  word-wrap: break-word;
 
-  .design a {
-    color: #676a6c;
-  }
+		  -ms-word-break: break-all;
+		  /* This is the dangerous one in WebKit, as it breaks things wherever */
+		  word-break: break-all;
+		  /* Instead use this non-standard one: */
+		  word-break: break-word;
 
-  .pagination a {
-    color: black;
-    float: left;
-    padding: 8px 16px;
-    text-decoration: none;
-  }
+		  /* Adds a hyphen where the word breaks, if supported (No Blink) */
+		  -ms-hyphens: auto;
+		  -moz-hyphens: auto;
+		  -webkit-hyphens: auto;
+		  hyphens: auto;
+
+		}
+
+		.btn-circle.btn-lg {
+		  width: 50px;
+		  height: 50px;
+		  padding: 5px 7px;
+		  font-size: 10px;
+		  line-height: 1.33;
+		  border-radius: 25px;
+		}
+		hr.style17 {
+		border-top: 1px solid #8c8b8b;
+		text-align: center;
+
+		}
+
+		hr.style17:after {
+			content: '§';
+			display: inline-block;
+			position: relative;
+			top: -14px;
+			padding: 0 10px;
+			background: white;
+			color: #8c8b8b;
+			font-size: 18px;
+			-webkit-transform: rotate(60deg);
+			-moz-transform: rotate(60deg);
+			transform: rotate(60deg);
+		}
+
+		.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+		.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+		.autocomplete-selected { background: #F0F0F0; }
+		.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+		.autocomplete-group { padding: 2px 5px; }
+		.autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
+
+		.avatar {
+					/* cambia estos dos valores para definir el tamaño de tu círculo */
+		    width:120px;
+		    height:120px;
+		    border-radius:100%;
+		    border:3px solid white;
 
 
-  .pagination a.active {
-    background-color: #1ab394;
-    color: white;
-  }
-
-  .pagination a:hover:not(.active) {
-    background-color: rgba(62, 75, 88, 0.7);
-  }
-
-  .rv {
-    height: 150px;
-    background-size: cover;
-    background-image: url('http://visitas.presidencia.gov.co/web/fts/casa-narino-1-fachada.jpg');
+		}
+		.avatar2 {
+					/* cambia estos dos valores para definir el tamaño de tu círculo */
+		    width:80px;
+		    height:80px;
+		    border-radius:100%;
+		    border:3px solid white;
 
 
-    padding-top: 0.25rem;
-  }
+		}
 
-  .rp {
-    -webkit-box-flex: 40;
-    flex: 1 1 auto;
-    padding: 0.25rem;
-  }
 
-  .links line {
-    stroke: #999;
-    stroke-opacity: 0.6;
-  }
+		.political-thumbnail{
+			background: rgba(255,255,255,0);
+			border-radius:0px;
 
-  .nodes circle {
-    stroke: #fff;
-    stroke-width: 1.5px;
-  }
+		    border: 20px solid rgba(0, 0, 0, 0);
+		    margin: 8px;
+		    flex-direction: column;
 
-  .nodes text {
+		    -webkit-box-shadow: 0 8px 6px -6px #999 !important;
+            -moz-box-shadow: 0 8px 6px -6px #999 !important;
+			box-shadow: 0 4px 8px 0px #999 !important;
 
-    font: 12px sans-serif;
-    color: #000;
-  }
 
-  .d3-tip {
-    line-height: 1;
-    font-weight: bold;
-    padding: 12px;
-    background: rgba(0, 0, 0, 0.8);
-    color: #fff;
-    border-radius: 2px;
-  }
+		}
+		.shadow{
+			-webkit-box-shadow: 0 8px 6px -6px #999 !important;
+            -moz-box-shadow: 0 8px 6px -6px #999 !important;
+			box-shadow: 0 4px 8px 0px #999 !important;
+		}
 
-  #modal_subgraph {
-    overflow-y: scroll;
-  }
-  </style>
-</head>
+		.btn-thumbnail{
+
+			display: block;
+			border-radius: 100%;
+			background-color: #222;
+			height: 40px;
+			width: 40px;
+			border: rgba(0, 0, 0, 1);
+			font-size: 20px;
+			text-align:  center;
+			cursor: pointer;
+		    color: #fff;
+		    outline: 0;
+		    -webkit-transition: all .3s;
+		    -moz-transition: all .3s;
+		    transition: all .3s;
+
+			}
+		.btn-thumbnail:hover {
+    		background-color: #148f76;
+    		color: white;
+    	}
+    	.political-thumbnail:hover{
+
+    		background-color: rgba(62,75,88, 0.7);
+
+    		background-color: rgba(19,44,56, 0.4);
+
+    		background-color: rgba(19,44,56, 0.7);
+
+
+    	}
+    	.margin-top-panel{
+    		margin-top: 20px
+    	}
+
+    	.no-border{
+    		border-radius: 0px;
+    	}
+    	.panel-header{
+    		margin-top: 0px;
+    		margin-bottom: 0px;
+    		margin-right: 0px;
+    		margin-left: 0px;
+    	}
+    	.nav-shadow{
+		    -webkit-box-shadow: 0 8px 6px -6px #999 !important;
+            -moz-box-shadow: 0 8px 6px -6px #999 !important;
+			box-shadow: 0 4px 8px 0px #999 !important;
+			background-image: url('/images/sayata.png');
+		}
+
+
+
+		.grid-item{
+			width: 25%;
+			padding-left:10px
+
+		}
+
+		.grid-item--width2 { width: 75%; padding-right: 10px }
+
+
+		.btn-site{
+			background-color: #1ab394;
+			border-color: #1ab394;
+			color: #FFFFFF;
+
+		}
+
+		.btn-site:hover{
+			background-color: #148f76;
+			border-color: #148f76;
+			color: #FFFFFF;
+		}
+
+		.btn-site-info{
+
+			background-color: #969292;
+			border-color: #969292;
+			color: #FFFFFF;
+		}
+
+		.btn-site-info:hover{
+
+			background-color: #a7b1c2;
+			border-color: #a7b1c2;
+			color: #FFFFFF;
+		}
+
+
+
+		.footer-bottom {
+		    background-color: #e7eaec;
+		    min-height: 30px;
+		    width: 100%;
+		}
+		.copyright {
+		    color: #676a6c;
+		    line-height: 30px;
+		    min-height: 30px;
+		    padding: 7px 0;
+		}
+		.design {
+		    color: #676a6c;
+		    line-height: 30px;
+		    min-height: 30px;
+		    padding: 7px 0;
+		    text-align: right;
+		}
+		.design a {
+		    color: #676a6c;
+		}
+
+		.pagination a {
+		    color: black;
+		    float: left;
+		    padding: 8px 16px;
+		    text-decoration: none;
+
+		}
+
+
+	    .pagination a.active {
+		    background-color: #1ab394;
+		    color: white;
+		}
+
+		.pagination a:hover:not(.active) {background-color: rgba(62,75,88, 0.7);}
+
+		.rv{
+			    height: 150px;
+    			background-size: cover;
+    			background-image: url('http://visitas.presidencia.gov.co/web/fts/casa-narino-1-fachada.jpg') ;
+
+
+    			padding-top: 0.25rem;
+
+
+			}
+
+		.rp{
+			-webkit-box-flex: 40;
+			flex: 1 1 auto;
+    		padding: 0.25rem;
+
+		}
+
+		.links line {
+		  stroke: #999;
+		  stroke-opacity: 0.6;
+		}
+
+		.nodes circle {
+		  stroke: #fff;
+		  stroke-width: 1.5px;
+
+		}
+		.nodes text {
+
+		  font: 12px sans-serif;
+		  color: #000;
+		}
+		.d3-tip {
+		  line-height: 1;
+		  font-weight: bold;
+		  padding: 12px;
+		  background: rgba(0, 0, 0, 0.8);
+		  color: #fff;
+		  border-radius: 2px;
+		}
+		#modal_subgraph{
+			overflow-y: scroll;
+		}
+
+
+	</style>
+
+	</head>
+
+
+
 <script src="https://d3js.org/d3.v4.min.js"></script>
-<script>
-$(document).ready(function() {
-
-  var grid = $('.grid').masonry({
-    // options
-    itemSelector: '.grid-item',
-
-  });
 
 
-  $('input[name="my-checkbox"]').on('switchChange.bootstrapSwitch', function(event, state) {
-    console.log(this); // DOM element
-    console.log(event); // jQuery event
-    console.log(state); // true | false
-  });
+	<script>
 
-});
-</script>
+	$(document).ready(function() {
 
-<body style="background-color: rgb(234, 236, 236);">
-  <% include header.html %>
-    <input type="hidden" id="graph" value="<%=graph %>" />
-    <input type="hidden" id="nodes" value="<%=nodes %>" />
-    <input type="hidden" id="url_person" value="<%=url %>" />
-    <div class="grid" id="grid_id">
-      <div class="grid-item">
-        <div class="panel panel-default no-border  shadow" style="margin-top: 20px; border-top-color: #1c84c6; border-width: 5px 0 0; padding-left: 0; padding-right: 0">
-          <div class="panel-body" style="padding: 0 !important">
-            <center>
-              <div style="padding: 15px">
-                <b>
-                  <h3>
-                    <%= info.nombre %>
-                  </h3>
-                </b>
-                <hr class="style17">
-              </div>
-              <img src="<%= info.imagen %>" class="img-responsive" style="height:auto; width: 50%; object-fit: cover" />
-            </center>
-          </div>
-          <!-- /.row -->
-        </div>
-      </div>
-      <div class="grid-item grid-item--width2">
-        <div class="panel panel-default no-border shadow" style="margin-top: 20px; height: 1050px; border-top-color: #f8ac59; border-width: 5px 0 0;" align="center">
-          <div class="panel-body">
-            <div class="col-md-12">
-              <svg id="algo" width="100%" height="900"></svg>
-            </div>
-          </div>
-          <!-- /.row -->
-        </div>
-      </div>
-      <div class="grid-item">
-        <div class="panel panel-default no-border shadow" style="border-top-color: #1c84c6; border-width: 5px 0 0;">
-          <div class="panel-body">
-            <center>
-              <h4>
-                <strong>
-                  <i class="fa fa-filter" aria-hidden="true"></i> Filtros</strong>
-              </h4>
-            </center>
-            <div id="nodes_types">
-            </div>
-            <div class="col-md-12" style="margin-top:20px">
-              <button type="button" id="search" class="col-md-12 btn btn-site no-border" onclick="search_query()">Actualizar</button>
-            </div>
-          </div>
-          <!-- /.row -->
-          </div-->
-        </div>
-      </div>
-      <div class="modal fade" id="loading_div" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog">
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div class="modal-body" align="center">
-              <h3>
-                <i class="fa fa-paper-plane" aria-hidden="true"></i> Estamos recolectando información...</h3>
-              <img src="/images/loading.gif" />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal fade" id="modal_subgraph" role="dialog">
-        <div class="modal-dialog" style="width: 75%">
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title">
-                <i class="fa fa-code-fork" aria-hidden="true"></i> Consulta</h4>
-            </div>
-            <div class="modal-body">
-              <div style="height: 900px !important">
-                <svg id="algo1" width="100%" height="900"></svg>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">
-                <i class="fa fa-window-close" onclik="reloadStartGraph()" aria-hidden="true"></i> Cerrar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal fade" id="loading_error" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog">
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title">
-                <i class="fa fa-exclamation-circle" aria-hidden="true"></i> Advertencia</h4>
-            </div>
-            <div class="modal-body" align="center">
-              <h3>
-                <i class="fa fa-exclamation-circle" aria-hidden="true"></i> Por favor seleccione por lo menos un filtro</h3>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">
-                <i class="fa fa-window-close" aria-hidden="true"></i> Cerrar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-</body>
+		var grid=$('.grid').masonry({
+		  // options
+		itemSelector: '.grid-item',
+
+		});
+
+
+		$('input[name="my-checkbox"]').on('switchChange.bootstrapSwitch', function(event, state) {
+			  console.log(this); // DOM element
+			  console.log(event); // jQuery event
+			  console.log(state); // true | false
+		});
+
+	});
+
+
+
+	</script>
+
+
+
+	<body style="background-color: rgb(234, 236, 236);">
+		<% include header.html %>
+
+
+
+			<input type="hidden" id="graph" value="<%=graph %>"/>
+			<input type="hidden" id="nodes" value="<%=nodes %>"/>
+			<input type="hidden" id="url_person" value="<%=url %>"/>
+
+
+			<div class="grid" id="grid_id">
+
+
+
+				<div class="grid-item">
+
+
+
+				<div class="panel panel-default no-border  shadow" style ="margin-top: 20px; border-top-color: #1c84c6; border-width: 5px 0 0; padding-left: 0; padding-right: 0">
+					<div class="panel-body" style="padding: 0 !important">
+
+
+
+					<center>
+					<div style="padding: 15px">
+						<b><h3><%= info.nombre %></h3></b>
+						<hr class="style17">
+
+
+					</div>
+
+					<img src="<%= info.imagen %>" class="img-responsive" style="height:auto; width: 50%; object-fit: cover"/>
+					</center>
+
+
+					</div><!-- /.row -->
+
+
+				</div>
+				</div>
+
+			<div class="grid-item grid-item--width2">
+
+			<div class="panel panel-default no-border shadow" style ="margin-top: 20px; height: 1050px; border-top-color: #f8ac59; border-width: 5px 0 0;" align="center">
+
+
+
+				<div class="panel-body">
+
+
+					<svg id="algo" width="100%" height="900"></svg>
+
+
+
+				</div><!-- /.row -->
+
+
+			</div>
+
+			</div>
+
+			<div class="grid-item">
+
+			<div class="panel panel-default no-border shadow" style ="border-top-color: #1c84c6; border-width: 5px 0 0;">
+				<div class="panel-body">
+
+
+			   		<center>
+						<h4><strong><i class="fa fa-filter" aria-hidden="true"></i> Filtros</strong></h4>
+					</center>
+
+					<div id="nodes_types">
+					</div>
+
+					<div class="col-md-12" style="margin-top:20px">
+						<button type="button" id="search" class="col-md-12 btn btn-site no-border" onclick="search_query()">Actualizar</button>
+					</div>
+
+
+
+				</div><!-- /.row -->
+			</div-->
+
+			</div>
+
+			</div>
+
+			<div class="modal fade" id="loading_div" data-backdrop="static" data-keyboard="false">
+
+				 <div class="modal-dialog">
+
+				    <!-- Modal content-->
+				    <div class="modal-content">
+
+				      	<div class="modal-body" align="center">
+				      		<h3><i class="fa fa-paper-plane" aria-hidden="true"></i> Estamos recolectando información...</h3>
+				        	<img src="/images/loading.gif" />
+				      	</div>
+
+				    </div>
+
+				  </div>
+
+			</div>
+
+			<div class="modal fade" id="modal_subgraph" role="dialog">
+
+				 <div class="modal-dialog" style="width: 75%">
+
+				    <!-- Modal content-->
+				    <div class="modal-content">
+
+				    	<div class="modal-header">
+        					<button type="button" class="close" data-dismiss="modal">&times;</button>
+        					<h4 class="modal-title"> <i class="fa fa-code-fork" aria-hidden="true"></i> Consulta</h4>
+      					</div>
+
+				      	<div class="modal-body">
+				      		<div style="height: 900px !important">
+				      			<svg id="algo1" width="100%" height="900"></svg>
+				      		</div>
+				      	</div>
+
+				      	<div class="modal-footer">
+				    		<button type="button" class="btn btn-danger" data-dismiss="modal"> <i class="fa fa-window-close" onclik="reloadStartGraph()" aria-hidden="true"></i> Cerrar</button>
+				    	</div>
+
+				    </div>
+
+				  </div>
+
+			</div>
+
+			<div class="modal fade" id="loading_error" data-backdrop="static" data-keyboard="false">
+
+				 <div class="modal-dialog">
+
+				    <!-- Modal content-->
+				    <div class="modal-content">
+
+				    	<div class="modal-header">
+        					<button type="button" class="close" data-dismiss="modal">&times;</button>
+        					<h4 class="modal-title"> <i class="fa fa-exclamation-circle" aria-hidden="true"></i> Advertencia</h4>
+      					</div>
+
+				      	<div class="modal-body" align="center">
+				      		<h3><i class="fa fa-exclamation-circle" aria-hidden="true"></i>  Por favor seleccione por lo menos un filtro</h3>
+
+				      	</div>
+
+				      	<div class="modal-footer">
+				    		<button type="button" class="btn btn-danger" data-dismiss="modal"> <i class="fa fa-window-close" aria-hidden="true"></i> Cerrar</button>
+				    	</div>
+
+				    </div>
+
+
+				  </div>
+
+			</div>
+
+
+	</body>
 
 </html>
+
+
 <script>
-var noty = null
-var noty_status = false;
-var link = null
-var linktext = null
-var node = null
-var svg = null
-var color = null
-var simulation = null
-var list_people_selected = []
-var dict_div = {}
 
-$(document).ready(function() {
-  $('[data-toggle="popover"]').popover();
+var noty=null
+var noty_status=false;
+var link=null
+var linktext=null
+var node=null
+var svg=null
+var color=null
+var simulation=null
+var list_people_selected=[]
+var dict_div={}
 
-  var graph = JSON.parse($("#graph").val())
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover();
 
-  load_graph(graph, 'algo')
+	var graph=JSON.parse($("#graph").val())
+
+	load_graph(graph,'algo')
 });
 
 
 
-function load_graph(graph, div) {
+function load_graph(graph,div){
 
-  dict_div[div] = {}
+	dict_div[div]={}
 
-  dict_div[div].svg = d3.select('#' + div),
-    dict_div[div].radius = 10
-  dict_div[div].width = +dict_div[div].svg.attr("width"),
+	dict_div[div].svg = d3.select('#'+div),
+	dict_div[div].radius=10
+    dict_div[div].width = +dict_div[div].svg.attr("width"),
     dict_div[div].height = +dict_div[div].svg.attr("height");
 
 
-  dict_div[div].color = d3.scaleOrdinal(d3.schemeCategory20);
+	dict_div[div].color = d3.scaleOrdinal(d3.schemeCategory20);
 
-  dict_div[div].simulation = d3.forceSimulation()
-    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(200).strength(0.5))
-    .force("charge", d3.forceManyBody().strength(-250))
-    //.force("size", )
-    .force("center", d3.forceCenter(dict_div[div].width / 2, dict_div[div].height / 2));
+	dict_div[div].simulation = d3.forceSimulation()
+	    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(200).strength(0.5))
+	    .force("charge", d3.forceManyBody().strength(-250))
+	    //.force("size", )
+	    .force("center", d3.forceCenter(dict_div[div].width / 2, dict_div[div].height / 2));
 
-  dict_div[div].link = dict_div[div].svg
-    .selectAll(".links")
-    .data(graph.links)
-    .enter().append("g")
-    .attr("class", "links").append('line')
-    .style("stroke-linecap", "round")
-    .style("stroke", "black")
-    //.on('click', clicklink)
-    .style("stroke-dasharray", "20,10,5,5,5,10")
-    .attr("stroke-width", function(d) { return Math.sqrt(8); });
-  dict_div[div].linktext = dict_div[div].svg.selectAll('.links').data(graph.links)
-    .append("text")
-    .attr("font-family", "Comic Sans MS, Helvetica, sans-serif")
-    .attr("fill", "Black")
-    .style("font", "italic 15px Calibri")
-    .on('click', clicklink)
-    .attr("dy", ".35em")
-    .text(function(d) { return d.type });
-
-
-
-  dict_div[div].node = dict_div[div].svg
-    .selectAll(".nodes")
-    .data(graph.nodes)
-    .enter().append('g')
-    .attr("class", "nodes")
-    .on("mouseover", mouseover)
-    .on("mouseout", mouseout)
-    //.on("click", clicknode)
-    .call(d3.drag()
-      .on("start", function(d) { dragstarted(d, div) })
-      .on("drag", function(d) { dragged(d, div) })
-      .on("end", function(d) { dragended(d, div) }));
-
-
-  dict_div[div].node.append("circle")
-    .attr("r", 15)
-    .style("fill", "white")
-    .style("stroke", function(d) { return d.group })
-    .style("stroke-width", 6)
-    .on("click", clicknode)
-
-
-  dict_div[div].node.append("text")
-    .attr("dx", 18)
-    .attr("dy", ".65em")
-    .style("font", "bold 11px Arial")
-    .text(function(d) { return d.name; });
+		dict_div[div].link = dict_div[div].svg
+		    .selectAll(".links")
+		    .data(graph.links)
+		    .enter().append("g")
+		    .attr("class", "links").append('line')
+		    .style("stroke-linecap", "round")
+		    .style("stroke", "black")
+		    //.on('click', clicklink)
+		    .style("stroke-dasharray", "20,10,5,5,5,10")
+		    .attr("stroke-width", function(d) { return Math.sqrt(8); });
+		dict_div[div].linktext=dict_div[div].svg.selectAll('.links').data(graph.links)
+		    .append("text")
+		    .attr("font-family", "Comic Sans MS, Helvetica, sans-serif")
+		    .attr("fill", "Black")
+		    .style("font", "italic 15px Calibri")
+		    .on('click', clicklink)
+		    .attr("dy", ".35em")
+		    .text(function(d) { return d.type });
 
 
 
-  dict_div[div].simulation
-    .nodes(graph.nodes)
-    .on("tick", function(d) { ticked(d, div) });
+	  dict_div[div].node = dict_div[div].svg
+	    .selectAll(".nodes")
+	    .data(graph.nodes)
+	    .enter().append('g')
+	    .attr("class", "nodes")
+	    .on("mouseover", mouseover)
+	    .on("mouseout", mouseout)
+	    //.on("click", clicknode)
+	    .call(d3.drag()
+			.on("start", function(d){dragstarted(d,div)})
+			.on("drag", function(d){dragged(d,div)})
+			.on("end", function(d){dragended(d,div)}));
 
-  dict_div[div].simulation.force("link")
-    .links(graph.links);
+
+	    dict_div[div].node.append("circle")
+	    .attr("r", 15)
+	    .style("fill", "white")
+	    .style("stroke", function(d) { return d.group })
+	    .style("stroke-width", 6 )
+	    .on("click", clicknode)
+
+
+		dict_div[div].node.append("text")
+	    .attr("dx", 18)
+	    .attr("dy", ".65em")
+	    .style("font", "bold 11px Arial")
+	    .text(function(d) { return d.name; });
+
+
+
+	  dict_div[div].simulation
+	      .nodes(graph.nodes)
+	      .on("tick", function(d){ticked(d,div)});
+
+	  dict_div[div].simulation.force("link")
+	      .links(graph.links);
 
 }
 
 
 
-function ticked(d, div) {
-  dict_div[div].link
-    .attr("x1", function(d) { return d.source.x; })
-    .attr("y1", function(d) { return d.source.y; })
-    .attr("x2", function(d) { return d.target.x; })
-    .attr("y2", function(d) { return d.target.y; });
+  function ticked(d,div) {
+    dict_div[div].link
+        .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
 
-  dict_div[div].linktext
-    .attr("x", function(d) {
-      if (d.target.x > d.source.x) {
-        return (d.source.x + (d.target.x - d.source.x) / 2);
-      } else {
-        return (d.target.x + (d.source.x - d.target.x) / 2);
-      }
-    })
-    .attr("y", function(d) {
-      if (d.target.y > d.source.y) {
-        return (d.source.y + (d.target.y - d.source.y) / 2);
-      } else {
-        return (d.target.y + (d.source.y - d.target.y) / 2);
-      }
-    })
+    dict_div[div].linktext
+	    .attr("x", function(d) {
+	        if (d.target.x > d.source.x) {
+	            return (d.source.x + (d.target.x - d.source.x)/2); }
+	        else {
+	            return (d.target.x + (d.source.x - d.target.x)/2); }
+	    })
+	    .attr("y", function(d) {
+	        if (d.target.y > d.source.y) {
+	            return (d.source.y + (d.target.y - d.source.y)/2); }
+	        else {
+	            return (d.target.y + (d.source.y - d.target.y)/2); }
+	    })
 
 
-  dict_div[div].node
-    .attr("transform", function(d) { return "translate(" + Math.max(dict_div[div].radius, Math.min(dict_div[div].width - dict_div[div].radius, d.x)) + "," + Math.max(dict_div[div].radius, Math.min(dict_div[div].height - dict_div[div].radius, d.y)) + ")" });
-}
+    dict_div[div].node
+        .attr("transform", function(d) { return "translate(" + Math.max(dict_div[div].radius, Math.min(dict_div[div].width - dict_div[div].radius, d.x)) + "," + Math.max(dict_div[div].radius, Math.min(dict_div[div].height - dict_div[div].radius, d.y)) + ")"});
+  }
 
 
 
-function dragstarted(d, div) {
+function dragstarted(d,div) {
   if (!d3.event.active) dict_div[div].simulation.alphaTarget(1).restart();
   d.fx = d.x;
   d.fy = d.y;
 }
 
-function dragged(d, div) {
+function dragged(d,div) {
   d.fx = d3.event.x;
   d.fy = d3.event.y;
 }
 
-function clicklink(d, div) {
-  if (!noty_status) {
-    noty_status = true;
-    noty = $.notify({
-      title: '<center><h4><strong>' + d.source.name + ' <i class="fa fa-arrow-right" aria-hidden="true"></i> ' + d.target.name + '</strong></h4></center><hr>',
-      message: d.info
-    }, {
-      type: 'success',
-      placement: {
-        from: "top",
-        align: "right"
-      },
-      allow_dismiss: true,
-      timer: 1000000000,
-      onClose: function() {
-        noty_status = false;
-      }
-    });
-  } else {
-    noty.close()
-  }
+function clicklink(d,div){
+	if(!noty_status){
+		noty_status=true;
+		noty=$.notify({
+			title: '<center><h4><strong>'+d.source.name+' <i class="fa fa-arrow-right" aria-hidden="true"></i> '+d.target.name+'</strong></h4></center><hr>',
+			message: d.info
+		},{
+			type: 'success',
+			placement: {
+				from: "top",
+				align: "right"
+			},
+			allow_dismiss: true,
+			timer: 1000000000,
+			onClose: function(){
+				noty_status=false;
+			}
+		});
+	}else{
+		noty.close()
+	}
 
 }
 
-function dragended(d, div) {
+function dragended(d,div) {
   if (!d3.event.active) dict_div[div].simulation.alphaTarget(0);
   d.fx = null;
   d.fy = null;
 }
 
-function clicknode(d) {
-  console.log(d)
+function clicknode(d){
+	console.log(d)
 
-  if ($("#" + d.labels + "_switch").bootstrapSwitch('state') == true) {
-    index = list_people_selected.indexOf(d.url)
-    if (index == -1) {
-      list_people_selected.push(d.url)
-      d3.select(this).style("fill", d.group)
-    } else {
-      list_people_selected.splice(index, 1);
-      d3.select(this).style("fill", 'white')
-    }
+	if($("#"+d.labels+"_switch").bootstrapSwitch('state') == true){
+		index=list_people_selected.indexOf(d.url)
+		if( index == -1){
+			list_people_selected.push(d.url)
+			d3.select(this).style("fill", d.group)
+		}else{
+			list_people_selected.splice(index, 1);
+			d3.select(this).style("fill", 'white')
+		}
 
 
-  } else {
+	}else{
 
-    if (!noty_status) {
-      noty_status = true;
-      noty = $.notify({
-        title: '<center><h4><strong>' + d.name + '</strong></h4></center><hr>',
-        message: d.info
-      }, {
-        type: 'info',
-        placement: {
-          from: "top",
-          align: "right"
-        },
-        allow_dismiss: true,
-        timer: 1000000000,
-        onClose: function() {
-          noty_status = false;
-        }
-      });
-    } else {
-      noty.close();
-    }
+		if(!noty_status){
+			noty_status=true;
+			noty=$.notify({
+				title: '<center><h4><strong>'+d.name+'</strong></h4></center><hr>',
+				message: d.info
+			},{
+				type: 'info',
+				placement: {
+					from: "top",
+					align: "right"
+				},
+				allow_dismiss: true,
+				timer: 1000000000,
+				onClose: function(){
+					noty_status=false;
+				}
+			});
+		}else{
+			noty.close();
+		}
 
-  }
+	}
 
 
 }
 
 function mouseover() {
   d3.select(this).select("circle").transition()
-    .duration(550)
-    .attr("r", 30)
+      .duration(550)
+      .attr("r", 30)
 }
 
 function mouseout() {
   d3.select(this).select("circle").transition()
-    .duration(550)
-    .attr("r", 20);
+      .duration(550)
+      .attr("r", 20);
 }
 
 
-var nodes_type = JSON.parse($("#nodes").val())
+var nodes_type=JSON.parse($("#nodes").val())
 
-for (key in nodes_type) {
-  console.log(nodes_type)
-  nodes_type[key].status = false;
+for(key in nodes_type){
+	console.log(nodes_type)
+	nodes_type[key].status=false;
 
-  slider = ''
+	slider=''
 
-  switch_element = ''
+	switch_element=''
 
-  if (key == 'person') {
-    switch_element = '<br><label>Seleccionar Nodos</label><br><input class="switch_bootstrap" type="checkbox" id="' + key + '_switch" name="my-checkbox"><br>'
-  }
+	if (key =='person'){
+		switch_element='<br><label>Seleccionar Nodos</label><br><input class="switch_bootstrap" type="checkbox" id="'+key+'_switch" name="my-checkbox"><br>'
+	}
 
-  for (rel in nodes_type[key].relation) {
-    if (nodes_type[key].relation[rel].scrolleable == '1') {
-      slider = '<br><br><label><i class="fa fa-level-down" aria-hidden="true"></i> <i class="fa fa-level-up" aria-hidden="true"></i> Nivel:</label><br><input id="' + key + '_slider" class="slider" type="text" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="1" "/><br>'
-    }
-  }
-  $("#nodes_types").append('<div class="col-md-12" style="margin-bottom:5px;"><button class="btn btn-default btn-circle btn-lg" id="' + key + '_button" onclick="create_query(\'' + key + '\')" style="border-color:' + nodes_type[key].style.color + '; border-width:4px"><i class="fa fa fa-check fa-3x" aria-hidden="true"></i></button>\
-		<strong><label style="font-size:20px; margin-left:10px; color:#455A64;">' + key + '</label></strong>' +
-    slider + switch_element + '</div>')
-  nodes_type[key].status = true
+	for(rel in nodes_type[key].relation){
+		if(nodes_type[key].relation[rel].scrolleable == '1'){
+			slider='<br><br><label><i class="fa fa-level-down" aria-hidden="true"></i> <i class="fa fa-level-up" aria-hidden="true"></i> Nivel:</label><br><input id="'+key+'_slider" class="slider" type="text" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="1" "/><br>'
+		}
+	}
+	$("#nodes_types").append('<div class="col-md-12" style="margin-bottom:5px;"><button class="btn btn-default btn-circle btn-lg" id="'+key+'_button" onclick="create_query(\''+key+'\')" style="border-color:'+nodes_type[key].style.color+'; border-width:4px"><i class="fa fa fa-check fa-3x" aria-hidden="true"></i></button>\
+		<strong><label style="font-size:20px; margin-left:10px; color:#455A64;">'+key+'</label></strong>'
+		+slider+switch_element+'</div>')
+	nodes_type[key].status = true
 }
 $('.slider').slider({
-  formatter: function(value) {
-    return 'Valor: ' + value;
-  }
+	formatter: function(value) {
+		return 'Valor: ' + value;
+	}
 });
 
 $(".switch_bootstrap").bootstrapSwitch();
 
-var consult = ''
+var consult=''
 
-function create_query(key) {
-  if (nodes_type[key].status == false) {
-    $("#" + key + '_button').append('<i class="fa fa fa-check fa-3x" aria-hidden="true"></i>')
-    nodes_type[key].status = true
-  } else {
-    $("#" + key + '_button').empty()
-    nodes_type[key].status = false
-  }
+function create_query(key){
+	if(nodes_type[key].status == false ){
+		$("#"+key+'_button').append('<i class="fa fa fa-check fa-3x" aria-hidden="true"></i>')
+		nodes_type[key].status = true
+	}else{
+		$("#"+key+'_button').empty()
+		nodes_type[key].status = false
+	}
 }
 
-function search_query() {
-  var query = []
-  var query_list_person = []
+function search_query(){
+	var query=[]
+	var query_list_person=[]
 
-  var atLeastOneQuery = false;
-  var switch_element_person = false;
+	var atLeastOneQuery = false;
+	var switch_element_person = false;
 
-  for (key in nodes_type) {
-    if (nodes_type[key].status) {
-      atLeastOneQuery = true;
-      for (rel in nodes_type[key].relation) {
+	for(key in nodes_type){
+		if(nodes_type[key].status){
+			atLeastOneQuery=true;
+			for(rel in nodes_type[key].relation){
 
-        if ($("#" + key + '_switch').bootstrapSwitch('state') == true) {
+				if($("#"+key+'_switch').bootstrapSwitch('state') == true){
 
-          if (list_people_selected.length > 1) {
-            switch_element_person = true
-            first = list_people_selected[0]
-            query_multiple = "match (a:person {Url:?url1})-[r*1..1]-(i)-[r2*1..1]-(n1)-[r3*1..1]-(n2)-[r4*1..1]-(n3:person {Url:?url2}) return a,r,i,n1,r2,n2,r3,n3,r4".replace('?url1', '"' + first + '"')
-            for (i = 1; i < list_people_selected.length; i++) {
+					if(list_people_selected.length > 1){
+						switch_element_person=true
+						first=list_people_selected[0]
+						query_multiple="MATCH (a)<-[r:belongsTo*1..1]-(n3:person {Url:?url1}) return a,r,n3 UNION ALL MATCH (a)<-[r:belongsTo*1..1]-(n3:person {Url:?url2}) return a,r,n3 UNION ALL MATCH (a)<-[r:worksAt*1..1]-(n3:person {Url:?url1}) return a,r,n3 UNION ALL MATCH (a)<-[r:worksAt*1..1]-(n3:person {Url:?url2}) return a,r,n3 UNION ALL MATCH (a)<-[r:studiedAt*1..1]-(n3:person {Url:?url1}) return a,r,n3 UNION ALL MATCH (a)<-[r:studiedAt*1..1]-(n3:person {Url:?url2}) return a,r,n3 UNION ALL MATCH (a)<-[r:born*1..1]-(n3:person {Url:?url1}) where not a.name =~ '.*lombia.*'  return a,r,n3 UNION ALL MATCH (a)<-[r:born*1..1]-(n3:person {Url:?url2}) where not a.name =~ '.*lombia.*' return a,r,n3".split("?url1").join('"'+first+'"')
 
-              query_list_person.push(query_multiple.replace('?url2', '"' + list_people_selected[i] + '"'))
-            }
+						for(i=1;i<list_people_selected.length;i++){
 
-          }
+							query_list_person.push(query_multiple.split("?url2").join('"'+list_people_selected[i]+'"'))
+						}
 
-        } else if (nodes_type[key].relation[rel].scrolleable == '1') {
-          query.push(nodes_type[key].relation[rel].query.replace('?Url', '"' + $("#url_person").val() + '"').replace('?scrolleable', $("#" + key + '_slider').val()))
+					}
 
-        } else {
-          query.push(nodes_type[key].relation[rel].query.replace('?Url', '"' + $("#url_person").val() + '"'))
+				}else if(nodes_type[key].relation[rel].scrolleable == '1'){
+					query.push(nodes_type[key].relation[rel].query.replace('?Url','"'+$("#url_person").val()+'"').replace('?scrolleable', $("#"+key+'_slider').val()))
 
-        }
-      }
-    }
-  }
-  if (atLeastOneQuery || switch_element_person) {
-    $("#loading_div").modal('show')
+				}else{
+					query.push(nodes_type[key].relation[rel].query.replace('?Url','"'+$("#url_person").val()+'"'))
 
-    if (switch_element_person == true) {
-      var data = query_list_person.join(' UNION ALL ')
-      console.log(data)
-    } else {
-      var data = query.join(' UNION ALL ')
-    }
-    $.ajax({
-      url: '/getGraphPerson/',
-      data: { 'query': data },
-      success: function(response) {
+				}
+			}
+		}
+	}
+	if(atLeastOneQuery || switch_element_person ){
+		$("#loading_div").modal('show')
 
-        $("#loading_div").modal('hide')
-        if (switch_element_person == true) {
-          d3.select("#algo1").selectAll("*").remove();
-          load_graph(JSON.parse(JSON.parse(response).graph), 'algo1')
-          $("#modal_subgraph").modal('show')
+		if( switch_element_person == true ){
+			var data = query_list_person.join(' UNION ALL ')
+		}else{
+			var data = query.join(' UNION ALL ')
+		}
+		$.ajax({
+			url:'/getGraphPerson/',
+			data:{'query': data},
+			success: function(response){
 
-        } else {
-          d3.select("#algo").selectAll("*").remove();
-          load_graph(JSON.parse(JSON.parse(response).graph), 'algo')
-        }
+				$("#loading_div").modal('hide')
+				if(switch_element_person == true){
+					d3.select("#algo1").selectAll("*").remove();
+					load_graph(JSON.parse(JSON.parse(response).graph),'algo1')
+					$("#modal_subgraph").modal('show')
 
-      }
+				}else{
+					d3.select("#algo").selectAll("*").remove();
+					load_graph(JSON.parse(JSON.parse(response).graph),'algo')
+				}
 
-    })
-  } else {
-    $("#loading_error").modal('show')
-  }
+			}
+
+		})
+	}else{
+		$("#loading_error").modal('show')
+	}
 }
+
+
+
 </script>
