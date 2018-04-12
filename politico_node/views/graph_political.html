@@ -460,7 +460,7 @@
       					</div>
 
 				      	<div class="modal-body">
-				      		<div style="height: 900px !important">
+				      		<div class="col-md-12" style="height: 900px !important">
 				      			<svg id="algo1" width="100%" height="900"></svg>
 				      		</div>
 				      	</div>
@@ -833,8 +833,11 @@ function search_query(){
 				$("#loading_div").modal('hide')
 				if(switch_element_person == true){
 					$("#modal_subgraph").modal('show')
-					d3.select("#algo1").selectAll("*").remove();
-					load_graph(JSON.parse(JSON.parse(response).graph),'algo1')
+					setTimeout(function() {
+						d3.select("#algo1").selectAll("*").remove();
+						load_graph(JSON.parse(JSON.parse(response).graph),'algo1')
+					}, 2000);
+					
 					
 
 				}else{
