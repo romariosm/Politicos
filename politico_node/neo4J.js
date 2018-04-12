@@ -12,8 +12,6 @@ module.exports = {
 	" or (toInt(r.InicioJul) >= "+ inicio +" and toInt(r.InicioJul) <= "+ fin +")"+
 	" or (toInt(r.FinJul) <= "+ fin +" and toInt(r.FinJul) >= "+ inicio +")"
   return 'match (a)-[r:worksAt]->(i)-[r_2]->(q '+createParameters(jsonI)+') WHERE '+rule+' RETURN a,r,i,r_2,q'
-  //console.log('match all = (p)-[r:worksAt]->()-[]->(q'+createParameters(jsonI)+') WHERE '+rule+' RETURN all')
-	//return sendNeo4j('match all = (p)-[r:worksAt]->(q'+createParameters(jsonI)+') WHERE '+rule+' RETURN all',callback)
  },
  sendNeo4j: function(sentence,callback){
  	return sendNeo4j(sentence,callback)

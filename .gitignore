@@ -1,7 +1,8 @@
+NEO4J/
 *.pyc
 *.log
 /python-service/wptools
-/python-service/politico-env
+python-service/politicos-env/
+python-service/politicos-env.old/
 /nohup.out
-/NEO4J
-/REDIS
+REDIS/
