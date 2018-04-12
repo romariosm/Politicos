@@ -833,13 +833,11 @@ function search_query(){
 				$("#loading_div").modal('hide')
 				if(switch_element_person == true){
 					$("#modal_subgraph").modal('show')
-					setTimeout(function() {
+					$('#modal_subgraph').on('shown.bs.modal', function (e) {
 						d3.select("#algo1").selectAll("*").remove();
 						load_graph(JSON.parse(JSON.parse(response).graph),'algo1')
-					}, 2000);
-					
-					
-
+					});
+						
 				}else{
 					d3.select("#algo").selectAll("*").remove();
 					load_graph(JSON.parse(JSON.parse(response).graph),'algo')
