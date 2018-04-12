@@ -451,7 +451,7 @@
 							  <div class="pagination" id="pagin">
 							  	
 							    
-							      <a href="/search/person:<%=search %>?search=wiki&page=<%= (parseInt(page)-1) %>" aria-label="Previous">
+							      <a href="/search/person:<%=search %>?search=&page=<%= (parseInt(page)-1) %>" aria-label="Previous">
 							        <span aria-hidden="true"><i class="fa fa-arrow-left" aria-hidden="true"></i></span>
 							      </a>
 							    
@@ -459,18 +459,18 @@
 							    <% for( i=1;i<=num_pages;i++){ %>
 
 							    	<% if (page == i){ %>
-								    	<a  class="active" type="button" id="page_<%= i %>" name="page_<%= i %>" href="/search/person:<%=search %>?search=wiki&page=<%= i %>"><%= i %></a>
+								    	<a  class="active" type="button" id="page_<%= i %>" name="page_<%= i %>" href="/search/person:<%=search %>?search=&page=<%= i %>"><%= i %></a>
 								    
 								    
 							    	<% } else{ %>
-								    	<a  type="button" id="page_<%= i %>" name="page_<%= i %>" href="/search/person:<%=search %>?search=wiki&page=<%= i %>"><%= i %></a>
+								    	<a  type="button" id="page_<%= i %>" name="page_<%= i %>" href="/search/person:<%=search %>?search=&page=<%= i %>"><%= i %></a>
 
 
 
 									<% } %>
 								<% } %>
 								
-							      <a href="/search/person:<%=search %>?search=wiki&page=<%= (parseInt(page) + 1) %>" aria-label="Next">
+							      <a href="/search/person:<%=search %>?search=&page=<%= (parseInt(page) + 1) %>" aria-label="Next">
 							        <span aria-hidden="true"><i class="fa fa-arrow-right" aria-hidden="true"></i></span>
 							      </a>
 							    
