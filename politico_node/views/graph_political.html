@@ -552,7 +552,7 @@ function load_graph(graph,div){
 	dict_div[div].svg = d3.select('#'+div)
 		.attr("preserveAspectRatio", "xMinYMin meet")
 		.attr("viewBox", "0 0 300 300")
-		.classed("svg-content", true);,
+		.classed("svg-content", true);
 	dict_div[div].radius=10
     dict_div[div].width = +dict_div[div].svg.attr("width"),
     dict_div[div].height = +dict_div[div].svg.attr("height");
