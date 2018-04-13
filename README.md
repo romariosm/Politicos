@@ -1,37 +1,54 @@
-## Welcome to GitHub Pages
+# UMA UD 
 
-You can use the [editor on GitHub](https://github.com/romariosm/Politicos/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+¿Qué es UMA UD?
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Estructura de UMA UD
 
-### Markdown
+¿Cómo es la estructura del proyecto?
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+### ¿Cómo iniciar la aplicación? (Linux)
 
-```markdown
-Syntax highlighted code block
+#### Servicio Python
 
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+Iniciar el entorno virutal
+```sh
+$ source politicos-env/bin/activate
 ```
+Se debe asegurar que se encuentren instaladas todas las librerías necesarias para el funcionamiento del aplicativo. Las cuales se nombraran a continuación:
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+> adium-theme-ubuntu==0.3.4  
+> beautifulsoup4==4.5.3  
+> click==6.7  
+> Flask==0.12  
+> Flask-SocketIO==2.8.5  
+> gyp==0.1  
+> itsdangerous==0.24  
+> Jinja2==2.9.5  
+> MarkupSafe==1.0  
+> pygobject==3.20.0  
+> python-engineio==1.3.0  
+> python-socketio==1.7.2  
+> requests==2.13.0  
+> six==1.10.0  
+> unity-lens-photos==1.0  
+> Werkzeug==0.12.1  
+> wikipedia==1.4.0  
 
-### Jekyll Themes
+Para validar la librerías que se encuentran instaladas use el comando:
+```sh
+$ pip frezze 
+```
+Para instalar librerías faltantes utilice el comando:
+```sh
+$ pip install librería
+```
+Una vez se encuentre el entorno virtual configurado, diríjase a la carpeta en la que se encuentra el archivo para inciar el servicio:
+```sh
+$ cd python-service/Scrapy
+```
+Ejecute el archivo para iniciar el servicio
+```sh
+$ python socket_python.py 
+```
+> **Nota:** Debe tener en cuenta que para el inicio del servicio se debe haber previamente configurado las bases de datos (Redis y Neo4J) en el archivo de configuración. 
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/romariosm/Politicos/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
