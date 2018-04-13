@@ -551,6 +551,17 @@ function load_graph(graph,div){
 	    //.force("size", )
 	    .force("center", d3.forceCenter(dict_div[div].width / 2, dict_div[div].height / 2));
 
+		dict_div[div].svg.append("svg:defs").append("marker")
+		    .attr("id", "end")
+		    .attr("viewBox", "0 -5 10 10")
+		    .attr("refX", -5)
+		    .attr("refY", 0)
+		    .attr("markerWidth", 6)
+		    .attr("markerHeight", 6)    
+		    .attr("orient", "auto")
+		    .append("path")
+		    .attr("d", "M0,0L10,-5L10,5");
+
 		dict_div[div].link = dict_div[div].svg
 		    .selectAll(".links")
 		    .data(graph.links)
@@ -561,6 +572,18 @@ function load_graph(graph,div){
 		    //.on('click', clicklink)
 		    .style("stroke-dasharray", "20,10,5,5,5,10")
 		    .attr("stroke-width", function(d) { return Math.sqrt(8); });
+
+		dict_div[div].linktext=dict_div[div].svg.selectAll('.links').data(graph.links).append("marker")
+	    .attr("id", "start")
+	    .attr("viewBox", "0 -5 10 10")
+	    .attr("refX", -5)
+	    .attr("refY", 0)
+	    .attr("markerWidth", 6)
+	    .attr("markerHeight", 6)    
+	    .attr("orient", "auto")
+	    .append("path")
+	    .attr("d", "M0,0L10,-5L10,5")
+
 		dict_div[div].linktext=dict_div[div].svg.selectAll('.links').data(graph.links)
 		    .append("text")
 		    .attr("font-family", "Comic Sans MS, Helvetica, sans-serif")
