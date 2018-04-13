@@ -50,4 +50,5 @@ Ejecute el archivo para iniciar el servicio
 ```sh
 $ python socket_python.py 
 ```
+> **Nota:** Debe tener en cuenta que para el inicio del servicio se debe haber previamente configurado las bases de datos (Redis y Neo4J) en el archivo de configuración. 
 
