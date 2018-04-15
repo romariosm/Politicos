@@ -1,11 +1,19 @@
-# UMA UD 
+![alt text](https://github.com/romariosm/Politicos/blob/master/politico_node/static/images/logo2.png)
 
-¿Qué es UMA UD?
+## ¿Qué es UMA UD?
+Es un prototipo de software que permita identificar relaciones de pertenencia de personajes vinculados con la política colombiana utilizando un motor de bases de datos NoSQL, información pública en enciclopedias libres en el idioma español y procesamiento de lenguaje natural. 
 
 ## Estructura de UMA UD
 
-¿Cómo es la estructura del proyecto?
+La aplicación consta de:  
+*	**Capa de datos:** donde se encuentran implementadas las bases de datos: a) MongoDB la cual se encarga de almacenar toda la información que extrae el aplicativo web de Wikipedia y b) la base de datos Neo4j donde se guardadas todas las entidades y relaciones que fueron extraídas, luego de haber pasado por fases de procesamientos.
+* **Capa de proceso:**: 
+   * La integración del crawler [Uru](https://github.com/romariosm/crawler). y la ontología. El crawler Uru extrae información personal, académica laboral y familiar de un determinado personaje de la política colombiana de Wikipedia, La ontología permite solucionar aspectos como el de sinonimia, modelo de datos dinámico, consultas a base de datos e información relacionada con la visualización de grafos. Dicha ontología fue implementada en REDIS, con el fin de optimizar los tiempos de respuesta 
+   * Implementar un  servicio de socket que permite comunicar los procesos del sistema entre Python y NodeJS. 
+* **Capa de presentación:** Contiene los flujos de trabajo entre el usuario y el aplicativo web por medio de las interfaces de usuario. 
 
+
+![alt text](https://github.com/romariosm/Politicos/blob/master/politico_node/static/images/ArquitecturaTesis.png)
 ### ¿Cómo iniciar la aplicación? (Linux)
 
 #### Servicio Python
@@ -27,7 +35,7 @@ Se debe asegurar que se encuentren instaladas todas las librerías necesarias pa
 > MarkupSafe==1.0  
 > pygobject==3.20.0  
 > python-engineio==1.3.0  
-> python-socketio==1.7.2  
+> python-socketio==1.7.2 
 > requests==2.13.0  
 > six==1.10.0  
 > unity-lens-photos==1.0  
