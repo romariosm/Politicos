@@ -6,7 +6,9 @@ Es un prototipo de software que permita identificar relaciones de pertenencia de
 ## Estructura de UMA UD
 
 La aplicación consta de:  
-*	**Capa de datos:** donde se encuentran implementadas las bases de datos: a) MongoDB la cual se encarga de almacenar toda la información que extrae el aplicativo web de Wikipedia y b) la base de datos Neo4j donde se guardadas todas las entidades y relaciones que fueron extraídas, luego de haber pasado por fases de procesamientos.
+*	**Capa de datos:** donde se encuentran implementadas las bases de datos
+   * MongoDB la cual se encarga de almacenar toda la información que extrae el aplicativo web de Wikipedia
+   * Neo4j donde se guardadas todas las entidades y relaciones que fueron extraídas, luego de haber pasado por fases de procesamientos.
 * **Capa de proceso:**: 
    * La integración del crawler [Uru](https://github.com/romariosm/crawler). y la ontología. El crawler Uru extrae información personal, académica laboral y familiar de un determinado personaje de la política colombiana de Wikipedia, La ontología permite solucionar aspectos como el de sinonimia, modelo de datos dinámico, consultas a base de datos e información relacionada con la visualización de grafos. Dicha ontología fue implementada en REDIS, con el fin de optimizar los tiempos de respuesta 
    * Implementar un  servicio de socket que permite comunicar los procesos del sistema entre Python y NodeJS. 
