@@ -35,7 +35,7 @@
 
 
 	<style>
-		
+
 
 		.dont-break-out {
 
@@ -537,7 +537,7 @@ function load_graph(graph,div){
 	dict_div[div]={}
 
 	dict_div[div].svg = d3.select('#'+div)
-		
+
 	dict_div[div].radius=10
     dict_div[div].width = +$('#'+div).width(),
     dict_div[div].height = +$('#'+div).height();
@@ -557,7 +557,7 @@ function load_graph(graph,div){
 		    .attr("refX", 19)
 		    .attr("refY", 3)
 		    .attr("markerWidth", 8)
-		    .attr("markerHeight", 10)    
+		    .attr("markerHeight", 10)
 		    .attr("orient", "auto")
 		    .append("path")
 		    .attr("d", "M0,0 L0,6 L9,3 z");
@@ -574,7 +574,7 @@ function load_graph(graph,div){
 		    .attr("stroke-width", function(d) { return Math.sqrt(8); })
 		    .attr('marker-end', 'url(#end)');
 
-		
+
 
 		dict_div[div].linktext=dict_div[div].svg.selectAll('.links').data(graph.links)
 		    .append("text")
@@ -814,13 +814,14 @@ function search_query(){
 					if(list_people_selected.length > 1){
 						switch_element_person=true
 						first=list_people_selected[0]
-						query_multiple="MATCH (a)<-[r:belongsTo*1..1]-(n3:person {Url:?url1}) return a,r,n3 UNION ALL MATCH (a)<-[r:belongsTo*1..1]-(n3:person {Url:?url2}) return a,r,n3 UNION ALL MATCH (a)<-[r:worksAt*1..1]-(n3:person {Url:?url1}) return a,r,n3 UNION ALL MATCH (a)<-[r:worksAt*1..1]-(n3:person {Url:?url2}) return a,r,n3 UNION ALL MATCH (a)<-[r:studiedAt*1..1]-(n3:person {Url:?url1}) return a,r,n3 UNION ALL MATCH (a)<-[r:studiedAt*1..1]-(n3:person {Url:?url2}) return a,r,n3 UNION ALL MATCH (a)<-[r:born*1..1]-(n3:person {Url:?url1}) where not a.name =~ '.*lombia.*'  return a,r,n3 UNION ALL MATCH (a)<-[r:born*1..1]-(n3:person {Url:?url2}) where not a.name =~ '.*lombia.*' return a,r,n3".split("?url1").join('"'+first+'"')
+						query_multiple="MATCH (a)<-[r:belongsTo*1..1]-(n3:person {Url:?url1}) return a,r,n3 UNION ALL MATCH (a)<-[r:belongsTo*1..1]-(n3:person {Url:?url2}) return a,r,n3 UNION ALL MATCH (a)<-[r:worksAt*1..1]-(n3:person {Url:?url1}) return a,r,n3 UNION ALL MATCH (a)<-[r:worksAt*1..1]-(n3:person {Url:?url2}) return a,r,n3 UNION ALL MATCH (a)<-[r:studiedAt*1..1]-(n3:person {Url:?url1}) return a,r,n3 UNION ALL MATCH (a)<-[r:studiedAt*1..1]-(n3:person {Url:?url2}) return a,r,n3 UNION ALL MATCH (a)<-[r:born*1..1]-(n3:person {Url:?url1}) where not a.name =~ '.*lombia.*'  return a,r,n3 UNION ALL MATCH (a)<-[r:born*1..1]-(n3:person {Url:?url2}) where not a.name =~ '.*lombia.*' return a,r,n3 UNION ALL match (a:person {Url:?url1})-[r*1..1]-(n3:person {Url:?url2}) return a,r,n3".split("?url1").join('"'+first+'"')
+
 
 						for(i=1;i<list_people_selected.length;i++){
 
 							query_list_person.push(query_multiple.split("?url2").join('"'+list_people_selected[i]+'"'))
 						}
-
+console.log(query_list_person)
 					}
 
 				}else if(nodes_type[key].relation[rel].scrolleable == '1'){
@@ -853,7 +854,7 @@ function search_query(){
 						d3.select("#algo1").selectAll("*").remove();
 						load_graph(JSON.parse(JSON.parse(response).graph),'algo1')
 					});
-						
+
 				}else{
 					d3.select("#algo").selectAll("*").remove();
 					load_graph(JSON.parse(JSON.parse(response).graph),'algo')
