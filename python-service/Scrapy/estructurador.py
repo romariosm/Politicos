@@ -146,7 +146,7 @@ def relateOrganizationsLaboral(structure):
 	relation = 'worksAt'
 	node = 'organization'
 	for key in array:
-		if len(key['Entidad'])>0:
+		if key.has_key('Entidad') and len(key['Entidad'])>0:
 			if not CM.exists(node,{'Url':key['Entidad'][0]['url']}):
 				scrap = politic_scrapeTable(key['Entidad'][0]['url'])
 				saveNode(create_structure_organization(scrap),node)
@@ -263,7 +263,7 @@ def Representsmonth(s):
     	}[s]
 
 
-#link = "https://es.wikipedia.org/wiki/Juan_Manuel_Santos"
+#link = "https://es.wikipedia.org/wiki/Mar%C3%ADa_Fernanda_Cabal"
 #createTree(link,[],[])
 """politic = politic_scrapeTable(link)
 a = create_structure(politic)

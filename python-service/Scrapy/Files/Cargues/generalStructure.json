@@ -3,7 +3,7 @@
     "relation": {
       "family": {
         "scrolleable": 1,
-        "query":"MATCH (a {Url:?Url})-[r:family*1..?scrolleable]->(i) RETURN a,r,i"
+        "query":"MATCH (a {Url:?Url})-[r:family*0..?scrolleable]->(i) RETURN a,r,i"
       }
     },
     "color": "#F44336"
@@ -12,7 +12,7 @@
     "relation": {
       "born": {
         "scrolleable": 0,
-        "query":"MATCH (a {Url:?Url})-[r:born*1..1]->(i) RETURN a,r,i"
+        "query":"MATCH (a {Url:?Url})-[r:born*0..1]->(i) RETURN a,r,i"
       }
     },
     "color": "#009688"
@@ -21,7 +21,7 @@
     "relation": {
       "belongsTo": {
         "scrolleable": 0,
-        "query":"MATCH (a {Url:?Url})-[r:belongsTo*1..1]->(i) RETURN a,r,i"
+        "query":"MATCH (a {Url:?Url})-[r:belongsTo*0..1]->(i) RETURN a,r,i"
       }
     },
     "color": "#CDDC39"
@@ -30,7 +30,7 @@
     "relation": {
       "belongsTo": {
         "scrolleable": 0,
-        "query":"MATCH (a {Url:?Url})-[r:studiedAt*1..1]->(i) RETURN a,r,i"
+        "query":"MATCH (a {Url:?Url})-[r:studiedAt*0..1]->(i) RETURN a,r,i"
       }
     },
     "color": "#673AB7"
@@ -39,9 +39,9 @@
     "relation": {
       "belongsTo": {
         "scrolleable": 0,
-        "query":"MATCH (a {Url:?Url})-[r:worksAt*1..1]->(i) RETURN a,r,i"
+        "query":"MATCH (a {Url:?Url})-[r:worksAt*0..1]->(i) RETURN a,r,i"
       }
     },
-    "color": "#FF9800"  
+    "color": "#FF9800"
   }
 }

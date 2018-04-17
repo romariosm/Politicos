@@ -34,13 +34,15 @@ def politic_scrapeTable(url):
 	table = soup.find('table', 'infobox')
 	table = getTable(soup)
 	dic={}
-	parent = ""
+	parent = 'default'
+	dic = jsonp.addValue(dic,'default',{})
 	try:
 		if soup is not None:
 			dic = jsonp.addValue(dic,"Fecha de registro", time.strftime("%x") + " " + time.strftime("%X"))
 			dic = jsonp.addValue(dic,"Nombre",getTitle(soup).replace(' - Wikipedia, la enciclopedia libre',''))
 			dic = jsonp.addValue(dic,"Url",url.strip())
 			dic = jsonp.addValue(dic,"Imagen",getTableImage(url))
+			cargo = None
 			if table is not None:
 				filas = table.find_all('tr')[1:] if dic['Imagen'] == "No disponible" else table.find_all('tr')[1:]
 				for fil in filas:
@@ -65,12 +67,17 @@ def politic_scrapeTable(url):
 									else:
 										dic[parent]=jsonp.addValue(dic[parent], fil.find_all('th')[0].text, getLinks(fil.find_all('td')[0]))
 							else:
+								"""if len(fil.find_all('td')[0].findAll('a'))>0:
+									dic = jsonp.addValue(dic,fil.find_all('th')[0].text, getLinks(fil.find_all('td')[0]))
+								else:"""
 								dic = jsonp.addValue(dic,fil.find_all('th')[0].text, fil.find_all('td')[0].text)
 					else:
 						if len(fil.find_all('td')) > 0 and fil.find_all('td')[0].text.strip() != "" and parent != "" and "Wikidata" not in fil.find_all('td')[0].text:
 								dic[parent] = jsonp.addValue(dic[parent], 'Perido del cargo', fil.find_all('td')[0].text)
-								dic[parent] = jsonp.addValue(dic[parent], 'Entidad', getLinks(cargo))
+								if cargo != None:
+									dic[parent] = jsonp.addValue(dic[parent], 'Entidad', getLinks(cargo))
 	except Exception as error:
+		print str(eror)
 		fm.registerError(url +"\n"+str(error))
 	return dic
 
@@ -98,5 +105,6 @@ def getContent(url):
 					data =val1
 	return data
 
-politic_scrapeTable("https://es.wikipedia.org/wiki/Enrique_G%C3%B3mez_Hurtado")
+#print politic_scrapeTable("https://es.wikipedia.org/wiki/Santa_Rosa_de_Cabal")
+#print politic_scrapeTable("https://es.wikipedia.org/wiki/Germ%C3%A1n_Vargas_Lleras")
 #fm.writeFileJSON("juan_santos_prueba",politic_scrapeTable("https://es.wikipedia.org/wiki/Germ%C3%A1n_Vargas_Lleras"))
