@@ -526,8 +526,8 @@ $(document).ready(function(){
     $('[data-toggle="popover"]').popover();
 
 	var graph=JSON.parse($("#graph").val())
-
-	load_graph(graph,'algo')
+	setTimeout(function() {load_graph(graph,'algo')}, 2000);
+	
 });
 
 
