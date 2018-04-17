@@ -230,7 +230,7 @@ app.get('/load/person:*', function(request, response){
 							}	
 							
 							list_nodes.push(node_p)
-						}else if (list_links.findIndex(i => i.id == element[node]._id) == -1 && node.indexOf('r') != -1){
+						}else if (list_links.findIndex(i => i.id == element[node]._id) == -1 && node.indexOf('r') != -1 && element[node].length>0){
 							if(element[node][0]._id != undefined){
 								element[node].forEach( function(element_r, index) {
 									if(list_links.findIndex(i => i.id == element_r._id) == -1){
