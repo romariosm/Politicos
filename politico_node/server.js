@@ -153,7 +153,7 @@ app.get("/autocomplete/politicos", function (request,response) {
 	var arreglo=[]
 
 	sendMongo(function (db){
-	 	db.collection(properties.mongo.collections).find({"Nombre": {"$in": [new RegExp(nombre, "i") ]} }).toArray(function(err, result) {
+	 	db.collection(properties.mongo.collections).find({"Nombre": {"$in": [new RegExp(nombre) ]} }).toArray(function(err, result) {
 	 		for(var i=0;i<result.length;i++){
 				arreglo.push({'data':String(result[i]._id),'value':result[i].Nombre})
 			}
