@@ -270,11 +270,12 @@
 					if(JSON.parse(response).Politic){
 
 						political_list.push(JSON.parse(response))
+						console.log(JSON.parse(response))
 
 						$("#table_body").empty();
 
 						for(i=0;i<political_list.length; i=i+3){
-							if (political_list[i].Imagen== "Imagen no disponible"){
+							if (political_list[i].Imagen== "no disponible"){
 
 								imagen='/images/hombre.png'
 							}else{
@@ -289,7 +290,7 @@
 													'</tr>')
 							}else if((i+1) == political_list.length-1){
 
-								if (political_list[i+1].Imagen== "Imagen no disponible"){
+								if (political_list[i+1].Imagen== "no disponible"){
 
 									imagen1='/images/hombre.png'
 								}else{
@@ -301,14 +302,14 @@
 													'<td><img class="avatar2" style="object-fit: cover" src="'+imagen1+'" height = "50px" width="50px"> <a style="cursor:pointer"onclick="search_political('+"'"+political_list[i+1].Url+"'"+')">'+political_list[i+1].Title+'<a/></td>'+
 													'</tr>')
 							}else{
-								if (political_list[i+1].Imagen== "Imagen no disponible"){
+								if (political_list[i+1].Imagen== "no disponible"){
 
 									imagen1='/images/hombre.png'
 								}else{
 									imagen1=political_list[i+1].Imagen
 								}
 
-								if (political_list[i+2].Imagen== "Imagen no disponible"){
+								if (political_list[i+2].Imagen== "no disponible"){
 
 									imagen2='/images/hombre.png'
 								}else{
