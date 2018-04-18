@@ -98,7 +98,7 @@ app.get('/search/person:*', function(request, response){
     				dict_personaje['nombre']=''
     			}
 
-    			if(result[i].Imagen != 'No_Disponible' ){
+    			if(result[i].Imagen != 'no disponible' ){
     				dict_personaje['foto']=result[i].Imagen
 
     			}else{
@@ -186,7 +186,14 @@ app.get('/load/person:*', function(request, response){
 	 	db.collection(properties.mongo.collections).find({"_id": political_id }).toArray(function(err, result) {
 	 	info={}
 		info['nombre']=result[0].Nombre
-		info['imagen']=result[0].Imagen
+		console.log('no disponible')
+		if(result[0].Imagen == "no disponible"){
+			info['imagen']='/images/hombre.png'
+		}else{
+			info['imagen']=result[0].Imagen
+			
+		}
+		
 		var url=result[0].Url
 		context['info']=info
 		var estructura;
