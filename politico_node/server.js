@@ -363,12 +363,13 @@ app.get('/search/getScrapy', function(request, response){
 				sendMongo(function(database){
 					familyCreated.forEach(function(element, index){
 						database.collection(properties.mongo.collections).find({Url: element.Url}).toArray(function(err, result) {
+							database.close()
 							if(result.length == 0){
 								database.collection(properties.mongo.collections).insertMany(familyCreated)
 							}
 						})
 					})
-					database.close()
+					
     				}
     			);
 
