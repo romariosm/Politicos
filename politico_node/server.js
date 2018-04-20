@@ -32,7 +32,7 @@ function sendMongo(callback){
 		}
 		assert.equal(null, err);
 		callback(db);
-		db.close();
+		//db.close();
 	});
 
 }
@@ -60,7 +60,8 @@ app.get('/search/person:*', function(request, response){
 	sendMongo(function (db){
 	 	db.collection(properties.mongo.collections).find(query).toArray(function(err, result) {
 	 		//console.log(result)
-
+			db.close();
+                        console.log(err)
 	 		num_pages=Math.ceil(result.length/quantity_characters)
 
 	 		if(request.query.page){
