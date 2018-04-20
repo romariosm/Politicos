@@ -134,24 +134,20 @@ app.get('/search/person:*', function(request, response){
     });
 
 app.get('/search/getsuggestion', function(request, response){
+	if(request.query.search.trim() != '' && request.query.search.trim() != undefined){
+		socket.emit('search suggestions', request.query.search)
 
-	socket.emit('search suggestions', request.query.search)
+		socket.on('suggestion response', function(msg) {
 
-	socket.on('suggestion response', function(msg) {
-
-		data={}
-		data['suggestions']=msg
-		response.end(JSON.stringify(data))
-
-	})
-
-
-
-
-
-
+			data={}
+			data['suggestions']=msg
+			response.end(JSON.stringify(data))
+		})
+	}else{
+		response.end(JSON.stringify({suggestions:[]}))
+	}
+	
 })
-
 
 
 app.get("/autocomplete/politicos", function (request,response) {
@@ -372,7 +368,7 @@ app.get('/search/getScrapy', function(request, response){
 							}
 						})
 					})
-						
+					database.close()
     				}
     			);
 
