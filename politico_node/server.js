@@ -52,7 +52,7 @@ app.get('/search/person:*', function(request, response){
 	initial=0
 	page=1
 	sendMongo(function (db){
-	 	db.collection(properties.mongo.collections).find({"Nombre": {"$in": [new RegExp(political, "i") ]} }).toArray(function(err, result) {
+	 	db.collection(properties.mongo.collections).find({"Nombre": new RegExp(political, "i")  }).toArray(function(err, result) {
 	 		//console.log(result)
 
 	 		num_pages=Math.ceil(result.length/quantity_characters)
