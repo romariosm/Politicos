@@ -32,7 +32,7 @@ function sendMongo(callback){
 		}
 		assert.equal(null, err);
 		callback(db);
-		db.close();
+		//db.close();
 	});
 
 }
@@ -364,7 +364,14 @@ app.get('/search/getScrapy', function(request, response){
 			socket.emit('relate relatedFamily',structure)
 			socket.on('create family', function(familyCreated) {
 				sendMongo(function(database){
-    				database.collection(properties.mongo.collections).insertMany(familyCreated)
+					familyCreated.forEach(function(element, index){
+						database.collection(properties.mongo.collections).find({Url: element.Url}).toArray(function(err, result) {
+							if(result.length == 0){
+								database.collection(properties.mongo.collections).insertMany(familyCreated)
+							}
+						})
+					})
+						
     				}
     			);
 
