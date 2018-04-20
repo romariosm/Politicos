@@ -51,8 +51,13 @@ app.get('/search/person:*', function(request, response){
 	quantity_characters=9
 	initial=0
 	page=1
+	if(political.trim() == ""){
+		var query = {"Nombre": new RegExp(political, "i")  }
+	}else{
+		var query = {}
+	}
 	sendMongo(function (db){
-	 	db.collection(properties.mongo.collections).find({"Nombre": new RegExp(political, "i")  }).toArray(function(err, result) {
+	 	db.collection(properties.mongo.collections).find(query).toArray(function(err, result) {
 	 		//console.log(result)
 
 	 		num_pages=Math.ceil(result.length/quantity_characters)
