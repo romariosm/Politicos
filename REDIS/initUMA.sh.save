@@ -1,3 +1,0 @@
-src/redis-server --port 6380#!/bin/bash
-
-src/redis-server --port 6380

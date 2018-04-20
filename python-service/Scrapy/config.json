@@ -1,9 +1,14 @@
 {
 	"filePath": "Files/",
-	"logFile":"Scrapy.log",
+	"logFile":"UMAOntology.log",
 	"loads":"Files/Cargues",
 	"generatedFilePath":"Generated Files/",
 	"databases":{
+		"redis":{
+			"host":"localhost",
+			"port":6381,
+			"db":0
+		},
 		"neo4j":{
 			"host":"localhost",
 			"port":7472,

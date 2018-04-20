@@ -13,7 +13,7 @@ authenticate(path['databases']['neo4j']['host'] + ":" + str(path['databases']['n
 	path['databases']['neo4j']["auth"]["user"], 
 	path['databases']['neo4j']["auth"]["psw"])
 
-graph = Graph("http://" +  path['databases']['neo4j']['host'] + ":" + str(path['databases']['neo4j']['port']) + "/db/data/")
+graph = Graph("http://" +  path['databases']['neo4j']['host'] + ":" + str(path['databases']['neo4j']['port']) + "/db/data/", bolt=False)
 
 def sendToNeo(sentence):
 	return graph.run(sentence)#.dump()
