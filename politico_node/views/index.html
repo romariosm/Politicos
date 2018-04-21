@@ -33,7 +33,7 @@
 	$(document).ready(function() {
 
 		$('#autocomplete').autocomplete({
-		    serviceUrl: '/autocomplete/politicos',
+		    serviceUrl: '/umaUD/autocomplete/politicos',
 
 		    onSelect: function (suggestion) {
 		        //alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
@@ -48,7 +48,7 @@
 
 		$("#search_submit").on("click", function(e){
 		    e.preventDefault();
-		    $('#loginformA').attr('action', "/search/person:"+$("#autocomplete").val()).submit();
+		    $('#loginformA').attr('action', "/umaUD/search/person:"+$("#autocomplete").val()).submit();
 		});
 
 
@@ -60,7 +60,7 @@
 
 	
 
-	<body style="background-image: url('/images/sayata.png')">
+	<body style="background-image: url('/umaUD/images/sayata.png')">
 
 		<% include header.html %>
 
@@ -76,7 +76,7 @@
 
 				<div class="col-md-12">
 
-					<form id="loginformA" action="/search/person:political" method="get">
+					<form id="loginformA" action="/umaUD/search/person:political" method="get">
 					    <div class="input-group" style="margin-top:50px;">
 					    	<input type="text" name="search" id="autocomplete" class="form-control" placeholder="Buscar..." style="border-radius:0px; height: 40px; border-color: gray"/>
 					      

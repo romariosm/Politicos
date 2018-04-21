@@ -114,7 +114,7 @@
 		    -webkit-box-shadow: 0 8px 6px -6px #999 !important;
             -moz-box-shadow: 0 8px 6px -6px #999 !important;
 			box-shadow: 0 4px 8px 0px #999 !important;
-			background-image: url('/images/sayata.png');
+			background-image: url('/umaUD/images/sayata.png');
 		}
 		
 		.grid-item{
@@ -217,7 +217,7 @@
 
 	$(document).ready(function() {
 		$('#autocomplete').autocomplete({
-		    serviceUrl: '/autocomplete/politicos',
+		    serviceUrl: '/umaUD/autocomplete/politicos',
 
 		    onSelect: function (suggestion) {
 		        //alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
@@ -237,7 +237,7 @@
 		  
 		});
 
-		$.get( "/search/getsuggestion", { search: "<%= search %>" } )
+		$.get( "/umaUD/search/getsuggestion", { search: "<%= search %>" } )
 			.done(function( data ) {
 				console.log(JSON.parse(data))
 
@@ -258,7 +258,7 @@
 
 
 		$.ajax( {
-				url:"/search/getDataSuggestion?search="+list[cont],
+				url:"/umaUD/search/getDataSuggestion?search="+list[cont],
 				type: 'GET',
 				success:function(response){
 
@@ -270,14 +270,14 @@
 					if(JSON.parse(response).Politic){
 
 						political_list.push(JSON.parse(response))
-						console.log(JSON.parse(response))
+						console.logg(JSON.parse(response))
 
 						$("#table_body").empty();
 
 						for(i=0;i<political_list.length; i=i+3){
 							if (political_list[i].Imagen== "no disponible"){
 
-								imagen='/images/hombre.png'
+								imagen='/umaUD/images/hombre.png'
 							}else{
 								imagen=political_list[i].Imagen
 							}
@@ -292,7 +292,7 @@
 
 								if (political_list[i+1].Imagen== "no disponible"){
 
-									imagen1='/images/hombre.png'
+									imagen1='/umaUD/images/hombre.png'
 								}else{
 									imagen1=political_list[i+1].Imagen
 								}
@@ -304,14 +304,14 @@
 							}else{
 								if (political_list[i+1].Imagen== "no disponible"){
 
-									imagen1='/images/hombre.png'
+									imagen1='/umaUD/images/hombre.png'
 								}else{
 									imagen1=political_list[i+1].Imagen
 								}
 
 								if (political_list[i+2].Imagen== "no disponible"){
 
-									imagen2='/images/hombre.png'
+									imagen2='/umaUD/images/hombre.png'
 								}else{
 									imagen2=political_list[i+2].Imagen
 								}
@@ -351,10 +351,10 @@
 
 		$("#loading_div").modal('toggle')
 
-		$.get( "/search/getScrapy", { 'url': url } )
+		$.get( "/umaUD/search/getScrapy", { 'url': url } )
 			.done(function( data ) {
 				$("#loading_div").modal('toggle');
-				window.open('/search/person:political?search='+data, '_self')
+				window.open('/umaUD/search/person:political?search='+data, '_self')
 
 			});
 
@@ -375,7 +375,7 @@
 					  	
 				      	<div class="col-md-12">
 
-							<form id="loginformA" action="/search/person:political" method="get">
+							<form id="loginformA" action="/umaUD/search/person:political" method="get">
 							    <div class="input-group" >
 							    	<input type="text" name="search" id="autocomplete" class="form-control" placeholder="Buscar..." value="<%= search %>" style="border-radius:0px"/>
 							      
@@ -434,7 +434,7 @@
 										        	<li>
 										        
 										        <li><a href="<%= political.Url%>" class="btn-thumbnail"><i class="fa fa-wikipedia-w"  style="margin-top:10px;" ></i></a></li>
-										        <li><a class="btn-thumbnail"  href="/load/person:<%= political.nombre%>?id=<%= political.id%>" ><i class="fa fa-share-alt" style="margin-top:10px;" ></i></a></li>
+										        <li><a class="btn-thumbnail"  href="/umaUD/load/person:<%= political.nombre%>?id=<%= political.id%>" ><i class="fa fa-share-alt" style="margin-top:10px;" ></i></a></li>
 										        </ul>
 									      	</div>
 									    </div>
@@ -452,7 +452,7 @@
 							  <div class="pagination" id="pagin">
 							  	
 							    
-							      <a href="/search/person:<%=search %>?search=<%= search %>&page=<%= (parseInt(page)-1) %>" aria-label="Previous">
+							      <a href="/umaUD/search/person:<%=search %>?search=<%= search %>&page=<%= (parseInt(page)-1) %>" aria-label="Previous">
 							        <span aria-hidden="true"><i class="fa fa-arrow-left" aria-hidden="true"></i></span>
 							      </a>
 							    
@@ -460,18 +460,18 @@
 							    <% for( i=1;i<=num_pages;i++){ %>
 
 							    	<% if (page == i){ %>
-								    	<a  class="active" type="button" id="page_<%= i %>" name="page_<%= i %>" href="/search/person:<%=search %>?search=<%= search %>&page=<%= i %>"><%= i %></a>
+								    	<a  class="active" type="button" id="page_<%= i %>" name="page_<%= i %>" href="/umaUD/search/person:<%=search %>?search=<%= search %>&page=<%= i %>"><%= i %></a>
 								    
 								    
 							    	<% } else{ %>
-								    	<a  type="button" id="page_<%= i %>" name="page_<%= i %>" href="/search/person:<%=search %>?search=<%= search %>&page=<%= i %>"><%= i %></a>
+								    	<a  type="button" id="page_<%= i %>" name="page_<%= i %>" href="/umaUD/search/person:<%=search %>?search=<%= search %>&page=<%= i %>"><%= i %></a>
 
 
 
 									<% } %>
 								<% } %>
 								
-							      <a href="/search/person:<%=search %>?search=<%= search %>&page=<%= (parseInt(page) + 1) %>" aria-label="Next">
+							      <a href="/umaUD/search/person:<%=search %>?search=<%= search %>&page=<%= (parseInt(page) + 1) %>" aria-label="Next">
 							        <span aria-hidden="true"><i class="fa fa-arrow-right" aria-hidden="true"></i></span>
 							      </a>
 							    
@@ -540,7 +540,7 @@
 		    	
 		      	<div class="modal-body" align="center">
 		      		<h3><i class="fa fa-paper-plane" aria-hidden="true"></i> Estamos recolectando información...</h3>
-		        	<img src="/images/loading.gif" />
+		        	<img src="/umaUD/images/loading.gif" />
 		      	</div>
 		      
 		    </div>

@@ -181,7 +181,7 @@
 		    -webkit-box-shadow: 0 8px 6px -6px #999 !important;
             -moz-box-shadow: 0 8px 6px -6px #999 !important;
 			box-shadow: 0 4px 8px 0px #999 !important;
-			background-image: url('/images/sayata.png');
+			background-image: url('/umaUD/images/sayata.png');
 		}
 
 
@@ -438,7 +438,7 @@
 
 				      	<div class="modal-body" align="center">
 				      		<h3><i class="fa fa-paper-plane" aria-hidden="true"></i> Estamos recolectando información...</h3>
-				        	<img src="/images/loading.gif" />
+				        	<img src="/umaUD/images/loading.gif" />
 				      	</div>
 
 				    </div>
@@ -844,7 +844,7 @@ console.log(query_list_person)
 			var data = query.join(' UNION ALL ')
 		}
 		$.ajax({
-			url:'/getGraphPerson/',
+			url:'/umaUD/getGraphPerson/',
 			data:{'query': data},
 			success: function(response){
 

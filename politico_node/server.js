@@ -15,10 +15,10 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.set('views', __dirname + '/views'); //REderizar vistas
 app.engine('html', require('ejs').renderFile); // Para procesar todo el HTML
-app.use(express.static('static')); //Donde voy a guardar archivos estaticos (java script y sus librerias)
+app.use('/umaUD',express.static('static')); //Donde voy a guardar archivos estaticos (java script y sus librerias)
 
 
-app.get('/', function(request, response){ //Start the main page
+app.get('/umaUD', function(request, response){ //Start the main page
 	console.log("Conecting to Node Server...")
 	response.render('index.html');
 	console.log("Connection completed");
@@ -37,12 +37,12 @@ function sendMongo(callback){
 
 }
 
-app.get('/send_political', function(request, response){
+app.get('/umaUD/send_political', function(request, response){
 
 
 });
 
-app.get('/search/person:*', function(request, response){
+app.get('/umaUD/search/person:*', function(request, response){
 
 	var political=request.query.search
 
@@ -109,7 +109,7 @@ app.get('/search/person:*', function(request, response){
     				dict_personaje['foto']=result[i].Imagen
 
     			}else{
-    				dict_personaje['foto']='/images/hombre.png'
+    				dict_personaje['foto']='/umaUD/images/hombre.png'
     			}
 
     			if(result[i].Url){
@@ -133,7 +133,7 @@ app.get('/search/person:*', function(request, response){
 
     });
 
-app.get('/search/getsuggestion', function(request, response){
+app.get('/umaUD/search/getsuggestion', function(request, response){
 	if(request.query.search.trim() != '' && request.query.search.trim() != undefined){
 		socket.emit('search suggestions', request.query.search)
 
@@ -150,7 +150,7 @@ app.get('/search/getsuggestion', function(request, response){
 })
 
 
-app.get("/autocomplete/politicos", function (request,response) {
+app.get("/umaUD/autocomplete/politicos", function (request,response) {
 	var nombre=request.query.query
 	var arreglo=[]
 
@@ -179,7 +179,7 @@ function hexToRgbA(hex){
     throw new Error('Bad Hex');
 }
 
-app.get('/load/person:*', function(request, response){
+app.get('/umaUD/load/person:*', function(request, response){
 
 
 	var political_id = new mongo.ObjectID(request.query.id);
@@ -191,7 +191,7 @@ app.get('/load/person:*', function(request, response){
 		info['nombre']=result[0].Nombre
 		console.log('no disponible')
 		if(result[0].Imagen == "no disponible"){
-			info['imagen']='/images/hombre.png'
+			info['imagen']='/umaUD/images/hombre.png'
 		}else{
 			info['imagen']=result[0].Imagen
 			
@@ -306,7 +306,7 @@ app.get('/load/person:*', function(request, response){
 	})
 })
 
-app.get('/search/getDataSuggestion', function(request, response){
+app.get('/umaUD/search/getDataSuggestion', function(request, response){
 	socket.emit('search dataSuggestions', request.query.search)
 
 	socket.on('suggestion dataResponse', function(data) {
@@ -347,7 +347,7 @@ app.get('/search/getDataSuggestion', function(request, response){
 })
 
 
-app.get('/search/getScrapy', function(request, response){
+app.get('/umaUD/search/getScrapy', function(request, response){
 
 	context = {}
 	socket.emit('search politician', request.query.url)
@@ -385,22 +385,22 @@ app.get('/search/getScrapy', function(request, response){
 	});
 })
 
-app.get('/nosotros/', function(request, response){
+app.get('/umaUD/nosotros/', function(request, response){
 	response.render('nosotros.html');
 })
 
-app.get('/contactar/', function(request, response){
+app.get('/umaUD/contactar/', function(request, response){
 
 	response.render('contacto.html');
 
 })
 
-app.get('/como_funciona/', function(request, response){
+app.get('/umaUD/como_funciona/', function(request, response){
 
 	response.render('how_work.html');
 
 })
-app.get('/getGraphPerson/', function(request, response){
+app.get('/umaUD/getGraphPerson/', function(request, response){
 
 	var context={}
 
@@ -472,7 +472,7 @@ app.get('/getGraphPerson/', function(request, response){
 	neo4j.sendNeo4j(request.query.query,sender)
 })
 
-app.post('/send_message/', function(request, response){
+app.post('/umaUD/send_message/', function(request, response){
 	var transporter = nodemailer.createTransport({
 	  service: properties.email.service,
 	  auth: {
