@@ -54,7 +54,7 @@ app.get('/umaUD/search/person:*', function(request, response){
 	if(political.trim() == ""){
 		var query = {}
 	}else{
-		var query = {"Nombre": new RegExp(political, "i")  }
+		var query = {$text:{$search: political}}
 		
 	}
 	sendMongo(function (db){
@@ -155,7 +155,7 @@ app.get("/umaUD/autocomplete/politicos", function (request,response) {
 	var arreglo=[]
 
 	sendMongo(function (db){
-	 	db.collection(properties.mongo.collections).find({"Nombre": {"$in": [new RegExp(nombre, "i") ]} }).toArray(function(err, result) {
+	 	db.collection(properties.mongo.collections).find({$text:{$search:nombre}}).toArray(function(err, result) {
 	 		for(var i=0;i<result.length;i++){
 				arreglo.push({'data':String(result[i]._id),'value':result[i].Nombre})
 			}
