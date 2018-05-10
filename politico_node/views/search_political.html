@@ -237,6 +237,8 @@
 		  
 		});
 
+		if(search != ''){
+
 		$.get( "/umaUD/search/getsuggestion", { search: "<%= search %>" } )
 			.done(function( data ) {
 				console.log(JSON.parse(data))
@@ -249,6 +251,8 @@
 				//});
 					
 			})
+
+		}
 
 		})
 
