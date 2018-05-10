@@ -54,7 +54,7 @@ app.get('/umaUD/search/person:*', function(request, response){
 	if(political.trim() == ""){
 		var query = {}
 	}else{
-		var query = {$text:{$search: political}}
+		var query = {$text:{$search: political}, status:1}
 		
 	}
 	sendMongo(function (db){
@@ -155,7 +155,7 @@ app.get("/umaUD/autocomplete/politicos", function (request,response) {
 	var arreglo=[]
 
 	sendMongo(function (db){
-	 	db.collection(properties.mongo.collections).find({$text:{$search:nombre}}).toArray(function(err, result) {
+	 	db.collection(properties.mongo.collections).find({$text:{$search:nombre}, status:1}).toArray(function(err, result) {
 	 		for(var i=0;i<result.length;i++){
 				arreglo.push({'data':String(result[i]._id),'value':result[i].Nombre})
 			}
@@ -365,6 +365,7 @@ app.get('/umaUD/search/getScrapy', function(request, response){
 						database.collection(properties.mongo.collections).find({Url: element.Url}).toArray(function(err, result) {
 							//database.close()
 							if(result.length == 0){
+								element['status']=1
 								database.collection(properties.mongo.collections).insertMany([element])
 							}
 						})
@@ -379,6 +380,7 @@ app.get('/umaUD/search/getScrapy', function(request, response){
 			})
     	})
     	sendMongo(function(database){
+    		msg['status']=1
     		database.collection(properties.mongo.collections).insertMany([msg])
     		response.end(msg.Nombre)
     		}
