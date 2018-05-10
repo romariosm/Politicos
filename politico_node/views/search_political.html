@@ -237,7 +237,7 @@
 		  
 		});
 
-		if(search != ''){
+		if("<%= search %>" != ''){
 
 		$.get( "/umaUD/search/getsuggestion", { search: "<%= search %>" } )
 			.done(function( data ) {
